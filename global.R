@@ -2,8 +2,7 @@
 RequiredPackages <- c("shiny", "dplyr", "DT",
                       "ggplot2", "statnet", "igraph",
                       "network", "shinydashboard", "shinyjs",
-                      "plotly", "magrittr", "mwss",
-                      "SimInf", "data.table", "shinyWidgets",
+                      "plotly", "magrittr", "SimInf", "data.table", "shinyWidgets",
                       "shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools")
 for (i in RequiredPackages) { #Installs packages if not yet installed
   if (!require(i, character.only = TRUE)) install.packages(i)
