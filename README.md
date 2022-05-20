@@ -52,10 +52,12 @@ mwss-App
 ├── header
 ├── helpfiles
 ├── www
+├── report.Rmd
 ├── app.R
 ├── global.R
 ├── server.R
 ├── ui.R
+
 ````
 
 - **body**
@@ -75,6 +77,9 @@ mwss-App
 
 - **www**
 <br> This folder contains the images displayed in the application.
+
+- ** report.Rmd **
+<br> This RMarkdown file contains the structure of the report that can be downloaded after runing simulations.
 
 - **R files**
  - app.R
