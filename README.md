@@ -34,8 +34,21 @@ Preprint available at: <a href="" target="_blank"> doi: </a>
 Open your R console or RStudio and paste the commands provided below. 
 mwss-App will automatically install all required dependencies (R packages).
 ````
-library(shiny)
+# Load and, if necessary, install packages
+RequiredPackages <- c("shiny", "dplyr", "DT",
+                      "ggplot2", "statnet", "igraph",
+                      "network", "shinydashboard", "shinyjs",
+                      "plotly", "magrittr", "SimInf", "data.table", "shinyWidgets",
+                      "shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools")
+for (i in RequiredPackages) { #Installs packages if not yet installed
+  if (!require(i, character.only = TRUE)) install.packages(i)
+}
+
+if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
+
 runGitHub("MESuRS-Lab/mwss-App")
+
+
 ````
 The main package used is mwss available in our GitHub page: https://github.com/MESuRS-Lab/mwss
 

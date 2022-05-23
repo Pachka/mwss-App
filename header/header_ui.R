@@ -1,5 +1,5 @@
 # Title
-header <- dashboardHeader(
+header <- shinydashboard::dashboardHeader(
   title = "Disease spread estimate",
 
   tags$li(a(href = 'https://www.cnam.eu/site-en/',

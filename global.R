@@ -8,7 +8,7 @@ for (i in RequiredPackages) { #Installs packages if not yet installed
   if (!require(i, character.only = TRUE)) install.packages(i)
 }
 
-  if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
+if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
 
 # Parameters dataset
 source('data/O1.R', local = TRUE)
