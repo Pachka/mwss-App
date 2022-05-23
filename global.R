@@ -12,7 +12,10 @@ new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"
 #install missing ones
 if(length(new.packages)) install.packages(new.packages, dependencies = TRUE)
 
-sapply(list.of.packages, function(pck) library(pck))
+sapply(list.of.packages, function(pck){
+  require(pck, character.only = TRUE)
+  })
+
 
 if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
 
