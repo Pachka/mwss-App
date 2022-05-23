@@ -1,12 +1,18 @@
 # Load and if necessary install packages
-RequiredPackages <- c("shiny", "dplyr", "DT",
+#list of packages required
+list.of.packages <- c("shiny", "dplyr", "DT",
                       "ggplot2", "statnet", "igraph",
                       "network", "shinydashboard", "shinyjs",
                       "plotly", "magrittr", "SimInf", "data.table", "shinyWidgets",
                       "shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools")
-for (i in RequiredPackages) { #Installs packages if not yet installed
-  if (!require(i, character.only = TRUE)) install.packages(i)
-}
+
+#checking missing packages from list
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+
+#install missing ones
+if(length(new.packages)) install.packages(new.packages, dependencies = TRUE)
+
+sapply(list.of.packages, function(pck) library(pck))
 
 if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
 
