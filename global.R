@@ -16,7 +16,6 @@ sapply(list.of.packages, function(pck){
   require(pck, character.only = TRUE)
   })
 
-
 if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
 
 # Parameters dataset
