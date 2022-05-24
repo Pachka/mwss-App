@@ -1,3 +1,5 @@
+--- Application under development ---
+
 ## mwss-App: an R-Shiny application to run stochastic simulation of infectious diseases spreading in healthcare systems structured as networked metapopulations
 
 <font size="-2">
