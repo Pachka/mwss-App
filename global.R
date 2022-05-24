@@ -16,6 +16,11 @@ sapply(list.of.packages, function(pck){
   require(pck, character.only = TRUE)
   })
 
+outdatedpck <- old.packages()
+if(TRUE %in% (list.of.packages %in% outdatedpck))
+  warning(paste("You might need to update the following packages:", 
+                paste(list.of.packages[which(list.of.packages %in% outdatedpck)], collapse = ", ")))
+
 if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
 
 # Parameters dataset
