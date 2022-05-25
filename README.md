@@ -36,24 +36,42 @@ Preprint available at: <a href="" target="_blank"> doi: </a>
 Open your R console or RStudio and paste the commands provided below. 
 mwss-App will automatically install all required dependencies (R packages).
 ````
-# Load and, if necessary, install packages
-RequiredPackages <- c("shiny", "dplyr", "DT",
-                      "ggplot2", "statnet", "igraph",
-                      "network", "shinydashboard", "shinyjs",
-                      "plotly", "magrittr", "SimInf", "data.table", "shinyWidgets",
-                      "shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools")
-for (i in RequiredPackages) { #Installs packages if not yet installed
-  if (!require(i, character.only = TRUE)) install.packages(i)
-}
-
-if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
-
+library("shiny")
 runGitHub("MESuRS-Lab/mwss-App")
-
 ````
 The main package used is mwss available in our GitHub page: https://github.com/MESuRS-Lab/mwss
 
 Required Shiny version >= 1.7.1 
+### Dependencies
+This version of mwss-App was developed on R version 4.1.3 (2022-03-10) with Windows 10 x64 (build 18363) using the following version of dependencies:
+````
+mwss-App
+├── shiny_1.7.1
+├── shinyalert_3.0.0
+├── shinydashboard_0.7.2 
+├── shinyhelper_0.3.2
+├── shinyjs_2.1.0
+├── shinyTime_1.0.1
+├── shinyWidgets_0.7.0
+├── DT_0.23
+├── data.table_1.14.2
+├── SimInf_9.0.0
+├── statnet_2019.6
+├── igraph_1.3.1
+├── network_1.17.2
+├── plotly_4.10.0
+├── magrittr_2.0.3
+├── dplyr_1.0.9
+├── knitr_1.39
+├── devtools_2.4.3
+├── ggplot2_3.3.6
+````
+The package mwss developed simultaneously should always be up to date with the online version.
+
+````
+library(devtools)
+install_github("MESuRS-Lab/mwss")
+````
 
 ## Main contents
 
