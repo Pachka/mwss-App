@@ -66,6 +66,7 @@ tabItemSim <- function() {
                 ),
                 conditionalPanel(condition = "input.CSprotocols.includes('ISO')",
                                  box(
+                                   width = 12,
                                  sliderInput(
                                    "pISO",
                                    label = 'Level of contact restriction or probability to implement contact restriction.',
