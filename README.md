@@ -1,3 +1,5 @@
+--- Application under development ---
+
 ## mwss-App: an R-Shiny application to run stochastic simulation of infectious diseases spreading in healthcare systems structured as networked metapopulations
 
 <font size="-2">
@@ -48,9 +50,10 @@ if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
 
 runGitHub("MESuRS-Lab/mwss-App")
 
-
 ````
 The main package used is mwss available in our GitHub page: https://github.com/MESuRS-Lab/mwss
+
+Required Shiny version >= 1.7.1 
 
 ## Main contents
 
