@@ -8,7 +8,6 @@ params:
   data : NA
   n_days : NA
   n_sim : NA
-  CSprotocols : NA
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)

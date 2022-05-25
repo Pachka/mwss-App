@@ -1376,8 +1376,7 @@ server <- function(input, output, session) {
              model = runmodel,
              variable = reactive(data),
              n_days = reactive(input$n_days),
-             n_sim = reactive(input$n_sim),
-             CSprotocols = reactive(input$CSprotocols))
+             n_sim = reactive(input$n_sim))
 
   callModule(module = exporttraj,
              id = "export_traj",

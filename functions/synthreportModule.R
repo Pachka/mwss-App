@@ -5,7 +5,7 @@ synthreportUI <- function(id) {
     downloadButton(ns("downloadReport"), "Generate report"))
 }
 
-synthreport <- function(input, output, session, model, variable, n_days, n_sim, CSprotocols) {
+synthreport <- function(input, output, session, model, variable, n_days, n_sim) {
   # model()
   ns <- session$ns
 
@@ -27,8 +27,7 @@ synthreport <- function(input, output, session, model, variable, n_days, n_sim, 
         params <- list(control_traj = model(),
                        data = variable(),
                        n_days = n_days(),
-                       n_sim = n_sim(),
-                       CSprotocols = CSprotocols())
+                       n_sim = n_sim())
 
       # save(params, file = "paramsReport.rda")
 
