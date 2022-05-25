@@ -64,6 +64,17 @@ tabItemSim <- function() {
                     )
                   )
                 ),
+                conditionalPanel(condition = "input.CSprotocols.includes('ISO')",
+                                 box(
+                                 sliderInput(
+                                   "pISO",
+                                   label = 'Level of contact restriction or probability to implement contact restriction.',
+                                   min = 0,
+                                   max = 1,
+                                   value = 1,
+                                   step = 0.01
+                                 ))
+                                 ),
                 conditionalPanel(condition = "input.CSprotocols.includes('regscreen')",
                                  box(
                                    checkboxGroupInput(

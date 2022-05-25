@@ -1086,8 +1086,8 @@ server <- function(input, output, session) {
 
 
     pISO <- ifelse('ISO' %in% input$CSprotocols,
-                   TRUE,
-                   FALSE)
+                   input$pISO,
+                   0)
 
     gdata <- build_gdata(
       ##### Infection
