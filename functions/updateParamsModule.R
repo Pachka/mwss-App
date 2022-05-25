@@ -59,6 +59,8 @@ updateParams  <- function(input, output, session){
                                          "tIC",
                                          "tE", "tEA", "tES", "tIA", "tIM", "tIS", "tLI","tHI",
                                          "rsymp", "rsev",
+                                         # Ratio adjusting the excretion rates based on epidemiological stage
+                                         "rEA","rES", "rIA", "rIM","rIS", 
                                          "sensAg", "speAg", "sensPCR", "spePCR"))
                          updateNumericInput(session = .subset2(session, "parent"),
                                             numInput,

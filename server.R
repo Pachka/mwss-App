@@ -632,7 +632,14 @@ server <- function(input, output, session) {
       # Ratio adjusting probability of symptoms for patients compared to general population (professionals)
       rsev = input$rsev,
       # Ratio adjusting probability of severity if symptoms for patients compared to general population (professionals)
-
+      
+      # Ratio adjusting the excretion rates based on epidemiological stage
+      rEA = input$rEA, 
+      rES = input$rES, 
+      rIA = input$rIA, 
+      rIM = input$rIM, 
+      rIS = input$rIS,
+      
       ptestPSAsymp = input$ptestPSAsymp,
       # probability to test symptomatic patients in the screening area
       ptestPSANI = input$ptestPSANI,
@@ -780,6 +787,11 @@ server <- function(input, output, session) {
             "tSLs",
             "rsymp",
             "rsev",
+            "rEA",
+            "rES",
+            "rIA",
+            "rIM",
+            "rIS",
             "sensAg",
             "speAg",
             "sensPCR",
@@ -1232,7 +1244,14 @@ server <- function(input, output, session) {
       # Ratio adjusting probability of symptoms for patients compared to general population (professionals)
       rsev = input$rsev,
       # Ratio adjusting probability of severity if symptoms for patients compared to general population (professionals)
-
+      
+      # Ratio adjusting the excretion rates based on epidemiological stage
+      rEA = input$rEA, 
+      rES = input$rES, 
+      rIA = input$rIA, 
+      rIM = input$rIM, 
+      rIS = input$rIS,
+      
       ptestPSAsymp = input$ptestPSAsymp,
       # probability to test symptomatic patients in the screening area
       ptestPSANI = input$ptestPSANI,
@@ -1332,7 +1351,6 @@ server <- function(input, output, session) {
     trajmwss <- multisim(mwssmodel, input$n_sim, ward_names)
 
     return(trajmwss)
-
   })
 
   output$simoutput <- reactive({

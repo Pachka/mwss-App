@@ -608,6 +608,43 @@ tabItemParams <- function() {
               value = 10,
               min = 0,
               max = 150
+            ),
+            hr(),
+            h5("Ratio adjusting the excretion rate based on epidemiological stage"),
+            numericInput(
+              'rEA',
+              'Exposed to become asymptomatic',
+              value = 0.35,
+              min = 0,
+              max = 1
+            ),
+            numericInput(
+              'rES',
+              'Exposed to become symptomatic',
+              value = 1,
+              min = 0,
+              max = 1
+            ),
+            numericInput(
+              'rIA',
+              'Infectious asymptomatics',
+              value = 0.35,
+              min = 0,
+              max = 1
+            ),
+            numericInput(
+              'rIM',
+              'Infectious with mild symptoms',
+              value = 1,
+              min = 0,
+              max = 1
+            ),
+            numericInput(
+              'rIS',
+              'Infectious with severe symptoms',
+              value = 1,
+              min = 0,
+              max = 1
             )
           ),
           box(
