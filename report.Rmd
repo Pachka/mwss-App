@@ -154,9 +154,16 @@ library(magrittr)
     
 ```
 
+
 ```{r, results='asis'}
 cat('This report present synthetic results of', nsim,' simulations run for a', nward, "-wards healthcare facility. The wards are connected by the professionals. In this report, the simulations run with the baseline scenario: without any control nor surveillance measure (contact restriction, regular random screening, screening area at the admission, are compared to simulations run with:", 
-params$CSprotocols %>% match(., c("ISO", "regscreen", "SA")) %>% c("confinement/contact restriction to detected patients", "implementation of random tests at regular intervals"," implementation of a screening area at patient admission including contact restriction/clinical examination/test")[.] %>% paste(., collapse = " / "),".")
+class(params$control_traj) %>% match(., c("ISO", "SA", "ScreenP", "ScreenH", "TestSympP", "TestSympH")) %>% 
+  c("confinement/contact restriction to detected patients", 
+    " implementation of a screening area at patient admission including contact restriction/clinical examination/test",
+    " screening of patients by implementation of tests on a random subset of patient population at regular intervals",
+    " screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals",
+    " positive probability to test symptomatic patients",
+    " positive probability to test symptomatic healthcare workers")[.] %>% paste(., collapse = " / "),".")
 ```
 
 

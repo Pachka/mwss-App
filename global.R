@@ -24,7 +24,6 @@ if(TRUE %in% (list.of.packages %in% outdatedpck))
 install_github("MESuRS-Lab/mwss")
 library("mwss")
 
-
 # Parameters dataset
 source('data/O1.R', local = TRUE)
 source('data/O2.R', local = TRUE)
