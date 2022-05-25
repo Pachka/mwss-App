@@ -21,7 +21,9 @@ if(TRUE %in% (list.of.packages %in% outdatedpck))
   warning(paste("You might need to update the following packages:", 
                 paste(list.of.packages[which(list.of.packages %in% outdatedpck)], collapse = ", ")))
 
-if (!require("mwss", character.only = TRUE)) install_github("MESuRS-Lab/mwss")
+install_github("MESuRS-Lab/mwss")
+library("mwss")
+
 
 # Parameters dataset
 source('data/O1.R', local = TRUE)
