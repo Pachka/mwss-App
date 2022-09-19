@@ -26,7 +26,7 @@ valueboxoutput <- function(input, output, session, model) {
                      focus = "infections")$H$quantiles_noso[["50%"]],
              ""),
       HTML("Number of nosocomial  <br/> infection among professionals"),
-      icon = icon("user-md"),
+      icon = icon("user-md", verify_fa = FALSE),
       color = "red",
       width = NULL
     )
@@ -74,7 +74,8 @@ valueboxoutput <- function(input, output, session, model) {
         ""
       ),
       HTML("Number of tests of patients <br/> "),
-      icon = icon("exclamation-triangle"),
+      icon = icon("exclamation-triangle",
+                  verify_fa = FALSE),
       color = "yellow",
       width = NULL
     )
@@ -90,7 +91,8 @@ valueboxoutput <- function(input, output, session, model) {
         ""
       ),
       HTML("Number of tests of professionals <br/> "),
-      icon = icon("exclamation-triangle"),
+      icon = icon("exclamation-triangle",
+                  verify_fa = FALSE),
       color = "yellow",
       width = NULL
     )
@@ -130,7 +132,7 @@ valueboxoutput <- function(input, output, session, model) {
       HTML(
         "Maximal number of professionals <br/>simulataneously in sick leave"
       ),
-      icon = icon("user-md"),
+      icon = icon("user-md", verify_fa = FALSE),
       color = "green",
       width = NULL
     )

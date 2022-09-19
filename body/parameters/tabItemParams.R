@@ -585,7 +585,9 @@ tabItemParams <- function() {
               # sliderInput("alphalabelpos",
               #             "Position of the ward names (angle)",
               #             min = 1, max = 10, value = 2),
-              h4('Red: proportion of non immune individuals, orange: proportion of individuals with low immunity, gree: proportion of individuals with high immunity.')
+              h4('Legend: <br> Red - proportion of non immune individuals, 
+              orange: proportion of individuals with low immunity, 
+                 gree: proportion of individuals with high immunity.'),
                 plotOutput("imm_plot")),
               # div(
               #   style = "display: inline-block;vertical-align:top;"
