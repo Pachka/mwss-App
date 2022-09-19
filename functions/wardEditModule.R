@@ -45,7 +45,7 @@ wardEdit  <- function(input, output, session, variable) {
             h5("Changing the number of professionals will reset the plannings of all healthcare workers of the ward at 100% in the ward. If you already adjust the professional planning, consider adding/removing specific professionals within the professional planning panel."),
             numericInput(
               'LSNEW',
-              'Average length of stay (days)',
+              'Average patient length of stay (days)',
               value = 1,
               min = 1,
               step = 1

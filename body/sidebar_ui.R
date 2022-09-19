@@ -25,7 +25,7 @@ sidebar <- dashboardSidebar(
     ##################################
 
 
-    menuItem("Parameters", icon = icon("fas fa-sliders-h"), tabName = "PARAMS"),
+    menuItem("Parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"),
 
     ###################
     ###################
@@ -41,7 +41,7 @@ sidebar <- dashboardSidebar(
     #############
     #############
 
-    menuItem("About", icon = icon("sticky-note"), tabName = "ABOUT") # icon could also be "book
+    menuItem("About", icon = icon("sticky-note", verify_fa = FALSE), tabName = "ABOUT") # icon could also be "book
 
   )
 

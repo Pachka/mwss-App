@@ -12,6 +12,7 @@ tabItemStructure <- function() {
               div(style = "display: inline-block;vertical-align:top;",
                   fileInput("loadwards",
                             "", # FIX ME: Explain in How to use: Upload a pre-recorded set of wards/buildings
+                            buttonLabel = "Browse RDA file",
                             accept = c("rda", ".Rda"))),
               div(
                 style = "display: inline-block;vertical-align:top;",
@@ -45,17 +46,18 @@ tabItemStructure <- function() {
             ),
             tabPanel(
               title = "How to use",
-              icon = icon("question-circle"),
+              icon = icon("question-circle",
+                          verify_fa = FALSE),
               h3(
                 "Organizational structure of the healthcare facility and epidemiological impact."
               ),
               p(
                 "
-                Contact network, responsible for disease introduction and spread in healthcare facilities, implies
+                Contact networks, responsible for disease introduction and spread in healthcare facilities, connect
                 several subpopulations: medical staff, patients and visitors, potentially structured in subgroups such as:  departments, wards, and rooms.
                 In the frame of evaluating nosocomial transmission of Sars-CoV-2 in healthcare facilities,
                 MWSS considers direct transmission routes through effective contacts among those populations structured in wards.
-                Healthcare workers can be contaminated either at work: by infectious patients or infectious professionals, or in community.
+                Healthcare workers can be contaminated either at work: by infectious patients or infectious professionals, or in the community.
                 Patients can be contaminated by infectious patients and professionals but also by infectious visitors."
               ),
               # https://doi.org/10.1016/j.jtbi.2008.07.001
@@ -63,7 +65,7 @@ tabItemStructure <- function() {
               HTML(
                 "
                 In this panel, you can inform the social network structure of your system.
-                That structure will shape the spread and introduction of the pathogen.
+                That structure will influence the spread of the pathogen after its introduction.
                 <br>
                 In the <b>'Structure'</b> tab, inform mwss about the structure of the system you want to represent.
                 <br>
@@ -79,15 +81,17 @@ tabItemStructure <- function() {
                 "The time spent by professionals into each ward can be adjusted using the 'Modify time distribution' button.
                 Total working time of a professional can be more or less than 100%,
                 nevertheless the `total` column will be highlighting those particular cases respectively in red and green to avoid mistake.
-                When professionals are spending time in multiple wards, it creates a connection between
-                those wards that will graphically appears on the connectivity network plot.
+                When professionals are spending time in multiple wards, a connection between
+                those wards graphically appears on the connectivity network plot.
                 "
               ),
-              h3("Save you structure"),
+              h3("Save your structure"),
               p(
-                "In the upper part of this panel, you can use the green button: 'Download' to upload a structure,
+                "In the upper part of this panel, you can use the green button: 'Download' to save a registered structure,
                  the associated buttons 'Browse' and 'Upload' to load a previously saved structure and the 'Clear' button to reset the tool.
                  Please, note that uploading a dataset or clearing the structure will erase everything that has been previously recorded.
+                 The 'Download' button will save the dataset under a Rda format (R Data file) associated with the R program.
+                 This file can be loaded in the R-shiny application 'MWSS-App' or in R.
                 "
               ),
               h3("No copy of your entries is saved anywhere, neither on the cloud nor on our servers, remember to download it locally for
@@ -100,7 +104,8 @@ tabItemStructure <- function() {
             ),
             tabPanel(
               title = "Structure",
-              icon = icon("sliders-h"),
+              icon = icon("sliders-h",
+                          verify_fa = FALSE),
               box(
                 title = "General structure",
                 solidHeader = T,

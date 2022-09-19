@@ -22,10 +22,10 @@ tabItemPresentation <- function() {
 <br>
 <br>
           The second section concerns the parameters of the epidemiological model.
-          This section is divided into four sub-sections which concern either the structure itself ('Epidemiological parameters'),
+          This section is divided into four sub-sections. These concern the epidemiological characteristics of a specific population ('Epidemiological parameters'),
           the characteristics of the tests used ('Test-related parameters'),
-          the levels of immunity in the different sub-populations studied (patients and healthcare workers in each department; 'Immunity-related parmeters'),
-          or finally the last sub-section display complementary parameters used by the model, those were taken from the literature and should not require any modification.
+          the levels of immunity in the different sub-populations studied (patients and healthcare workers in each department; 'Immunity-related parameters').
+          The last subsection displays complementary parameters used by the model, there were taken from the literature and should not require any modification.
 <br>
 <br>
           The last section concerns the monitoring and control scenarios.

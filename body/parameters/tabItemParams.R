@@ -19,6 +19,7 @@ tabItemParams <- function() {
           fileInput(
             "loadparams",
             "Upload a pre-recorded set of parameters",
+            buttonLabel = "Browse RDA file",
             accept = c("rda", ".Rda")
           )
         ),
@@ -40,7 +41,8 @@ tabItemParams <- function() {
       ),
       tabPanel(
         title = "How to use",
-        icon = icon("question-circle"),
+        icon = icon("question-circle",
+                    verify_fa = FALSE),
         h3("Epidemiological parameters"),
         HTML(
           "In this panel, you can adjust the epidemiological parameters.
@@ -50,30 +52,35 @@ tabItemParams <- function() {
         h3("Upload a baseline set of parameters"),
         HTML(
           "In the upper part of this panel, you can use either the scrolling list, to select a SARS-CoV-2 variants,
-          or sequentially both buttons 'Browse' and 'Upload' to load a previously saved set of parameters.
-          Parameters loaded using the scrolling list were defined using literature review (see Reference tab) and
-          parameters estimation statistical approaches.
+          or the buttons 'Browse' and 'Upload' to load a previously saved set of parameters.
+          Parameters loaded using the scrolling list were defined based on the literature (see Reference tab) and
+          parameter estimation statistical approaches.
           <br>
-          Be careful, upload new parameters will erase any modified parameters. Think about regularly saving your inputs using the 'Download' button."
+          Be careful, uploading new parameters will erase any modified parameters. Think about regularly saving your inputs using the 'Download' button.
+          <br>
+          Using the 'Download' button allows saving the set of parameters in RDA file.
+          This file contains a list of parameters and can be opened in the MWSS-App as well as directly using the R software."
         ),
         h3("Adjust parameters"),
         h4("Epidemiological parameters"),
         HTML(
           "In this tab, use the left part to inform mwss about the specificities in your facility related to professionals (<b>sick leave</b>: SL and <b>extended sick leave</b>: ESL)
           and patients (<b>intensive care</b>: IC and <b>potential comorbidities or resistance</b>).
-          For example, children are a lot less likely to develop severe symptoms, and inversely older are more likely to develop severe symptoms.
+          For example, children are a lot less likely to develop severe symptoms, while older individuals are more likely to develop severe symptoms.
           Use the right part to characterize contacts between populations (quantity, duration and level of infection control).
-          For example, infection control of children during visits could be lower than with professionals."
+          For example, infection control of children during visits could be lower than with professionals.
+          <br>
+          <b>All parameters are pre-entered and may be left as they are.</b>"
         ),
         h4("Test-related parameters"),
         HTML(
-        "In this tab, use the left part to inform mwss about the used test (specificity, sensibility, duration and targeted population).
-        Two type of tests are proposed:
+        "In this tab, use the left part to inform mwss about the used test (specificity, sensibility, delay before result and targeted population).
+        Two types of tests are proposed:
         <ol>
         <li>antigen detection rapid diagnostic test (Ag-RDT), and</li>
         <li>real-time reverse transcription polymerase chain reaction assay (RT-PCR).</li>
         </ol>
-        In essence, both type of test being define by their specificity, sensibility and duration, it can be any type test,
+        In essence, both types of test are defined by their specificity, sensibility and duration, it can be any type test,
         nevertheless, in its stage of developement, mwss only provides the possibility of discriminating two types of tests
         used either for patient or professional screening, or for symptomatic patients confirmation.
         <br>
@@ -90,20 +97,20 @@ tabItemParams <- function() {
         <li> individuals with a high immunity level (considering either a recent vaccine injection or recovery: HI). </li>
         </ol>
         <br>
-        Those three levels of immunity impact the probabilities of contacting the disease, and developing both mild and severe symptoms.
+        Those three levels of immunity impact the probabilities of both contracting the disease, and developing mild or severe symptoms.
         <br>
           By default, all patients and professionals are considered as fully susceptible (neither vaccinated nor recovered).
           In this tab, you can specify the initial immunity state of your population.
-          Your population will be randomly sampled based on probability weights define for each immunity level.
-          You can choose to use national proportion as probabilities, or set you own probability.
+          Your population will be randomly sampled based on probability weights defined for each immunity level.
+          You can choose to use national proportions as probabilities, or set you own probabilities.
           You can also choose to use different probabilities for different wards (for example,
-          you may face different immunity populations in a paediatric ward and in a psychiatric ward).
+          you may face different immunity levels in paediatric, geriatric or psychiatric wards).
           "
         ),
         h4("Expert corner"),
         HTML(
           "
-          This tab is mainly reserved to epidemiologists, nevertheless if you want to take your chance here, you have access to all the model parameters.
+          This tab is mainly reserved to epidemiologists, nevertheless if you whish to, you have access to all the model parameters here.
           <br>
           Using this tab, you can change the daily incidence, the basic reproduction number (R0) and the average disease duration.
           Those parameters will affect the probability of contamination of professionals in the community (outside of work), as well as
@@ -122,18 +129,19 @@ tabItemParams <- function() {
       ),
       tabPanel(
         title = "Epidemiological parameters",
-        icon = icon("sliders-h"),
+        icon = icon("sliders-h",
+                    verify_fa = FALSE),
         fluidRow(
           box(
-            title = "Specificities in your facility",
+            title = "Specificities of your facility for COVID-19 management",
             solidHeader = T,
             column(
               width = 6,
-              h4("Health care workers"),
+              h4("Health care workers (HCWs)"),
               br(),
               sliderInput(
                 "pSL",
-                label = 'Probability that professionals developping mild symptoms takes sick leave',
+                label = 'Probability that HCWs developping mild symptoms take sick leave',
                 min = 0,
                 max = 100,
                 value = 30,
@@ -141,7 +149,7 @@ tabItemParams <- function() {
               ),
               sliderInput(
                 "pESL",
-                label = 'Probability that HCWS developping severe symptoms takes extended sick leave',
+                label = 'Probability that HCWS developping severe symptoms take extended sick leave',
                 min = 0,
                 max = 100,
                 value = 100,
@@ -161,7 +169,8 @@ tabItemParams <- function() {
               ),
               sliderInput(
                 "pSLT",
-                label = 'Probability that to take sick leave after positive test',
+                # label = 'Probability to take sick leave after a positive test',
+                label = 'Probability that non-symptomatic HCWs with a positive test take sick leave.',
                 min = 0,
                 max = 100,
                 value = 10,
@@ -169,7 +178,7 @@ tabItemParams <- function() {
               ),
               numericInput(
                 'tw',
-                'Average number of working hours per professional per week (hours)',
+                'Average number of working hours per fulltime professional per week (hours)',
                 value = 35,
                 min = 1,
                 max = 70,
@@ -181,7 +190,7 @@ tabItemParams <- function() {
               h4("Patients"),
               sliderInput(
                 "pIC",
-                label = 'When developing severe symptoms, what is the probability of transfer in another facility (eg. intensive care)?',
+                label = 'When developing severe symptoms, what is the probability of transfer to another facility (eg. intensive care outside of the institut)?',
                 min = 0,
                 max = 100,
                 value = 30,
@@ -191,7 +200,7 @@ tabItemParams <- function() {
                 condition = "input.pIC > 0",
                 numericInput(
                   'tIC',
-                  'Average number of days outside the facility (eg. intensive care)',
+                  'Average number of days outside the facility (eg. in intensive care)',
                   value = 15,
                   min = 1,
                   step = 0.5
@@ -213,7 +222,8 @@ tabItemParams <- function() {
                   value = FALSE,
                   width = NULL
                 ),
-                icon = "question-circle",
+                icon = icon("question-circle",
+                            verify_fa = FALSE),
                 colour = "red",
                 type = "markdown",
                 content = "HelpBoxComorbidities"
@@ -230,7 +240,8 @@ tabItemParams <- function() {
                     value = 1,
                     step = 0.01
                   ),
-                  icon = "exclamation-triangle",
+                  icon = icon("exclamation-triangle",
+                              verify_fa = FALSE),
                   colour = "orange",
                   type = "inline",
                   content = textOutput("rsympInfo")
@@ -245,7 +256,8 @@ tabItemParams <- function() {
                     value = 1,
                     step = 0.01
                   ),
-                  icon = "exclamation-triangle",
+                  icon = icon("exclamation-triangle",
+                              verify_fa = FALSE),
                   colour = "orange",
                   type = "inline",
                   content = paste(
@@ -256,14 +268,14 @@ tabItemParams <- function() {
             )
           ),
           box(
-            title = "Characterize person-to-person contacts within your facility",
+            title = "Person-to-person contacts within your facility",
             solidHeader = T,
             column(
               width = 6,
               h4("Patients-to-Patient"),
               sliderInput(
                 "n_ctcP_PW",
-                label = 'How many patients on average each healthecare worker comes in contact with on a daily basis?',
+                label = 'How many patients on average does each HCW come in contact with on a daily basis?',
                 min = 0,
                 max = 15,
                 value = 4
@@ -287,10 +299,10 @@ tabItemParams <- function() {
                 )
               ),
               hr(),
-              h4("Caregiver-to-Caregiver"),
+              h4("HCW-to-HCW"),
               sliderInput(
                 "n_ctcH_H",
-                label = 'How many healthecare worker on average each healthecare worker comes in contact with on a daily basis?',
+                label = 'How many HCW on average does each HCW come in contact with on a daily basis?',
                 min = 0,
                 max = 15,
                 value = 5
@@ -316,10 +328,10 @@ tabItemParams <- function() {
             ),
             column(
               width = 6,
-              h4("Patients-to-Caregivers"),
+              h4("Patients-to-HCWs"),
               sliderInput(
                 "n_ctcH_PW",
-                label = 'How many healthecare worker on average each patient comes in contact with on a daily basis?',
+                label = 'How many HCW on average does each patient come in contact with on a daily basis?',
                 min = 0,
                 max = 15,
                 value = 4
@@ -374,7 +386,8 @@ tabItemParams <- function() {
       ),
       tabPanel(
         title = "Test-related parameters",
-        icon = icon("sliders-h"),
+        icon = icon("sliders-h",
+                    verify_fa = FALSE),
         fluidPage(
           box(
             width = 9,
@@ -517,7 +530,8 @@ tabItemParams <- function() {
       ),
       tabPanel(
         title = "Immunity-related parameters",
-        icon = icon("sliders-h"),
+        icon = icon("sliders-h",
+                    verify_fa = FALSE),
         fluidRow(
           box(
             title = "Here you can define the initial immunity state of your facility",
@@ -581,7 +595,8 @@ tabItemParams <- function() {
       ),
       tabPanel(
         title = "Expert corner",
-        icon = icon("sliders-h"),
+        icon = icon("sliders-h",
+                    verify_fa = FALSE),
         fluidRow(
           box(
             width = 2,
@@ -660,7 +675,8 @@ tabItemParams <- function() {
                   max = 1,
                   step = 0.01
                 ),
-                icon = "exclamation-triangle",
+                icon = icon("exclamation-triangle",
+                            verify_fa = FALSE),
                 colour = "orange",
                 type = "inline",
                 content = paste(
@@ -702,7 +718,8 @@ tabItemParams <- function() {
                   max = 1,
                   step = 0.01
                 ),
-                icon = "exclamation-triangle",
+                icon = icon("exclamation-triangle",
+                            verify_fa = FALSE),
                 colour = "orange",
                 type = "inline",
                 content = paste(

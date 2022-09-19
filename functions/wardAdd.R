@@ -27,7 +27,7 @@ wardAddPanel <- function(input, output, session) {
           ),
           numericInput(
             'LS',
-            'Average length of stay (days)',
+            'Average patient length of stay (days)',
             value = 1,
             min = 1,
             step = 1

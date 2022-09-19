@@ -11,7 +11,8 @@ tabItemSim <- function() {
             id = "tabsSIM",
             tabPanel(
               title = "How to use",
-              icon = icon("question-circle"),
+              icon = icon("equestion-circle",
+                          verify_fa = FALSE),
               h3("Simulation panel"),
               HTML(
                 "In this panel, you can run various surveillance and control scenarios to assess their impact on the disease spread."
@@ -50,7 +51,8 @@ tabItemSim <- function() {
             ),
             tabPanel(
               title = "Simulations",
-              icon = icon("sliders-h"),
+              icon = icon("sliders-h",
+                          verify_fa = FALSE),
               fluidRow(
                 box(
                   width = 12,

@@ -1222,7 +1222,7 @@ server <- function(input, output, session) {
 
       pIC = input$pIC / 100,
       # probability to be transfer in intensive care
-      pdieIC = input$pdieIC / 100,
+      pdieIC = input$pdieIC / 100,####################### FIX HERE
       # probability to die in intensive care
 
       ###################################
@@ -1235,33 +1235,33 @@ server <- function(input, output, session) {
       hLI2HI = input$hLI2HI,
       # daily probability to become fully immune
 
-      rinfLI = input$rinfLI,
-      # partial immunity efficiency % FIX ME better explain that this is the ratio of reduction of probability to be infected compared to non immune
-      rinfHI = input$rinfHI,
-      # partial immunity efficiency % FIX ME better explain that this is the ratio of reduction of probability to be infected compared to non immune
+    rinfLI = input$rinfLI,
+    # partial immunity efficiency % FIX ME better explain that this is the ratio of reduction of probability to be infected compared to non immune
+    rinfHI = input$rinfHI,
+    # partial immunity efficiency % FIX ME better explain that this is the ratio of reduction of probability to be infected compared to non immune
 
-      rsymp = input$rsymp,
-      # Ratio adjusting probability of symptoms for patients compared to general population (professionals)
-      rsev = input$rsev,
-      # Ratio adjusting probability of severity if symptoms for patients compared to general population (professionals)
-      
-      # Ratio adjusting the excretion rates based on epidemiological stage
-      rEA = input$rEA, 
-      rES = input$rES, 
-      rIA = input$rIA, 
-      rIM = input$rIM, 
-      rIS = input$rIS,
-      
-      ptestPSAsymp = input$ptestPSAsymp,
-      # probability to test symptomatic patients in the screening area
-      ptestPSANI = input$ptestPSANI,
-      # probability to test NI patients in the screening area
-      ptestPSALI = input$ptestPSALI,
-      # probability to test PI patients in the screening area
-      ptestPSAHI = input$ptestPSAHI,
-      # probability to test FI patients in the screening area
+    rsymp = input$rsymp,
+    # Ratio adjusting probability of symptoms for patients compared to general population (professionals)
+    rsev = input$rsev,
+    # Ratio adjusting probability of severity if symptoms for patients compared to general population (professionals)
 
-      ptestPWsymp = input$ptestPWsymp / 100,
+    # Ratio adjusting the excretion rates based on epidemiological stage
+    rEA = input$rEA,
+    rES = input$rES,
+    rIA = input$rIA,
+    rIM = input$rIM,
+    rIS = input$rIS,
+
+    ptestPSAsymp = input$ptestPSAsymp,
+    # probability to test symptomatic patients in the screening area
+    ptestPSANI = input$ptestPSANI,
+    # probability to test NI patients in the screening area
+    ptestPSALI = input$ptestPSALI,
+    # probability to test PI patients in the screening area
+    ptestPSAHI = input$ptestPSAHI,
+    # probability to test FI patients in the screening area
+
+    ptestPWsymp = input$ptestPWsymp / 100,
       # probability to test symptomatic patients in the ward
       ptestPWNI = ptestPWNI,
       # probability to test NI patients in the ward
