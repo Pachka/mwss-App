@@ -5,8 +5,8 @@ setIMMstateUI <-
     ns <- NS(id)
 
     radiobuttonChoices <- c(
-      "Use the national levels of immunity" = "NL",
-      "Modify levels of immunity" = "ML",
+      "Use the national levels of immunity for the simulated variant" = "NL",
+      "Modify levels of immunity globally" = "ML",
       "I"
     )
     names(radiobuttonChoices)[3] <-

@@ -15,7 +15,7 @@ diseasetimelineUI <-
         ),
         numericInput(
           ns('tEA'),
-          'Average duration of contagious incubating period for futur asymptomatic (days)',
+          'Average duration of contagious incubating period for future asymptomatic (days)',
           value = 2,
           min = 0,
           step = 0.5
@@ -32,7 +32,7 @@ diseasetimelineUI <-
         2,
         numericInput(
           ns('tES'),
-          'Average duration of contagious incubating period for futur symptomatic (days)',
+          'Average duration of contagious incubating period for future symptomatic (days)',
           value = 2,
           min = 0,
           step = 0.5

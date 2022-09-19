@@ -100,7 +100,7 @@ tabItemParams <- function() {
         Those three levels of immunity impact the probabilities of both contracting the disease, and developing mild or severe symptoms.
         <br>
           By default, all patients and professionals are considered as fully susceptible (neither vaccinated nor recovered).
-          In this tab, you can specify the initial immunity state of your population.
+          In this tab, you can specify the initial immunity state population.
           Your population will be randomly sampled based on probability weights defined for each immunity level.
           You can choose to use national proportions as probabilities, or set you own probabilities.
           You can also choose to use different probabilities for different wards (for example,
@@ -397,7 +397,7 @@ tabItemParams <- function() {
               width = 4,
               radioButtons(
                 "testPW",
-                "What kind of test are you using to test patients?",
+                "What kind of test are you using to systematically test patients?",
                 choiceNames =
                   list("Ag-RDT", "RT-PCR"),
                 choiceValues =
@@ -406,7 +406,7 @@ tabItemParams <- function() {
               ),
               radioButtons(
                 'testH',
-                "What kind of test are you using to test professionals?",
+                "What kind of test are you using to systematically test professionals?",
                 choiceNames =
                   list("Ag-RDT", "RT-PCR"),
                 choiceValues =
@@ -415,7 +415,7 @@ tabItemParams <- function() {
               ),
               radioButtons(
                 'testsymp',
-                "What kind of test are you using to test symptomatic (both patients and professionals)?",
+                "What kind of test are you using to test symptomatic individuals (either patients or professionals)?",
                 choiceNames =
                   list("Ag-RDT", "RT-PCR"),
                 choiceValues =
@@ -449,7 +449,7 @@ tabItemParams <- function() {
                 ),
                 timeInput(
                   'tAg',
-                  'Duration from test to action (H:M)',
+                  'Average delay between test and action (H:M)',
                   seconds = FALSE,
                   value = strptime("00:30", "%R")
                 )
@@ -534,7 +534,7 @@ tabItemParams <- function() {
                     verify_fa = FALSE),
         fluidRow(
           box(
-            title = "Here you can define the initial immunity state of your facility",
+            title = "Here you can define the initial immunity status of patients and professionals within your facility",
             width = 12,
             solidHeader = T,
             conditionalPanel(
@@ -558,7 +558,7 @@ tabItemParams <- function() {
           conditionalPanel(
             "output.atleastoneward == true",
             box(
-              title = "Visualize the immunity levels of each ward and remove entries",
+              title = "Visualize the immunity levels of each ward",
               width = 12,
               solidHeader = T,
               column(5,
@@ -585,6 +585,7 @@ tabItemParams <- function() {
               # sliderInput("alphalabelpos",
               #             "Position of the ward names (angle)",
               #             min = 1, max = 10, value = 2),
+              h4('Red: proportion of non immune individuals, orange: proportion of individuals with low immunity, gree: proportion of individuals with high immunity.')
                 plotOutput("imm_plot")),
               # div(
               #   style = "display: inline-block;vertical-align:top;"
@@ -600,6 +601,7 @@ tabItemParams <- function() {
         fluidRow(
           box(
             width = 2,
+            title = 'Characteristics of the variant in the community',
             numericInput(
               'I',
               'Daily incidence for 100,000 persons',
@@ -628,21 +630,21 @@ tabItemParams <- function() {
             h5("Ratio adjusting the excretion rate based on epidemiological stage"),
             numericInput(
               'rEA',
-              'Exposed to become asymptomatic',
+              'Exposed pre-asymptomatic',
               value = 0.35,
               min = 0,
               max = 1
             ),
             numericInput(
               'rES',
-              'Exposed to become symptomatic',
+              'Exposed pre-symptomatic',
               value = 1,
               min = 0,
               max = 1
             ),
             numericInput(
               'rIA',
-              'Infectious asymptomatics',
+              'Infectious asymptomatic',
               value = 0.35,
               min = 0,
               max = 1
@@ -685,7 +687,7 @@ tabItemParams <- function() {
                 ),
               sliderInput(
                 'rinfLI',
-                'Low immunity efficiency (probability to be infected compared to non immune)',
+                'Low immunity impact (probability to be infected compared to non immune individuals)',
                 value =  0.70,
                 min = 0,
                 max = 1,
@@ -712,7 +714,7 @@ tabItemParams <- function() {
               helper(
                 sliderInput(
                   'pHI_NL',
-                  'Proportion of the population with low immunity (probability to have low immunity level at the admission)',
+                  'Proportion of the population with high immunity (probability to have high immunity level at the admission)',
                   value =  0.50,
                   min = 0,
                   max = 1,
@@ -727,7 +729,7 @@ tabItemParams <- function() {
                 )),
               sliderInput(
                 'rinfHI',
-                'High immunity efficiency (probability to be infected compared to non immune)',
+                'High immunity impact (probability to be infected compared to non immune individuals)',
                 value =  0.50,
                 min = 0,
                 max = 1,
@@ -766,7 +768,7 @@ tabItemParams <- function() {
               ),
               sliderInput(
                 'psympLI',
-                'With old (>3 month) history of infection or vaccination',
+                'With low immunity', # old (>3 month) history of infection or vaccination',
                 value = 0.2,
                 min = 0,
                 max = 1,
@@ -774,7 +776,7 @@ tabItemParams <- function() {
               ),
               sliderInput(
                 'psympHI',
-                'With recent (<= 3 month) history of infection or vaccination',
+                'With high immunity',# recent (<= 3 month) history of infection or vaccination',
                 value = 0.2,
                 min = 0,
                 max = 1,
@@ -796,7 +798,7 @@ tabItemParams <- function() {
               ),
               sliderInput(
                 'psevLI',
-                'With old (>3 month) history of infection or vaccination',
+                'With low immunity', # old (>3 month) history of infection or vaccination',
                 value = 0.3,
                 min = 0,
                 max = 1,
@@ -804,7 +806,7 @@ tabItemParams <- function() {
               ),
               sliderInput(
                 'psevHI',
-                'With recent (<= 3 month) history of infection or vaccination',
+                'With high immunity', # recent (<= 3 month) history of infection or vaccination',
                 value = 0.1,
                 min = 0,
                 max = 1,
