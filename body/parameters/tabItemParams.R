@@ -117,7 +117,7 @@ tabItemParams <- function() {
           the probability to receive a infectious visitor.
           You can also adjust the national proportions and duration of each immunity and epidemiological stages,
           as well as the probability of receiving a vaccination dose.
-          Finally, you can adjust the immunity efficiency.
+          Finally, you can adjust the immunity impact (percentage of protection assigned to each immunity level).
           Epidemiological stages considered in this model are: susceptible (S), exposed but non contagious (E), exposed and contagious either before symptoms (ES) or before asymptomatic stage (EA), infectious either asymptomatic (IA), with mild symptoms (IM) or with severe symptoms (IS).
           "
         ),
@@ -205,15 +205,6 @@ tabItemParams <- function() {
                   min = 1,
                   step = 0.5
                 )
-              ),
-              sliderInput(
-                "pdieIC",
-                label = 'Probability of dying in intensive care',
-                min = 0,
-                max = 100,
-                value = 0.5,
-                step = 0.1,
-                post = " %"
               ),
               helper(
                 checkboxInput(
@@ -815,6 +806,15 @@ tabItemParams <- function() {
                 step = 0.01
               ),
               style = 'border-left: 1px solid'
+            ),
+            sliderInput(
+              "pdieIC",
+              label = 'Probability of dying in intensive care',
+              min = 0,
+              max = 100,
+              value = 0.5,
+              step = 0.1,
+              post = " %"
             )
           )
         ),
