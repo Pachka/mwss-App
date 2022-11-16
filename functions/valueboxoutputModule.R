@@ -40,7 +40,8 @@ valueboxoutput <- function(input, output, session, model) {
                      focus = "infections")$P$quantiles_noso[["50%"]],
              ""),
       HTML("Number of nosocomial  <br/> infection among patients"),
-      icon = icon("bed"),
+      icon = icon("bed",
+                  verify_fa = FALSE),
       color = "red",
       width = NULL
     )
@@ -57,7 +58,8 @@ valueboxoutput <- function(input, output, session, model) {
         ""
       ),
       HTML("Number of severe cases <br/>among patients"),
-      icon = icon("fire"),
+      icon = icon("fire",
+                  verify_fa = FALSE),
       color = "red",
       width = NULL
     )
@@ -114,7 +116,8 @@ valueboxoutput <- function(input, output, session, model) {
         "Maximal number of beds <br/>simulataneously under confinement"
       ),
       # "Maximal number of beds simulataneously under confinement",
-      icon = icon("bed"),
+      icon = icon("bed",
+                  verify_fa = FALSE),
       color = "green",
       width = NULL
     )

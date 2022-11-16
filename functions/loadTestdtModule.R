@@ -3,7 +3,8 @@ loadTestdtUI <- function(id) {
   actionButton(
     ns("testds"),
     "Load example dataset",
-    icon = icon("download"),
+    icon = icon("download",
+                verify_fa = FALSE),
     style = "color: #fff; background-color: #063567; border-color: #2e6da4"
   )
 }

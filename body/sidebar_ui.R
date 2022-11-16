@@ -8,7 +8,8 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     id = "sidebarMenu",
 
-    menuItem("Presentation", icon = icon("book"), tabName = "PRS"),
+    menuItem("Presentation", icon = icon("book",
+                                         verify_fa = FALSE), tabName = "PRS"),
 
     #################
     #################
@@ -16,7 +17,8 @@ sidebar <- dashboardSidebar(
     #################
     #################
 
-    menuItem("Structure", icon = icon("users"), tabName = "STR"),
+    menuItem("Structure", icon = icon("users",
+                                      verify_fa = FALSE), tabName = "STR"),
 
     ##################################
     ##################################
@@ -33,7 +35,8 @@ sidebar <- dashboardSidebar(
     ###################
     ###################
 
-    menuItem("Simulation", icon = icon("play"), tabName = "SIM"),
+    menuItem("Simulation", icon = icon("play",
+                                       verify_fa = FALSE), tabName = "SIM"),
 
     #############
     #############

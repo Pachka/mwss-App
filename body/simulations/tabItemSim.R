@@ -11,7 +11,7 @@ tabItemSim <- function() {
             id = "tabsSIM",
             tabPanel(
               title = "How to use",
-              icon = icon("equestion-circle",
+              icon = icon("question-circle",
                           verify_fa = FALSE),
               h3("Simulation panel"),
               HTML(
@@ -71,7 +71,7 @@ tabItemSim <- function() {
                                    width = 12,
                                  sliderInput(
                                    "pISO",
-                                   label = 'Level of contact restriction or probability to implement contact restriction.',
+                                   label = 'Level of contact restriction or probability to implement contact restriction (0: no contact restriction, 1: no contact).',
                                    min = 0,
                                    max = 1,
                                    value = 1,
@@ -345,7 +345,8 @@ tabItemSim <- function() {
                       "runmodel",
                       "Run",
                       # span("Run", id = "UpdateAnimate", class = "loading dots"),
-                      icon = icon("play"),
+                      icon = icon("play",
+                                  verify_fa = FALSE),
                       style = "color: #fff; background-color: #063567; border-color: #2e6da4"
                     ),
                     div(

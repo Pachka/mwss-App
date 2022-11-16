@@ -21,7 +21,8 @@ tabItemStructure <- function() {
                   actionButton(
                     inputId = "uploadSTR",
                     label = "Upload",
-                    icon = icon("upload"),
+                    icon = icon("upload",
+                                verify_fa = FALSE),
                     style = "color: #fff; background-color: red; border-color: #fff; width:130; margin: 20px 5px 5px 5px;"
                   )
                 )

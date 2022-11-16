@@ -1,5 +1,6 @@
 body <- dashboardBody(
-  tags$head(tags$style(
+  tags$head(
+    tags$style(
     HTML(
       ".shiny-notification {position:fixed; top: 30%;left: 40%;right: 40%;}
          .box {margin: 5px;}

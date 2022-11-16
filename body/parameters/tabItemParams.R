@@ -30,7 +30,8 @@ tabItemParams <- function() {
             actionButton(
               inputId = "applyParamsLoad",
               label = "Upload",
-              icon = icon("upload"),
+              icon = icon("upload",
+                          verify_fa = FALSE),
               style = "color: #fff; background-color: red; border-color: #fff; padding: 5px 5px 5px 5px; margin: 10px 5px 5px 5px; "
             )
           )
@@ -207,17 +208,21 @@ tabItemParams <- function() {
                 )
               ),
               helper(
-                checkboxInput(
+                shiny_tag = checkboxInput(
                   "comorbidities",
                   "Do your patients have comorbidities or resistance?",
                   value = FALSE,
                   width = NULL
-                ),
-                icon = icon("question-circle",
-                            verify_fa = FALSE),
-                colour = "red",
+                ), 
+                icon = "question-circle",
+                colour = NULL, 
                 type = "markdown",
-                content = "HelpBoxComorbidities"
+                title = "",
+                content = "HelpBoxComorbidities",
+                size = "m", 
+                buttonLabel = "Okay", 
+                easyClose = TRUE,
+                fade = FALSE
               ),
               conditionalPanel(
                 condition = "input.comorbidities == 1",
@@ -231,8 +236,7 @@ tabItemParams <- function() {
                     value = 1,
                     step = 0.01
                   ),
-                  icon = icon("exclamation-triangle",
-                              verify_fa = FALSE),
+                  icon = "triangle-exclamation",
                   colour = "orange",
                   type = "inline",
                   content = textOutput("rsympInfo")
@@ -247,8 +251,7 @@ tabItemParams <- function() {
                     value = 1,
                     step = 0.01
                   ),
-                  icon = icon("exclamation-triangle",
-                              verify_fa = FALSE),
+                  icon = "exclamation-triangle", 
                   colour = "orange",
                   type = "inline",
                   content = paste(
@@ -670,8 +673,7 @@ tabItemParams <- function() {
                   max = 1,
                   step = 0.01
                 ),
-                icon = icon("exclamation-triangle",
-                            verify_fa = FALSE),
+                icon = "exclamation-triangle",
                 colour = "orange",
                 type = "inline",
                 content = paste(
@@ -713,8 +715,7 @@ tabItemParams <- function() {
                   max = 1,
                   step = 0.01
                 ),
-                icon = icon("exclamation-triangle",
-                            verify_fa = FALSE),
+                icon = "exclamation-triangle",
                 colour = "orange",
                 type = "inline",
                 content = paste(
@@ -822,7 +823,8 @@ tabItemParams <- function() {
       ),
       tabPanel(
         title = "References",
-        icon = icon("book")
+        icon = icon("book",
+                    verify_fa = FALSE)
       )
     )
   )

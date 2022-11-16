@@ -6,7 +6,8 @@ uploadParamsUI <- function(id) {
           conditionalPanel("output.paramsUploaded == true",
                            actionButton(inputId = ns("applyParamsLoad"),
                                         label = "Load new set of parameters",
-                                        icon = icon("play"),
+                                        icon = icon("play",
+                                                    verify_fa = FALSE),
                                         style = "color: #fff; background-color: red; border-color: #fff;width:130;padding: 5px 5px 5px 5px;margin: -20px 5px 5px 15px; ")
           )
           )

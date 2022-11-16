@@ -27,7 +27,8 @@ setIMMstateUI <-
         fluidRow(
           actionButton(inputId = ns("setImmState_NL"),
                        label = "Apply",
-                       icon = icon("play")),
+                       icon = icon("play",
+                                   verify_fa = FALSE)),
           br()
         )
       ),
@@ -76,7 +77,8 @@ setIMMstateUI <-
         fluidRow(
           actionButton(inputId = ns("setImmState_Faclev"),
                        label = "Apply",
-                       icon = icon("play")),
+                       icon = icon("play",
+                                   verify_fa = FALSE)),
           br()
         )
       ),
@@ -129,7 +131,8 @@ setIMMstateUI <-
           fluidRow(
           actionButton(inputId = ns("setImmState_Wlev"),
                        label = "Apply",
-                       icon = icon("play")),
+                       icon = icon("play",
+                                   verify_fa = FALSE)),
           br()
           )
         )
