@@ -51,7 +51,7 @@ source('functions/loadTestdtModule.R', local = TRUE)
 # App Structure function
 
 source('body/presentation.R', local = TRUE)
-source('body/structure/tabItemStructure.R', local = TRUE)
+source('body/initialization/tabItemInitialization.R', local = TRUE)
 source('body/parameters/tabItemParams.R', local = TRUE)
 source('body/simulations/tabItemSim.R', local = TRUE)
 source('body/about.R', local = TRUE)

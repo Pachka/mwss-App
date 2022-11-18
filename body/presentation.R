@@ -16,20 +16,23 @@ tabItemPresentation <- function() {
           MWSS-App contains four sections (left panel):
 <br>
 <br>
-          The first one is about the healthcare structure.
-          It is in this section that you will define the structure of the different wards and the assignments of healthcare workers to the different wards.
+          The first one allows to initialize the tool.
+          In this section, you will describe the healthcare structure with its different wards and how healthcare workers are shared between them.
           In short and technical words, this is where you parameterize the demographic model.
+          You will also describe epidemiological settings inherent to your facility.
 <br>
 <br>
-          The second section concerns the parameters of the epidemiological model.
+          The second section allows to run simulation according to different monitoring and control scenarios.
+          The predictions can be visualized and downloaded in the section.
+         
+<br>
+          The last section concerns the parameters of the epidemiological model.
           This section is divided into four sub-sections. These concern the epidemiological characteristics of a specific population ('Epidemiological parameters'),
           the characteristics of the tests used ('Test-related parameters'),
           the levels of immunity in the different sub-populations studied (patients and healthcare workers in each department; 'Immunity-related parameters').
           The last subsection displays complementary parameters used by the model, there were taken from the literature and should not require any modification.
 <br>
-<br>
-          The last section concerns the monitoring and control scenarios.
-          It is also in this section that the simulations will be performed and that you will be able to visualize and download the predictions.
-          ")))
+
+ ")))
           )
 }

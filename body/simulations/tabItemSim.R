@@ -53,6 +53,33 @@ tabItemSim <- function() {
               title = "Simulations",
               icon = icon("sliders-h",
                           verify_fa = FALSE),
+              div(style = "display: inline-block;vertical-align:top;",
+                  updateParamsUI("variant")),
+              div(
+                style = "display: inline-block;vertical-align:top;",
+                fileInput(
+                  "loadparams",
+                  "Upload a pre-recorded set of parameters",
+                  buttonLabel = "Browse RDA file",
+                  accept = c("rda", ".Rda")
+                )
+              ),
+              div(
+                style = "display: inline-block;vertical-align:top;",
+                conditionalPanel(
+                  "output.paramsUploaded == true",
+                  actionButton(
+                    inputId = "applyParamsLoad",
+                    label = "Upload",
+                    icon = icon("upload",
+                                verify_fa = FALSE),
+                    style = "color: #fff; background-color: red; border-color: #fff; padding: 5px 5px 5px 5px; margin: 10px 5px 5px 5px; "
+                  )
+                )
+              ),
+              div(style = "display: inline-block;vertical-align:top;",
+                  downloadParamsUI("dwloadParams")),
+              hr(),
               fluidRow(
                 box(
                   width = 12,
@@ -80,6 +107,7 @@ tabItemSim <- function() {
                                  ),
                 conditionalPanel(condition = "input.CSprotocols.includes('regscreen')",
                                  box(
+                                   width = 12,
                                    checkboxGroupInput(
                                      "regscreenPop",
                                      "Implement random tests at regular intervals to:",

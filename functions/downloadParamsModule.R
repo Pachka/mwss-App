@@ -2,7 +2,7 @@ downloadParamsUI <- function(id) {
   ns <- NS(id)
 
   tagList(h5("", style = "margin: 15px 5px 5px 5px; "),
-          downloadButton(ns("params"), "Download",
+          downloadButton(ns("params"), "Save",
                          style = "color: #fff; background-color: #27ae60; border-color: #fff; padding: 5px 5px 5px 5px;margin: 10px 5px 5px 5px; "),
   )
 

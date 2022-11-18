@@ -10,36 +10,6 @@ tabItemParams <- function() {
     "PARAMS",
     tabsetPanel(
       id = "tabsPARAMS",
-      header = tagList(
-        br(),
-        div(style = "display: inline-block;vertical-align:top;",
-            updateParamsUI("variant")),
-        div(
-          style = "display: inline-block;vertical-align:top;",
-          fileInput(
-            "loadparams",
-            "Upload a pre-recorded set of parameters",
-            buttonLabel = "Browse RDA file",
-            accept = c("rda", ".Rda")
-          )
-        ),
-        div(
-          style = "display: inline-block;vertical-align:top;",
-          conditionalPanel(
-            "output.paramsUploaded == true",
-            actionButton(
-              inputId = "applyParamsLoad",
-              label = "Upload",
-              icon = icon("upload",
-                          verify_fa = FALSE),
-              style = "color: #fff; background-color: red; border-color: #fff; padding: 5px 5px 5px 5px; margin: 10px 5px 5px 5px; "
-            )
-          )
-        ),
-        div(style = "display: inline-block;vertical-align:top;",
-            downloadParamsUI("dwloadParams")),
-        hr()
-      ),
       tabPanel(
         title = "How to use",
         icon = icon("question-circle",
@@ -129,258 +99,8 @@ tabItemParams <- function() {
             width = "100%")
       ),
       tabPanel(
-        title = "Epidemiological parameters",
-        icon = icon("sliders-h",
-                    verify_fa = FALSE),
-        fluidRow(
-          box(
-            title = "Specificities of your facility for COVID-19 management",
-            solidHeader = T,
-            column(
-              width = 6,
-              h4("Health care workers (HCWs)"),
-              br(),
-              sliderInput(
-                "pSL",
-                label = 'Probability that HCWs developping mild symptoms take sick leave',
-                min = 0,
-                max = 100,
-                value = 30,
-                post  = " %"
-              ),
-              sliderInput(
-                "pESL",
-                label = 'Probability that HCWS developping severe symptoms take extended sick leave',
-                min = 0,
-                max = 100,
-                value = 100,
-                post  = " %"
-              ),
-              #
-              conditionalPanel(
-                condition = "input.pSL > 0",
-                sliderInput(
-                  "tSLs",
-                  label = 'On average, how many days do sick leave and extended sick leave last?',
-                  min = 0,
-                  max = 90,
-                  value = c(14, 28),
-                  post = " days"
-                )
-              ),
-              sliderInput(
-                "pSLT",
-                # label = 'Probability to take sick leave after a positive test',
-                label = 'Probability that non-symptomatic HCWs with a positive test take sick leave.',
-                min = 0,
-                max = 100,
-                value = 10,
-                post  = " %"
-              ),
-              numericInput(
-                'tw',
-                'Average number of working hours per fulltime professional per week (hours)',
-                value = 35,
-                min = 1,
-                max = 70,
-                step = 1
-              )
-            ),
-            column(
-              width = 6,
-              h4("Patients"),
-              sliderInput(
-                "pIC",
-                label = 'When developing severe symptoms, what is the probability of transfer to another facility (eg. intensive care outside of the institut)?',
-                min = 0,
-                max = 100,
-                value = 30,
-                post  = " %"
-              ),
-              conditionalPanel(
-                condition = "input.pIC > 0",
-                numericInput(
-                  'tIC',
-                  'Average number of days outside the facility (eg. in intensive care)',
-                  value = 15,
-                  min = 1,
-                  step = 0.5
-                )
-              ),
-              helper(
-                shiny_tag = checkboxInput(
-                  "comorbidities",
-                  "Do your patients have comorbidities or resistance?",
-                  value = FALSE,
-                  width = NULL
-                ), 
-                icon = "question-circle",
-                colour = NULL, 
-                type = "markdown",
-                title = "",
-                content = "HelpBoxComorbidities",
-                size = "m", 
-                buttonLabel = "Okay", 
-                easyClose = TRUE,
-                fade = FALSE
-              ),
-              conditionalPanel(
-                condition = "input.comorbidities == 1",
-                helper(
-                  numericInput(
-                    "rsymp",
-                    label = paste(
-                      'Ratio adjusting probability of symptoms for patients compared to general population (professionals)'
-                    ),
-                    min = 0,
-                    value = 1,
-                    step = 0.01
-                  ),
-                  icon = "triangle-exclamation",
-                  colour = "orange",
-                  type = "inline",
-                  content = textOutput("rsympInfo")
-                ),
-                helper(
-                  numericInput(
-                    "rsev",
-                    label = paste(
-                      'Ratio adjusting probability of severity if symptoms for patients compared to general population (professionals)'
-                    ),
-                    min = 0,
-                    value = 1,
-                    step = 0.01
-                  ),
-                  icon = "exclamation-triangle", 
-                  colour = "orange",
-                  type = "inline",
-                  content = paste(
-                    textOutput("rsevInfo")
-                    ) # FIX ME give an example
-                )
-              )
-            )
-          ),
-          box(
-            title = "Person-to-person contacts within your facility",
-            solidHeader = T,
-            column(
-              width = 6,
-              h4("Patients-to-Patient"),
-              sliderInput(
-                "n_ctcP_PW",
-                label = 'How many patients on average does each HCW come in contact with on a daily basis?',
-                min = 0,
-                max = 15,
-                value = 4
-              ),
-              conditionalPanel(
-                condition = "input.n_ctcP_PW > 0",
-                timeInput(
-                  "t_ctcP_PW",
-                  'Average duration of those contacts (H:M)',
-                  seconds = FALSE,
-                  value = strptime("00:30", "%R")
-                ),
-                radioButtons(
-                  "epsPPW",
-                  "During those contacts, how would you characterize the level of infection control?",
-                  choiceNames =
-                    list("low", "regular", "high"),
-                  choiceValues =
-                    list(0.2, 0.5, 0.8),
-                  inline = TRUE
-                )
-              ),
-              hr(),
-              h4("HCW-to-HCW"),
-              sliderInput(
-                "n_ctcH_H",
-                label = 'How many HCW on average does each HCW come in contact with on a daily basis?',
-                min = 0,
-                max = 15,
-                value = 5
-              ),
-              conditionalPanel(
-                condition = "input.n_ctcH_H > 0",
-                timeInput(
-                  "t_ctcH_H",
-                  'Average duration of those contacts (H:M)',
-                  seconds = FALSE,
-                  value = strptime("00:03", "%R")
-                ),
-                radioButtons(
-                  "epsHHW",
-                  "During those contacts, how would you characterize the level of infection control?",
-                  choiceNames =
-                    list("low", "regular", "high"),
-                  choiceValues =
-                    list(0.2, 0.5, 0.8),
-                  inline = TRUE
-                )
-              )
-            ),
-            column(
-              width = 6,
-              h4("Patients-to-HCWs"),
-              sliderInput(
-                "n_ctcH_PW",
-                label = 'How many HCW on average does each patient come in contact with on a daily basis?',
-                min = 0,
-                max = 15,
-                value = 4
-              ),
-              conditionalPanel(
-                condition = "input.n_ctcH_PW > 0",
-                timeInput(
-                  "t_ctcH_PW",
-                  'Average duration of those contacts (H:M)',
-                  seconds = FALSE,
-                  value = strptime("00:15", "%R")
-                ),
-                radioButtons(
-                  "epsHPW",
-                  "During those contacts, how would you characterize the level of infection control for patients?",
-                  choiceNames =
-                    list("low", "regular", "high"),
-                  choiceValues =
-                    list(0.2, 0.5, 0.8),
-                  inline = TRUE
-                ),
-                radioButtons(
-                  "epsPHW",
-                  "During those contacts, how would you characterize the level of infection control for professionals?",
-                  choiceNames =
-                    list("low", "regular", "high"),
-                  choiceValues =
-                    list(0.2, 0.5, 0.8),
-                  inline = TRUE
-                )
-              ),
-              hr(),
-              h4("Patients-to-Visitors"),
-              timeInput(
-                "t_ctcV_PW",
-                'Average duration of one visit (H:M)',
-                seconds = FALSE,
-                value = strptime("00:20", "%R")
-              ),
-              radioButtons(
-                "epsVPW",
-                "During visits, how would you characterize the level of infection control for patients?",
-                choiceNames =
-                  list("low", "regular", "high"),
-                choiceValues =
-                  list(0.2, 0.5, 0.8),
-                inline = TRUE
-              )
-            )
-          )
-        )
-      ),
-      tabPanel(
         title = "Test-related parameters",
-        icon = icon("sliders-h",
+        icon = icon("vial-virus",
                     verify_fa = FALSE),
         fluidPage(
           box(
@@ -388,38 +108,7 @@ tabItemParams <- function() {
             title = "Test effectiveness",
             solidHeader = TRUE,
             column(
-              width = 4,
-              radioButtons(
-                "testPW",
-                "What kind of test are you using to systematically test patients?",
-                choiceNames =
-                  list("Ag-RDT", "RT-PCR"),
-                choiceValues =
-                  list("Ag-RDT", "RT-PCR"),
-                inline = TRUE
-              ),
-              radioButtons(
-                'testH',
-                "What kind of test are you using to systematically test professionals?",
-                choiceNames =
-                  list("Ag-RDT", "RT-PCR"),
-                choiceValues =
-                  list("Ag-RDT", "RT-PCR"),
-                inline = TRUE
-              ),
-              radioButtons(
-                'testsymp',
-                "What kind of test are you using to test symptomatic individuals (either patients or professionals)?",
-                choiceNames =
-                  list("Ag-RDT", "RT-PCR"),
-                choiceValues =
-                  list("Ag-RDT", "RT-PCR"),
-                inline = TRUE
-              )
-            ),
-            br(),
-            column(
-              width = 4,
+              width = 6,
               conditionalPanel(
                 'input.testPW == "Ag-RDT" | input.testH == "Ag-RDT" | input.testsymp == "Ag-RDT"',
                 h5(
@@ -450,7 +139,7 @@ tabItemParams <- function() {
               )
             ),
             column(
-              width = 4,
+              width = 6,
               conditionalPanel(
                 'input.testPW == "RT-PCR" | input.testH == "RT-PCR" | input.testsymp == "RT-PCR"',
                 h5(
@@ -480,51 +169,12 @@ tabItemParams <- function() {
                 )
               )
             )
-          ),
-          box(
-            width = 3,
-            title = "Test of symptomatic individuals",
-            solidHeader = TRUE,
-            sliderInput(
-              "ptestPWsymp",
-              label = 'Probability to test symptomatic patients',
-              min = 0,
-              max = 100,
-              value = 100
-            ),
-            conditionalPanel(
-              'input.ptestPWsymp > 0',
-              numericInput(
-                'tbeftestPsymp',
-                'Average duration between first symptoms and test for symptomatic patients (hours)',
-                value = 2,
-                min = 0.5,
-                step = 0.5
-              )
-            ),
-            sliderInput(
-              "ptestHsymp",
-              label = 'Probability to test symptomatic professionals',
-              min = 0,
-              max = 100,
-              value = 85
-            ),
-            conditionalPanel(
-              'input.ptestHsymp > 0',
-              numericInput(
-                'tbeftestHsymp',
-                'Average duration between first symptoms and test for symptomatic professionals (hours)',
-                value = 24,
-                min = 0.5,
-                step = 0.5
-              )
-            )
           )
         )
       ),
       tabPanel(
         title = "Immunity-related parameters",
-        icon = icon("sliders-h",
+        icon = icon("shield",
                     verify_fa = FALSE),
         fluidRow(
           box(
@@ -592,7 +242,7 @@ tabItemParams <- function() {
       ),
       tabPanel(
         title = "Expert corner",
-        icon = icon("sliders-h",
+        icon = icon("brain",
                     verify_fa = FALSE),
         fluidRow(
           box(
