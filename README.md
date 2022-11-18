@@ -121,3 +121,12 @@ mwss-App
  - server.R
  - ui.R
 Those files are baseline files for Rshiny application (read more on: https://shiny.rstudio.com/articles/scoping.html)
+
+
+## Further actions
+- simplification for primary use
+- test by modelers (Lulla, Ajmal, Laura) -> test by clinicians (Hackathon)
+- upgrade
+- publication
+
+
