@@ -4,7 +4,7 @@ list.of.packages <- c("shiny", "dplyr", "DT",
                       "ggplot2", "statnet", "igraph",
                       "network", "shinydashboard", "shinyjs",
                       "plotly", "magrittr", "SimInf", "data.table", "shinyWidgets",
-                      "shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools")
+                      "shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools", "tinytex")
 
 #checking missing packages from list
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -51,7 +51,7 @@ source('functions/loadTestdtModule.R', local = TRUE)
 # App Structure function
 
 source('body/presentation.R', local = TRUE)
-source('body/structure/tabItemStructure.R', local = TRUE)
+source('body/initialization/tabItemInitialization.R', local = TRUE)
 source('body/parameters/tabItemParams.R', local = TRUE)
 source('body/simulations/tabItemSim.R', local = TRUE)
 source('body/about.R', local = TRUE)

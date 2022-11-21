@@ -36,7 +36,8 @@ updateParams  <- function(input, output, session){
 
                        # update sliders input values
                        for(slidersInput in c("psympNI", "psympLI", "psympHI", "psevNI", "psevLI", "psevHI",
-                                             "pIC", "pdieIC",
+                                             # "pIC", 
+                                             "pdieIC",
                                              "hNI2LI", "hLI2HI",
                                              "rinfLI", "rinfHI"))
                          updateSliderInput(session = .subset2(session, "parent"),
@@ -56,9 +57,9 @@ updateParams  <- function(input, output, session){
 
                        # update numeric input values
                        for(numInput in c("I", "d", "R0",
-                                         "tIC",
+                                         # "tIC",
                                          "tE", "tEA", "tES", "tIA", "tIM", "tIS", "tLI","tHI",
-                                         "rsymp", "rsev",
+                                         # "rsymp", "rsev",
                                          # Ratio adjusting the excretion rates based on epidemiological stage
                                          "rEA","rES", "rIA", "rIM","rIS", 
                                          "sensAg", "speAg", "sensPCR", "spePCR"))
@@ -67,13 +68,13 @@ updateParams  <- function(input, output, session){
                                             value = gdata[[numInput]])
 
                        # update sick leave duration input values
-                       updateNumericInput(session = .subset2(session, "parent"),
-                                          "tSLs",
-                                          value = c(gdata[["tSL"]],gdata[["tESL"]]))
+                       # updateNumericInput(session = .subset2(session, "parent"),
+                       #                    "tSLs",
+                       #                    value = c(gdata[["tSL"]],gdata[["tESL"]]))
 
-                       updateSliderInput(session = .subset2(session, "parent"),
-                                         "pSL",
-                                         value = gdata$pSL)
+                       # updateSliderInput(session = .subset2(session, "parent"),
+                       #                   "pSL",
+                       #                   value = gdata$pSL)
 
                      }
                    }, ignoreNULL = FALSE)

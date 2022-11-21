@@ -17,17 +17,9 @@ sidebar <- dashboardSidebar(
     #################
     #################
 
-    menuItem("Structure", icon = icon("users",
-                                      verify_fa = FALSE), tabName = "STR"),
+    menuItem("Initialization", icon = icon("gears",
+                                      verify_fa = FALSE), tabName = "INI"),
 
-    ##################################
-    ##################################
-    ### Epidemiological parameters ###
-    ##################################
-    ##################################
-
-
-    menuItem("Parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"),
 
     ###################
     ###################
@@ -37,6 +29,15 @@ sidebar <- dashboardSidebar(
 
     menuItem("Simulation", icon = icon("play",
                                        verify_fa = FALSE), tabName = "SIM"),
+    
+    ##################################
+    ##################################
+    ### Epidemiological parameters ###
+    ##################################
+    ##################################
+
+
+    menuItem("More parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"),
 
     #############
     #############

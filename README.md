@@ -125,7 +125,7 @@ Those files are baseline files for Rshiny application (read more on: https://shi
 
 ## Further actions
 - simplification for primary use
-- define parameters for two variants (e.g. alpha and omicron)
+- define parameters for two variants (e.g. alpha and omicron) & fill References tabs 
 - test by modelers (Lulla, Ajmal, Laura) -> test by clinicians (Hackathon)
 - upgrade
 - publication

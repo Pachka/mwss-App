@@ -15,7 +15,20 @@ tabItemSim <- function() {
                           verify_fa = FALSE),
               h3("Simulation panel"),
               HTML(
-                "In this panel, you can run various surveillance and control scenarios to assess their impact on the disease spread."
+                "In this panel, you can select a variant and run various surveillance and control scenarios to assess their impact on the disease spread. 
+                <br>
+                In the upper part of this panel, you can use either the scrolling list, to select a SARS-CoV-2 variants,
+                or the buttons 'Browse' and 'Upload' to load a previously saved set of parameters.
+                Parameters loaded using the scrolling list were defined based on the literature (see Reference tab) and
+                parameter estimation statistical approaches.
+                <br>
+                  Be careful, uploading new parameters will erase any modified parameters. Think about regularly saving your inputs using the 'Download' button.
+                <br>
+                  Using the 'Download' button allows saving the set of parameters in RDA file.
+                This file contains a list of parameters and can be opened in the MWSS-App as well as directly using the R software.
+                <br>
+                The epidemiological parameters defined for each variant are displayed in the 'More parameters' panel.
+                They have been defined based on literature review and expert opinion. They should not require modification, but to meet different user needs, the possibility to adjust each parameter has been implemented."
               ),
               h3("Surveillance and control"),
               HTML(
@@ -53,6 +66,33 @@ tabItemSim <- function() {
               title = "Simulations",
               icon = icon("sliders-h",
                           verify_fa = FALSE),
+              div(style = "display: inline-block;vertical-align:top;",
+                  updateParamsUI("variant")),
+              div(
+                style = "display: inline-block;vertical-align:top;",
+                fileInput(
+                  "loadparams",
+                  "Upload a pre-recorded set of parameters",
+                  buttonLabel = "Browse RDA file",
+                  accept = c("rda", ".Rda")
+                )
+              ),
+              div(
+                style = "display: inline-block;vertical-align:top;",
+                conditionalPanel(
+                  "output.paramsUploaded == true",
+                  actionButton(
+                    inputId = "applyParamsLoad",
+                    label = "Upload",
+                    icon = icon("upload",
+                                verify_fa = FALSE),
+                    style = "color: #fff; background-color: red; border-color: #fff; padding: 5px 5px 5px 5px; margin: 10px 5px 5px 5px; "
+                  )
+                )
+              ),
+              div(style = "display: inline-block;vertical-align:top;",
+                  downloadParamsUI("dwloadParams")),
+              hr(),
               fluidRow(
                 box(
                   width = 12,
@@ -80,6 +120,7 @@ tabItemSim <- function() {
                                  ),
                 conditionalPanel(condition = "input.CSprotocols.includes('regscreen')",
                                  box(
+                                   width = 12,
                                    checkboxGroupInput(
                                      "regscreenPop",
                                      "Implement random tests at regular intervals to:",

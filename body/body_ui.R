@@ -65,9 +65,9 @@ body <- dashboardBody(
   useShinyjs(),
   tabItems(
     tabItemPresentation(),
-    tabItemStructure(),
-    tabItemParams(),
+    tabItemInitialization(),
     tabItemSim(),
+    tabItemParams(),
     tabItemAbout()
   )
 )

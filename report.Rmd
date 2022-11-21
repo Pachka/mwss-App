@@ -1,8 +1,8 @@
 ---
 title: "Epidemiological simulation report"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 params:
   control_traj: NA
   data : NA
@@ -12,6 +12,8 @@ params:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 knitr::opts_chunk$set(eval = TRUE)
+
+options(tinytex.verbose = TRUE)
 ```
 
 ```{r}
