@@ -47,15 +47,37 @@ tabItemInitialization <- function() {
                 nevertheless the `total` column will be highlighting those particular cases respectively in red and green to avoid mistake.
                 When professionals are spending time in multiple wards, a connection between
                 those wards graphically appears on the connectivity network plot.
+                <br> 
+                <br>
+                In the <b>'Parameters'</b> tab, inform mwss about the epimediological settings of the system you want to represent.
+                In this tab, use the left part to inform mwss about the specificities in your facility related to professionals (<b>sick leave</b>: SL and <b>extended sick leave</b>: ESL)
+          and patients (<b>intensive care</b>: IC and <b>potential comorbidities or resistance</b>).
+          For example, children are a lot less likely to develop severe symptoms, while older individuals are more likely to develop severe symptoms.
+          Use the right part to characterize contacts between populations (quantity, duration and level of infection control).
+          For example, infection control of children during visits could be lower than with professionals. 
+          Finaly, inform mwss about the used test (delay before result and targeted population).
+          Two types of tests are proposed:
+        <ol>
+        <li>antigen detection rapid diagnostic test (Ag-RDT), and</li>
+        <li>real-time reverse transcription polymerase chain reaction assay (RT-PCR).</li>
+        </ol>
+        In essence, both types of test are defined by their specificity, sensibility and duration (define in the 'More parameters' panel), it can be any type test,
+        nevertheless, in its stage of developement, mwss only provides the possibility of discriminating two types of tests
+        used either for patient or professional screening, or for symptomatic patients confirmation.
+        <br>
+        Use the right side of the tab to inform on the  probability of being tested and detection/reaction time in case of symptoms for both patients and professionals.
                 "
               ),
               h3("Save your structure"),
-              p(
-                "In the upper part of this panel, you can use the green button: 'Download' to save a registered structure,
+              HTML(
+                "In the upper part of the <b>'Structure'</b> tab, you can use the green button: 'Download' to save a registered structure,
                  the associated buttons 'Browse' and 'Upload' to load a previously saved structure and the 'Clear' button to reset the tool.
                  Please, note that uploading a dataset or clearing the structure will erase everything that has been previously recorded.
                  The 'Download' button will save the dataset under a Rda format (R Data file) associated with the R program.
                  This file can be loaded in the R-shiny application 'MWSS-App' or in R.
+                 <br>
+                 In the same way, in the <b>'Parameters'</b> tab, use the upper part to save and load your settings/parameteres.
+                
                 "
               ),
               h3("No copy of your entries is saved anywhere, neither on the cloud nor on our servers, remember to download it locally for
@@ -71,12 +93,15 @@ tabItemInitialization <- function() {
               icon = icon("hospital-user",
                           verify_fa = FALSE),
               fluidRow(
-                br(),
-                div(style = "display: inline-block;vertical-align:top;",
+                div(
+                  style = "display: inline-block;vertical-align:top;margin-left: 25px",
+                  # offset = 0,
                     fileInput("loadwards",
                               "", # FIX ME: Explain in How to use: Upload a pre-recorded set of wards/buildings
                               buttonLabel = "Browse RDA file",
-                              accept = c("rda", ".Rda"))),
+                              accept = c("rda", ".Rda")
+                              )
+                    ),
                 div(
                   style = "display: inline-block;vertical-align:top;",
                   conditionalPanel(
@@ -150,12 +175,14 @@ tabItemInitialization <- function() {
               )
             ),
             tabPanel(
-              title = "Epidemiological parameters",
+              title = "Parameters",
               icon = icon("sliders-h",
                           verify_fa = FALSE),
               fluidRow(
                 br(),
-                div(style = "display: inline-block;vertical-align:top;",
+                div(
+                  style = "display: inline-block;vertical-align:top;margin-left: 25px",
+                  # offset = 0,
                     fileInput("loadsettings",
                               "",
                               buttonLabel = "Browse RDA file",
@@ -422,8 +449,10 @@ tabItemInitialization <- function() {
                   )
                 ),
                 box(
+                  width = 12,
+                box(
                   title = "What kind of test are you using",
-                  solidHeader = TRUE,
+                  # solidHeader = TRUE,
                   radioButtons(
                     "testPW",
                     "To systematically test patients?",
@@ -454,7 +483,7 @@ tabItemInitialization <- function() {
                 ),
                 box(
                   title = "Test of symptomatic individuals",
-                  solidHeader = TRUE,
+                  # solidHeader = TRUE,
                   sliderInput(
                     "ptestPWsymp",
                     label = 'Probability to test symptomatic patients',
@@ -490,7 +519,7 @@ tabItemInitialization <- function() {
                     )
                   )
                 )
-              )
+              ))
             )
           )
   )

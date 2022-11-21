@@ -37,7 +37,7 @@ sidebar <- dashboardSidebar(
     ##################################
 
 
-    menuItem("Parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"),
+    menuItem("More parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"),
 
     #############
     #############
