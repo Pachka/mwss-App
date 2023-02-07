@@ -15,7 +15,7 @@ tabItemSim <- function() {
                           verify_fa = FALSE),
               h3("Simulation panel"),
               HTML(
-                "In this panel, you can select a variant and run various surveillance and control scenarios to assess their impact on the disease spread. 
+                "In this panel, you can select a variant and run various surveillance and control scenarios to assess their impact on the disease spread.
                 <br>
                 In the upper part of this panel, you can use either the scrolling list, to select a SARS-CoV-2 variants,
                 or the buttons 'Browse' and 'Upload' to load a previously saved set of parameters.
@@ -68,30 +68,36 @@ tabItemSim <- function() {
                           verify_fa = FALSE),
               div(style = "display: inline-block;vertical-align:top;",
                   updateParamsUI("variant")),
+              # div(
+              #   style = "display: inline-block;vertical-align:top;",
+              #   fileInput(
+              #     "loadparams",
+              #     "Upload a pre-recorded set of parameters",
+              #     buttonLabel = "Browse RDA file",
+              #     accept = c("rda", ".Rda")
+              #   )
+              # ),
+              # div(
+              #   style = "display: inline-block;vertical-align:top;",
+              #   conditionalPanel(
+              #     "output.paramsUploaded == true",
+              #     actionButton(
+              #       inputId = "applyParamsLoad",
+              #       label = "Upload",
+              #       icon = icon("upload",
+              #                   verify_fa = FALSE),
+              #       style = "color: #fff; background-color: red; border-color: #fff; padding: 5px 5px 5px 5px; margin: 10px 5px 5px 5px; "
+              #     )
+              #   )
+              # ),
+              # div(style = "display: inline-block;vertical-align:top;",
+              #     downloadParamsUI("dwloadParams")),
+              hr(),
               div(
                 style = "display: inline-block;vertical-align:top;",
-                fileInput(
-                  "loadparams",
-                  "Upload a pre-recorded set of parameters",
-                  buttonLabel = "Browse RDA file",
-                  accept = c("rda", ".Rda")
-                )
+                br(),
+                loadTestdtUI("loadtest")
               ),
-              div(
-                style = "display: inline-block;vertical-align:top;",
-                conditionalPanel(
-                  "output.paramsUploaded == true",
-                  actionButton(
-                    inputId = "applyParamsLoad",
-                    label = "Upload",
-                    icon = icon("upload",
-                                verify_fa = FALSE),
-                    style = "color: #fff; background-color: red; border-color: #fff; padding: 5px 5px 5px 5px; margin: 10px 5px 5px 5px; "
-                  )
-                )
-              ),
-              div(style = "display: inline-block;vertical-align:top;",
-                  downloadParamsUI("dwloadParams")),
               hr(),
               fluidRow(
                 box(
@@ -346,13 +352,13 @@ tabItemSim <- function() {
                   width = 12,
                   status = "primary",
                   # Only show this panel if the plot type is a histogram
-                  numericInput(
-                    'n_sim',
-                    'Number of simulations',
-                    value = 50,
-                    min = 1,
-                    step = 1
-                  ),
+                  # numericInput(
+                  #   'n_sim',
+                  #   'Number of simulations',
+                  #   value = 50,
+                  #   min = 1,
+                  #   step = 1
+                  # ),
                   numericInput(
                     'n_days',
                     'Number of simulated days',

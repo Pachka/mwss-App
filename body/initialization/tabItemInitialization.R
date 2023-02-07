@@ -47,14 +47,14 @@ tabItemInitialization <- function() {
                 nevertheless the `total` column will be highlighting those particular cases respectively in red and green to avoid mistake.
                 When professionals are spending time in multiple wards, a connection between
                 those wards graphically appears on the connectivity network plot.
-                <br> 
+                <br>
                 <br>
                 In the <b>'Parameters'</b> tab, inform mwss about the epimediological settings of the system you want to represent.
                 In this tab, use the left part to inform mwss about the specificities in your facility related to professionals (<b>sick leave</b>: SL and <b>extended sick leave</b>: ESL)
           and patients (<b>intensive care</b>: IC and <b>potential comorbidities or resistance</b>).
           For example, children are a lot less likely to develop severe symptoms, while older individuals are more likely to develop severe symptoms.
           Use the right part to characterize contacts between populations (quantity, duration and level of infection control).
-          For example, infection control of children during visits could be lower than with professionals. 
+          For example, infection control of children during visits could be lower than with professionals.
           Finaly, inform mwss about the used test (delay before result and targeted population).
           Two types of tests are proposed:
         <ol>
@@ -77,7 +77,7 @@ tabItemInitialization <- function() {
                  This file can be loaded in the R-shiny application 'MWSS-App' or in R.
                  <br>
                  In the same way, in the <b>'Parameters'</b> tab, use the upper part to save and load your settings/parameteres.
-                
+
                 "
               ),
               h3("No copy of your entries is saved anywhere, neither on the cloud nor on our servers, remember to download it locally for
@@ -126,12 +126,11 @@ tabItemInitialization <- function() {
                     resetreactivesUI("resetall")
                   )
                 ),
-                div(
-                  style = "display: inline-block;vertical-align:top;",
-                  br(),
-                  loadTestdtUI("loadtest")
-                ),
-                hr()
+                # div(
+                #   style = "display: inline-block;vertical-align:top;",
+                #   br(),
+                #   loadTestdtUI("loadtest")
+                # ),
               ),
               fluidRow(
                 box(
@@ -285,14 +284,14 @@ tabItemInitialization <- function() {
                         "Do your patients have comorbidities or resistance?",
                         value = FALSE,
                         width = NULL
-                      ), 
+                      ),
                       icon = "question-circle",
-                      colour = NULL, 
+                      colour = NULL,
                       type = "markdown",
                       title = "",
                       content = "HelpBoxComorbidities",
-                      size = "m", 
-                      buttonLabel = "Okay", 
+                      size = "m",
+                      buttonLabel = "Okay",
                       easyClose = TRUE,
                       fade = FALSE
                     ),
@@ -323,7 +322,7 @@ tabItemInitialization <- function() {
                           value = 1,
                           step = 0.01
                         ),
-                        icon = "exclamation-triangle", 
+                        icon = "exclamation-triangle",
                         colour = "orange",
                         type = "inline",
                         content = paste(
