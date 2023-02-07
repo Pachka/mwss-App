@@ -15,7 +15,7 @@ tabItemSim <- function() {
                           verify_fa = FALSE),
               h3("Simulation panel"),
               HTML(
-                "In this panel, you can select a variant and run various surveillance and control scenarios to assess their impact on the disease spread. 
+                "In this panel, you can select a variant and run various surveillance and control scenarios to assess their impact on the disease spread.
                 <br>
                 In the upper part of this panel, you can use either the scrolling list, to select a SARS-CoV-2 variants,
                 or the buttons 'Browse' and 'Upload' to load a previously saved set of parameters.
@@ -357,7 +357,7 @@ tabItemSim <- function() {
                     'n_days',
                     'Number of simulated days',
                     value = 60,
-                    min = 0,
+                    min = 1,
                     step = 1
                   ),
                   # checkboxInput(
