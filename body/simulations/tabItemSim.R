@@ -93,7 +93,8 @@ tabItemSim <- function() {
               hr(),
               box(
                 width = 12,
-                loadTestdtUI("loadtest"), updateParamsUI("variant"),
+                loadTestdtUI("loadtest"),
+                updateParamsUI("disease"),
               ),
               hr(),
               fluidRow(
@@ -378,30 +379,31 @@ tabItemSim <- function() {
                   #     format = "dd/mm/yy"
                   #   )
                   # ),
-                  conditionalPanel(
-                    "output.atleastoneward == true",
-                    conditionalPanel(
-                      condition = "$(\'html\').hasClass(\'shiny-busy\')",
-                      # tags$div(class = "loader"),
-                      tags$div(class = "prevent_click")
-                    ),
-                    actionButton(
-                      "runmodel",
-                      "Run",
-                      # span("Run", id = "UpdateAnimate", class = "loading dots"),
-                      icon = icon("play",
-                                  verify_fa = FALSE),
-                      style = "color: #fff; background-color: #063567; border-color: #2e6da4"
-                    ),
-                    div(
-                      style = "display: inline-block;vertical-align:top;",
-                      conditionalPanel(
-                        "output.simoutput == true",
-                        synthreportUI("report_exp"),
-                        exporttrajUI("export_traj")
-                      )
-                    )
-                  ),
+                  # conditionalPanel(
+                  #   "output.atleastoneward == true" ,
+                  #   conditionalPanel(
+                  #     condition = "$(\'html\').hasClass(\'shiny-busy\')",
+                  #     # tags$div(class = "loader"),
+                  #     tags$div(class = "prevent_click")
+                  #   ),
+                  #   actionButton(
+                  #     "runmodelVsimp",
+                  #     "Run",
+                  #     # span("Run", id = "UpdateAnimate", class = "loading dots"),
+                  #     icon = icon("play",
+                  #                 verify_fa = FALSE),
+                  #     style = "color: #fff; background-color: #063567; border-color: #2e6da4"
+                  #   ),
+                  #   div(
+                  #     style = "display: inline-block;vertical-align:top;",
+                  #     conditionalPanel(
+                  #       "output.simoutput == true",
+                  #       synthreportUI("report_exp"),
+                  #       exporttrajUI("export_traj")
+                  #     )
+                  #   )
+                  # ),
+                  uiOutput("runbutton"),
                   # display load spinner when shiny is busy
                   conditionalPanel(
                     condition = "$(\'html\').hasClass(\'shiny-busy\')",

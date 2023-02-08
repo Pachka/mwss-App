@@ -1,11 +1,11 @@
 updateParamsUI <- function(id) {
   ns <- NS(id)
-  selectizeInput(ns("variant_id"), "Pathogen",
+  selectizeInput(ns("disease_id"), "Pathogen",
                  choices = setNames(
                    list("Covid", "Influenza"),
                    # list("Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Omicron (BA.1)", "Omicron (BA.2)")),
                    list("SARS-CoV-2", "Influenza")),
-                 selected = "Covid",
+                 selected = NULL,
                  options = list(
                    placeholder = 'Select disease',
                    onInitialize = I('function() { this.setValue(""); }')
@@ -16,24 +16,25 @@ updateParamsUI <- function(id) {
 updateParams  <- function(input, output, session){
   ns <- session$ns
 
-  observeEvent(input$variant_id, {
+
+  observeEvent(input$disease_id, {
 
     rdsfiles <- list.files("./data", pattern = "\\.rds$")
 
-    if(paste0(input$variant_id, ".rds") %in% rdsfiles){
+    if(paste0(input$disease_id, ".rds") %in% rdsfiles){
       # ask for confirmation
-        ask_confirmation(
-          inputId = "confirmVariantchange",
-          title = "Want to confirm ?",
-          type = "warning",
-          btn_labels = c("Cancel", "Confirm"),
-          text = "Note that choosing another disease will erase the current set of parameters."
-        )
+      ask_confirmation(
+        inputId = "confirmdiseasechange",
+        title = "Want to confirm ?",
+        type = "warning",
+        btn_labels = c("Cancel", "Confirm"),
+        text = "Note that choosing another disease will erase the current set of parameters."
+      )
 
-      observeEvent(eventExpr = input$confirmVariantchange,
+      observeEvent(eventExpr = input$confirmdiseasechange,
                    handlerExpr = {
-                     if(isTRUE(input$confirmVariantchange)){
-                       gdata <- readRDS(paste0("./data/", input$variant_id, ".rds"))
+                     if(isTRUE(input$confirmdiseasechange)){
+                       gdata <- readRDS(paste0("./data/", input$disease_id, ".rds"))
 
                        # update sliders input values
                        for(slidersInput in c("psympNI", "psympLI", "psympHI", "psevNI", "psevLI", "psevHI",
@@ -81,7 +82,7 @@ updateParams  <- function(input, output, session){
                    }, ignoreNULL = FALSE)
 
     } else {
-      if(input$variant_id != ""){
+      if(input$disease_id != ""){
         # Show a simple modal
         shinyalert(title = paste("Epidemiological parameters for this disease haven't been integrated yet.
                                  Set values by yourself or choose another pathogen."),
@@ -89,6 +90,8 @@ updateParams  <- function(input, output, session){
                    size = "l")
       }
     }
+
+
   })
 
 }
