@@ -183,8 +183,5 @@ params$control_traj %>% keyoutput(., scale = 0, focus = "infections") %>% .$H %>
 'nosocomial infections of professionals were observed with the tested surveillance and control measures.')
 ```
 
-## Conclusions: 
-...
-
 
 
