@@ -950,6 +950,17 @@ server <- function(input, output, session) {
   dtimeline <- callModule(module = diseasetimeline,
                           id = "covid")
 
+  observeEvent(input$tAg, {
+    if((as.numeric(strftime(input$tAg, "%M")) / 60 + as.numeric(strftime(input$tAg, "%H"))) /
+       24 == 0)
+      showModal(modalDialog(
+        title = "Important message",
+        "This is an important message!"
+      ))
+
+  })
+
+
   #####################################
   #######    Simulations panel   ######
   #####################################
@@ -960,7 +971,6 @@ server <- function(input, output, session) {
       updateNumericInput(session, 'nH_SA', max = min(data$pop_size_H))
   })
 
-
   ########### RUN MODEL ###########
 
 
@@ -970,39 +980,33 @@ server <- function(input, output, session) {
     if (input$testPW == "Ag-RDT") {
       senW = input$sensAg
       speW = input$speAg
-      ttestPW = (as.numeric(strftime(input$tAg, "%M")) / 60 + as.numeric(strftime(input$tAg, "%H"))) /
-        24
+      ttestPW = timeinputinday(input$tAg)
     } else {
       senW = input$sensPCR
       speW = input$spePCR
-      ttestPW = (as.numeric(strftime(input$tPCR, "%M")) / 60 + as.numeric(strftime(input$tPCR, "%H"))) /
-        24
+      ttestPW = timeinputinday(input$tPCR)
     }
 
     # Professionals
     if (input$testH == "Ag-RDT") {
       senH = input$sensAg
       speH = input$speAg
-      ttestHW = (as.numeric(strftime(input$tAg, "%M")) / 60 + as.numeric(strftime(input$tAg, "%H"))) /
-        24
+      ttestHW = timeinputinday(input$tAg)
     } else {
       senH = input$sensPCR
       speH = input$spePCR
-      ttestHW = (as.numeric(strftime(input$tPCR, "%M")) / 60 + as.numeric(strftime(input$tPCR, "%H"))) /
-        24
+      ttestHW = timeinputinday(input$tPCR)
     }
 
     # Symptomatics
     if (input$testsymp == "Ag-RDT") {
       sensymp = input$sensAg
       spesymp = input$speAg
-      ttestsymp = (as.numeric(strftime(input$tAg, "%M")) / 60 + as.numeric(strftime(input$tAg, "%H"))) /
-        24
+      ttestsymp = timeinputinday(input$tAg)
     } else {
       sensymp = input$sensPCR
       spesymp = input$spePCR
-      ttestsymp = (as.numeric(strftime(input$tPCR, "%M")) / 60 + as.numeric(strftime(input$tPCR, "%H"))) /
-        24
+      ttestsymp = timeinputinday(input$tPCR)
     }
 
     # Screening area
