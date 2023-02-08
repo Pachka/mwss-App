@@ -227,68 +227,71 @@ plotsoutputUI <- function(id) {
       align = "center"
     ),
     box(
-      column(
-        4,
-        selectInput(
-          inputId = ns("scaleInc"),
-          label = "Display incidence for (scale):",
-          choices = c("The whole facility" = 0,
-                      "Each ward" = 1),
-          selected = FALSE
-        ),
-        conditionalPanel(
-          condition =
-            paste0('input[\'', ns('scaleInc'), "\'] == 1"),
-          checkboxInput(
-            inputId = ns("wardInc"),
-            label = "Display incidence for a specific ward",
-            value = FALSE,
-            width = NULL
-          ),
-          conditionalPanel(condition =
-                             paste0('input[\'', ns('wardInc'), "\'] == 1"),
-                           uiOutput(ns("ward_choiceInc")))
-        ),
-        selectInput(
-          inputId = ns("popInc"),
-          label = "Display incidence for (population):",
-          choices = c(
-            "Both: patients and professionals" = "P+H",
-            "Patients" = "P",
-            "Professionals" = "H"
-          ),
-          selected = FALSE
-        ),
-        conditionalPanel(
-          condition =
-            paste0('input[\'', ns('iterInc'), "\'] == 0"),
-          checkboxInput(
-            inputId = ns("display_sdInc"),
-            label = "Display standard deviation",
-            value = FALSE,
-            width = NULL
-          )
-        ),
-        checkboxInput(
-          inputId = ns("iterInc"),
-          label = "Display incidence for only one simulation",
-          value = FALSE,
-          width = NULL
-        ),
-        conditionalPanel(condition =
-                           paste0('input[\'', ns('iterInc'), "\'] == 1"),
-                         uiOutput(ns("iter_choiceInc"))),
-        hr(),
-        radioButtons(
-          inputId = ns("formatP3"),
-          label = "Select the file type",
-          choices = list("png", "pdf")
-        ),
-        downloadButton(outputId = ns("down_Incidence"), label = "Download the plot")
-      ),
-      column(8,
-             plotOutput(ns("plotIncidence")))
-    ),
+      # column(
+      #   4,
+      #   selectInput(
+      #     inputId = ns("scaleInc"),
+      #     label = "Display incidence for (scale):",
+      #     choices = c("The whole facility" = 0,
+      #                 "Each ward" = 1),
+      #     selected = FALSE
+      #   ),
+      #   conditionalPanel(
+      #     condition =
+      #       paste0('input[\'', ns('scaleInc'), "\'] == 1"),
+      #     checkboxInput(
+      #       inputId = ns("wardInc"),
+      #       label = "Display incidence for a specific ward",
+      #       value = FALSE,
+      #       width = NULL
+      #     ),
+      #     conditionalPanel(condition =
+      #                        paste0('input[\'', ns('wardInc'), "\'] == 1"),
+      #                      uiOutput(ns("ward_choiceInc")))
+      #   ),
+      #   selectInput(
+      #     inputId = ns("popInc"),
+      #     label = "Display incidence for (population):",
+      #     choices = c(
+      #       "Both: patients and professionals" = "P+H",
+      #       "Patients" = "P",
+      #       "Professionals" = "H"
+      #     ),
+      #     selected = FALSE
+      #   ),
+      #   conditionalPanel(
+      #     condition =
+      #       paste0('input[\'', ns('iterInc'), "\'] == 0"),
+      #     checkboxInput(
+      #       inputId = ns("display_sdInc"),
+      #       label = "Display standard deviation",
+      #       value = FALSE,
+      #       width = NULL
+      #     )
+      #   ),
+      #   checkboxInput(
+      #     inputId = ns("iterInc"),
+      #     label = "Display incidence for only one simulation",
+      #     value = FALSE,
+      #     width = NULL
+      #   ),
+      #   conditionalPanel(condition =
+      #                      paste0('input[\'', ns('iterInc'), "\'] == 1"),
+      #                    uiOutput(ns("iter_choiceInc"))),
+      #   hr(),
+      #   radioButtons(
+      #     inputId = ns("formatP3"),
+      #     label = "Select the file type",
+      #     choices = list("png", "pdf")
+      #   ),
+      #   downloadButton(outputId = ns("down_Incidence"), label = "Download the plot")
+      # ),
+      # column(8,
+      #        plotOutput(ns("plotIncidence")))
+      plotOutput(ns("plotIncidence")),
+      downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
+      align = "center"
+  ),
     box(
       column(
         4,
@@ -493,40 +496,82 @@ plotsoutput <-
       )
     })
 
-
+    #QL edit here to use simple version
     myIncidence <- function() {
-      ward = FALSE
-
-      if (isTRUE(input$iterInc) |  length(input$display_sdInc) == 0)
-        display_sdInc <- FALSE
-      else
-        display_sdInc <- input$display_sdInc
-
-      if (input$scaleInc == 1 &
-          isTRUE(input$wardInc) & length(input$ward_inc) > 0)
-        ward = input$ward_inc
-
-      if (input$iterInc == 1 & length(input$iter_inc) > 0)
-        iter = input$iter_inc %>% as.numeric
-      else
-        iter = FALSE
-
-      if (input$popInc == "P+H" | length(input$popInc) == 0)
-        pop = FALSE
-      else
-        pop = input$popInc
-
-      scale = input$scaleInc
-      display_sd = display_sdInc
-
-      plot_incidence(
-        trajmwss = model(),
-        scale = scale,
-        pop = pop,
-        iter = iter,
-        ward = ward,
-        display_sd = display_sdInc
-      )
+      # ward = FALSE
+      # 
+      # if (isTRUE(input$iterInc) |  length(input$display_sdInc) == 0)
+      #   display_sdInc <- FALSE
+      # else
+      #   display_sdInc <- input$display_sdInc
+      # 
+      # if (input$scaleInc == 1 &
+      #     isTRUE(input$wardInc) & length(input$ward_inc) > 0)
+      #   ward = input$ward_inc
+      # 
+      # if (input$iterInc == 1 & length(input$iter_inc) > 0)
+      #   iter = input$iter_inc %>% as.numeric
+      # else
+      #   iter = FALSE
+      # 
+      # if (input$popInc == "P+H" | length(input$popInc) == 0)
+      #   pop = FALSE
+      # else
+      #   pop = input$popInc
+      # 
+      # scale = input$scaleInc
+      # display_sd = display_sdInc
+      
+      #redefine plot_incidence()
+      
+      simple_plot_incidence = function(trajmwss) {
+        trajmwss <- lapply(seq(length(trajmwss)), function(sim) {
+          trajmwss[[sim]][, `:=`(iteration, sim)]
+          trajmwss[[sim]]
+        })
+        trajmwss %<>% do.call(rbind, .)
+        trajmwss[, `:=`(incP = sum(incPA + incPM + incPS),
+                        incPsymp = sum(incPM + incPS),
+                        incH = sum(incHA + incHM + incHS),
+                        incHsymp = sum(incHM + incHS),
+                        inc = sum(incPA + incPM + incPS + incHA + incHM + incHS)),
+                 by = c("iteration", "time")]
+        
+        trajmwss[, `:=`(mean_incP = mean(incP), sd_incP = sd(incP), 
+                        mean_incPsymp = mean(incPsymp), sd_incPsymp = sd(incPsymp), 
+                        mean_incH = mean(incH), sd_incH = sd(incH), mean_incHsymp = mean(incHsymp), 
+                        sd_incHsymp = sd(incHsymp), mean_inc = mean(inc), 
+                        sd_inc = sd(inc)), by = c("time")]
+        
+        p <- ggplot(trajmwss) +
+          geom_line(aes(time, mean_incP, colour = "Patients")) +
+          geom_line(aes(time, mean_incH, colour = "Professionals")) +
+          xlab("Time (day)") + 
+          ylab("Median daily incidence") +
+          labs(colour = "") +
+          geom_errorbar(aes(time, mean_incP,
+                            ymin = ifelse(mean_incP - sd_incP >= 0,
+                                          mean_incP - sd_incP, 0),
+                            ymax = mean_incP + sd_incP, colour = "Patients"),
+                        alpha = 0.75, width = 0.2, position = position_dodge(0.9)) +
+          geom_errorbar(aes(time, mean_incH,ymin = ifelse(mean_incH - sd_incH >= 0,
+                                          mean_incH - sd_incH, 0),
+                            ymax = mean_incH + sd_incH, colour = "Professionals"),
+                        alpha = 0.75, width = 0.2, position = position_dodge(0.9))
+        
+        return(p)
+      }
+      
+      # plot_incidence(
+      #   trajmwss = model(),
+      #   scale = scale,
+      #   pop = pop,
+      #   iter = iter,
+      #   ward = ward,
+      #   display_sd = display_sdInc
+      # )
+      simple_plot_incidence(trajmwss = model())
+      
     }
 
     output$plotIncidence <- renderPlot({
@@ -536,15 +581,12 @@ plotsoutput <-
     # downloadHandler contains 2 arguments as functions, namely filename, content
     output$down_Incidence <- downloadHandler(
       filename =  function() {
-        paste("daily_incidence", input$formatP3, sep = ".")
+        paste("daily_incidence", "png", sep = ".") #edited to remove call to input$formatP3
       },
       # content is a function with argument file. content writes the plot to the device
       content = function(file) {
-        if (input$formatP3 == "png")
           png(file) # open the png device
-        else
-          pdf(file) # open the pdf device
-
+        
         myIncidence()
 
         # draw the plot
