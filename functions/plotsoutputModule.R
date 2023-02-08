@@ -347,11 +347,11 @@ plotsoutputUI <- function(id) {
                            "daysint_choiceTest"
                          ))),
         hr(),
-        radioButtons(
-          inputId = ns("formatP4"),
-          label = "Select the file type",
-          choices = list("png", "pdf")
-        ),
+        # radioButtons(
+        #   inputId = ns("formatP4"),
+        #   label = "Select the file type",
+        #   choices = list("png", "pdf")
+        # ),
         downloadButton(outputId = ns("down_nTest"), label = "Download the plot")
       ),
       column(8,
@@ -458,12 +458,12 @@ plotsoutput <-
       },
       # content is a function with argument file. content writes the plot to the device
       content = function(file) {
-        if (input$formatP2 == "png")
+        #if (input$formatP2 == "png")
           png(file, res = 150,
               width = input$widthP2,
               height = input$heightP2) # open the png device
-        else
-          pdf(file) # open the pdf device
+        #else
+        #  pdf(file) # open the pdf device
 
         mynosoHazard()
 
@@ -590,7 +590,6 @@ plotsoutput <-
           isTRUE(input$wardTest) & length(input$ward_test) > 0)
         ward = input$ward_test
 
-
       if (input$iterTest == 1 & length(input$iter_test) > 0)
         iter = input$iter_test %>% as.numeric
       else
@@ -628,14 +627,14 @@ plotsoutput <-
     # downloadHandler contains 2 arguments as functions, namely filename, content
     output$down_nTest <- downloadHandler(
       filename =  function() {
-        paste("daily_test_counter", input$formatP4, sep = ".")
+        paste("daily_test_counter", "png" , sep = ".") #input$formatP4 change in "png" for VSimp
       },
       # content is a function with argument file. content writes the plot to the device
       content = function(file) {
-        if (input$formatP4 == "png")
+        #if (input$formatP4 == "png")
           png(file) # open the png device
-        else
-          pdf(file) # open the pdf device
+        #else
+        #  pdf(file) # open the pdf device
 
         myTestcounter()
 
