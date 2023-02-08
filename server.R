@@ -66,6 +66,36 @@ server <- function(input, output, session) {
   ### Sidebar
   ###
 
+  observeEvent(input$versionSimple, {
+
+    output$menu <- renderUI({
+        ################
+        ### VERISONS ###
+        ################
+
+        menuItem("Version simple", icon = icon("play",
+                                               verify_fa = FALSE), tabName = "Vsimp")
+
+        })
+  })
+
+
+  observeEvent(input$versionExp, {
+    output$menu <- renderUI({
+        ################
+        ### VERISONS ###
+        ################
+
+        menuItem("Version expert", icon = icon("play",
+                                               verify_fa = FALSE), tabName = "Vexp",
+                 menuSubItem("Initialization", icon = icon("gears", verify_fa = FALSE), tabName = "INI"),
+                 menuSubItem('Simulations', tabName = 'SIMexp'),
+                 menuSubItem("More parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"))
+
+      })
+  })
+
+
   #### Upload dataset
   # Layout load button once the file is uploaded
   ####

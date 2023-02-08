@@ -11,7 +11,16 @@ tabItemPresentation <- function() {
             title = "MWSS-App",
             width = "100%"
           ),
-          br(),br(),br(),
+            column(12, align="center", offset = 3,
+                   actionButtonStyled("versionSimple", "Simple version", icon = NULL, width = NULL,
+                                      btn_type = "button", type = "warning", class = "btn-lg"),
+                   actionButtonStyled("versionExp", "Expert version", icon = NULL, width = NULL,
+                                      btn_type = "button", type = "warning", class = "btn-lg"),
+         tags$style(type='text/css', "#button { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
+                   ),
+         br(),
+         br(),
+         br(),
           p(
             "MWSS-App contains three sections (left panel):"),
           p("The first one allows to initialize the tool.
