@@ -486,40 +486,81 @@ plotsoutput <-
       )
     })
 
-
+    #QL edit here to use simple version
     myIncidence <- function() {
-      ward = FALSE
-
-      if (isTRUE(input$iterInc) |  length(input$display_sdInc) == 0)
-        display_sdInc <- FALSE
-      else
-        display_sdInc <- input$display_sdInc
-
-      if (input$scaleInc == 1 &
-          isTRUE(input$wardInc) & length(input$ward_inc) > 0)
-        ward = input$ward_inc
-
-      if (input$iterInc == 1 & length(input$iter_inc) > 0)
-        iter = input$iter_inc %>% as.numeric
-      else
-        iter = FALSE
-
-      if (input$popInc == "P+H" | length(input$popInc) == 0)
-        pop = FALSE
-      else
-        pop = input$popInc
-
-      scale = input$scaleInc
-      display_sd = display_sdInc
-
-      plot_incidence(
-        trajmwss = model(),
-        scale = scale,
-        pop = pop,
-        iter = iter,
-        ward = ward,
-        display_sd = display_sdInc
-      )
+      # ward = FALSE
+      # 
+      # if (isTRUE(input$iterInc) |  length(input$display_sdInc) == 0)
+      #   display_sdInc <- FALSE
+      # else
+      #   display_sdInc <- input$display_sdInc
+      # 
+      # if (input$scaleInc == 1 &
+      #     isTRUE(input$wardInc) & length(input$ward_inc) > 0)
+      #   ward = input$ward_inc
+      # 
+      # if (input$iterInc == 1 & length(input$iter_inc) > 0)
+      #   iter = input$iter_inc %>% as.numeric
+      # else
+      #   iter = FALSE
+      # 
+      # if (input$popInc == "P+H" | length(input$popInc) == 0)
+      #   pop = FALSE
+      # else
+      #   pop = input$popInc
+      # 
+      # scale = input$scaleInc
+      # display_sd = display_sdInc
+      
+      #redefine plot_incidence()
+      
+      simple_plot_incidence = function(trajmwss) {
+        trajmwss <- lapply(seq(length(trajmwss)), function(sim) {
+          trajmwss[[sim]][, `:=`(iteration, sim)]
+          trajmwss[[sim]]
+        })
+        trajmwss %<>% do.call(rbind, .)
+        trajmwss[, `:=`(incP = sum(incPA + incPM + incPS),
+                        incPsymp = sum(incPM + incPS),
+                        incH = sum(incHA + incHM + incHS),
+                        incHsymp = sum(incHM + incHS),
+                        inc = sum(incPA + incPM + incPS + incHA + incHM + incHS)),
+                 by = c("iteration", "time")]
+        
+        trajmwss[, `:=`(mean_incP = mean(incP), sd_incP = sd(incP), 
+                        mean_incPsymp = mean(incPsymp), sd_incPsymp = sd(incPsymp), 
+                        mean_incH = mean(incH), sd_incH = sd(incH), mean_incHsymp = mean(incHsymp), 
+                        sd_incHsymp = sd(incHsymp), mean_inc = mean(inc), 
+                        sd_inc = sd(inc)), by = c("time")]
+        
+        p <- ggplot(trajmwss) +
+          geom_line(aes(time, mean_incP, colour = "Patients")) +
+          geom_line(aes(time, mean_incH, colour = "Staff")) +
+          xlab("Time (day)") + 
+          ylab("Median daily incidence") +
+          geom_errorbar(aes(time, mean_incP,
+                            ymin = ifelse(mean_incP - sd_incP >= 0,
+                                          mean_incP - sd_incP, 0),
+                            ymax = mean_incP + sd_incP, colour = "Patients"),
+                        alpha = 0.75, width = 0.2, position = position_dodge(0.9)) +
+          geom_errorbar(aes(time, mean_incH,ymin = ifelse(mean_incH - sd_incH >= 0,
+                                          mean_incH - sd_incH, 0),
+                            ymax = mean_incH + sd_incH, colour = "Staff"),
+                        alpha = 0.75, width = 0.2, position = position_dodge(0.9))
+        
+        return(p)
+      }
+      
+      # plot_incidence(
+      #   trajmwss = model(),
+      #   scale = scale,
+      #   pop = pop,
+      #   iter = iter,
+      #   ward = ward,
+      #   display_sd = display_sdInc
+      # )
+      simple_plot_incidence(trajmwss = model())
+      
     }
 
     output$plotIncidence <- renderPlot({
