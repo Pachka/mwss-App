@@ -1,11 +1,22 @@
 loadTestdtUI <- function(id) {
   ns <- NS(id)
-  actionButton(
-    ns("testds"),
-    "Load example dataset",
-    icon = icon("download",
-                verify_fa = FALSE),
-    style = "color: #fff; background-color: #063567; border-color: #2e6da4"
+
+  tagList(
+    fluidRow(
+      box(
+        selectInput(
+          ns("structure"), "Structure:",
+          c("Network 1" = "1",
+            "Network 2" = "2")),
+        actionButton(
+          ns("testds"),
+          "Load example dataset",
+          icon = icon("download",
+                      verify_fa = FALSE),
+          style = "color: #fff; background-color: #063567; border-color: #2e6da4"
+        )
+      )
+    )
   )
 }
 
@@ -25,7 +36,7 @@ loadTestdt <- function(input, output, session, variable) {
     observeEvent(eventExpr = input$confirmuploadtestdt,
                  handlerExpr = {
                    if (isTRUE(input$confirmuploadtestdt)) {
-                     load("./data/exampleds.rda")
+                     load(paste0("./data/structure",input$structure,".rda"))
 
                      if (exists("saveInputs")) {
                        # structure

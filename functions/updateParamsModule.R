@@ -1,12 +1,13 @@
 updateParamsUI <- function(id) {
   ns <- NS(id)
-  selectizeInput(ns("variant_id"), "SARS-CoV-2 variants",
+  selectizeInput(ns("variant_id"), "Pathogen",
                  choices = setNames(
-                   list("A", "B", "G", "D", "E", "O1", "O2"),
-                   list("Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Omicron (BA.1)", "Omicron (BA.2)")),
-                 selected = "Omicron (BA.1)",
+                   list("Covid", "Influenza"),
+                   # list("Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Omicron (BA.1)", "Omicron (BA.2)")),
+                   list("SARS-CoV-2", "Influenza")),
+                 selected = "Covid",
                  options = list(
-                   placeholder = 'Select variant',
+                   placeholder = 'Select disease',
                    onInitialize = I('function() { this.setValue(""); }')
                  )
   )
@@ -26,7 +27,7 @@ updateParams  <- function(input, output, session){
           title = "Want to confirm ?",
           type = "warning",
           btn_labels = c("Cancel", "Confirm"),
-          text = "Note that choosing another variant will erase the current set of parameters."
+          text = "Note that choosing another disease will erase the current set of parameters."
         )
 
       observeEvent(eventExpr = input$confirmVariantchange,
@@ -36,7 +37,7 @@ updateParams  <- function(input, output, session){
 
                        # update sliders input values
                        for(slidersInput in c("psympNI", "psympLI", "psympHI", "psevNI", "psevLI", "psevHI",
-                                             # "pIC", 
+                                             # "pIC",
                                              "pdieIC",
                                              "hNI2LI", "hLI2HI",
                                              "rinfLI", "rinfHI"))
@@ -61,7 +62,7 @@ updateParams  <- function(input, output, session){
                                          "tE", "tEA", "tES", "tIA", "tIM", "tIS", "tLI","tHI",
                                          # "rsymp", "rsev",
                                          # Ratio adjusting the excretion rates based on epidemiological stage
-                                         "rEA","rES", "rIA", "rIM","rIS", 
+                                         "rEA","rES", "rIA", "rIM","rIS",
                                          "sensAg", "speAg", "sensPCR", "spePCR"))
                          updateNumericInput(session = .subset2(session, "parent"),
                                             numInput,
@@ -82,8 +83,8 @@ updateParams  <- function(input, output, session){
     } else {
       if(input$variant_id != ""){
         # Show a simple modal
-        shinyalert(title = paste("Epidemiological parameters for this variant haven't been integrated yet.
-                                 Set values by yourself or choose another variant."),
+        shinyalert(title = paste("Epidemiological parameters for this disease haven't been integrated yet.
+                                 Set values by yourself or choose another pathogen."),
                    type = "info",
                    size = "l")
       }

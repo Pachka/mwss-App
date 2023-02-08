@@ -18,15 +18,15 @@ sapply(list.of.packages, function(pck){
 
 outdatedpck <- old.packages()
 if(TRUE %in% (list.of.packages %in% outdatedpck))
-  warning(paste("You might need to update the following packages:", 
+  warning(paste("You might need to update the following packages:",
                 paste(list.of.packages[which(list.of.packages %in% outdatedpck)], collapse = ", ")))
 
 install_github("MESuRS-Lab/mwss", quiet = T)
 library("mwss")
 
 # Parameters dataset
-source('data/O1.R', local = TRUE)
-source('data/O2.R', local = TRUE)
+source('data/Covid.R', local = TRUE)
+source('data/Influenza.R', local = TRUE)
 
 #### Source function
 source('functions/buttonsUI.R', local = TRUE)

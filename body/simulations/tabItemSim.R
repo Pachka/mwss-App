@@ -6,7 +6,7 @@
 
 
 tabItemSim <- function() {
-  tabItem("SIM",
+  tabItem("Vsimp",
           tabsetPanel(
             id = "tabsSIM",
             tabPanel(
@@ -66,8 +66,6 @@ tabItemSim <- function() {
               title = "Simulations",
               icon = icon("sliders-h",
                           verify_fa = FALSE),
-              div(style = "display: inline-block;vertical-align:top;",
-                  updateParamsUI("variant")),
               # div(
               #   style = "display: inline-block;vertical-align:top;",
               #   fileInput(
@@ -93,10 +91,9 @@ tabItemSim <- function() {
               # div(style = "display: inline-block;vertical-align:top;",
               #     downloadParamsUI("dwloadParams")),
               hr(),
-              div(
-                style = "display: inline-block;vertical-align:top;",
-                br(),
-                loadTestdtUI("loadtest")
+              box(
+                width = 12,
+                loadTestdtUI("loadtest"), updateParamsUI("variant"),
               ),
               hr(),
               fluidRow(
