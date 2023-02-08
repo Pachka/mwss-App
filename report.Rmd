@@ -95,18 +95,12 @@ options(tinytex.verbose = TRUE)
 
 ```
 
-## Modelling project
-Supported by the Département d’information médicale of the Centre hospitalier Guillaume Régnier (Rennes, France), a simulation modelling project was undertaken during 2020 pandemic to evaluate the effect of infection control protocols on SARS-CoV-2 spread in french long-term care facilities. The modelling was carried out by the french Pasteur Institute, the french Conservatoire national des arts et métiers and the french University of Versailles Saint-Quentin-en-Yvelines, in collaboration with the Department of Disease Control and Epidemiology of the National Veterinary Institute of Sweden. Epidemiological simulation are performed using R-based packages: mwss and SimInf.
-
-Note that simulations were run locally and, to deal with data confidentiality challenges, the parameters and simulations were not saved on our servers.
-
 ## Objective
 Dynamic epidemiological modeling is a powerful tool to analyse risk of pathogen persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and health care workers in health care settings, heterogeneity and stochasticity play fundamental roles due to risk of super-spreading events or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately.
 
 Here we use a network-structured model to simulate disease spreading accross wards inside a healthcare facility and test the efficacy of intervention strategies on disease control. 
 
 ## Methods 
-This report contains synthetic output generated using the open source R package 'MWSS' which uses the Gillespie algorithm, implemented with SimInf R-package.
 
 ### Hospital structure and population
 
@@ -121,7 +115,7 @@ Plots:
 2. Population size (patients, HCWs)
 
 ### Epidemiology: pathogen (and immunity level)
-We simulate the diffusion of **pathogen X** in a population with **no/low/high** immunity. 
+We simulate the diffusion of **pathogen X** in a population with **no/low/high** immunity/ in a population with heterogeneous immunity. 
 
 A couple of key parameters to include:
 
@@ -153,8 +147,14 @@ All plots from the simple version app.
 To discuss.
 
 ## Appendix
+This report contains synthetic output generated using the open source R package 'MWSS' which uses the Gillespie algorithm, implemented with SimInf R-package.
 
 Full table with parameters. 
+
+## Modelling project
+Supported by the Département d’information médicale of the Centre hospitalier Guillaume Régnier (Rennes, France), a simulation modelling project was undertaken during 2020 pandemic to evaluate the effect of infection control protocols on SARS-CoV-2 spread in french long-term care facilities. The modelling was carried out by the french Pasteur Institute, the french Conservatoire national des arts et métiers and the french University of Versailles Saint-Quentin-en-Yvelines, in collaboration with the Department of Disease Control and Epidemiology of the National Veterinary Institute of Sweden. Epidemiological simulation are performed using R-based packages: mwss and SimInf.
+
+Note that simulations were run locally and, to deal with data confidentiality challenges, the parameters and simulations were not saved on our servers.
 
 
 
