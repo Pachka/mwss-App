@@ -1,8 +1,8 @@
 ---
 title: "Epidemiological simulation report"
 output:
-  html_document: default
   pdf_document: default
+  #html_document: default
 params:
   control_traj: NA
   data : NA
@@ -95,91 +95,130 @@ options(tinytex.verbose = TRUE)
 
 ```
 
-## Modelling project:
+## Modelling project
 Supported by the Département d’information médicale of the Centre hospitalier Guillaume Régnier (Rennes, France), a simulation modelling project was undertaken during 2020 pandemic to evaluate the effect of infection control protocols on SARS-CoV-2 spread in french long-term care facilities. The modelling was carried out by the french Pasteur Institute, the french Conservatoire national des arts et métiers and the french University of Versailles Saint-Quentin-en-Yvelines, in collaboration with the Department of Disease Control and Epidemiology of the National Veterinary Institute of Sweden. Epidemiological simulation are performed using R-based packages: mwss and SimInf.
 
 Note that simulations were run locally and, to deal with data confidentiality challenges, the parameters and simulations were not saved on our servers.
 
-## Objective: 
-Dynamic epidemiological modeling is a powerful tool to analyse risk of pathogen  persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and health care workers in health care settings, heterogeneity and stochasticity play fundamental roles due to high risk of super-spreading or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population  and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately.
+## Objective
+Dynamic epidemiological modeling is a powerful tool to analyse risk of pathogen persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and health care workers in health care settings, heterogeneity and stochasticity play fundamental roles due to risk of super-spreading events or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately.
 
-## Methods: 
+Here we use a network-structured model to simulate disease spreading accross wards inside a healthcare facility and test the efficacy of intervention strategies on disease control. 
+
+## Methods 
 This report contains synthetic output generated using the open source R package 'MWSS' which uses the Gillespie algorithm, implemented with SimInf R-package.
 
-
-```{r eval = TRUE, warning = FALSE, message = FALSE}
-library(mwss)
-library(magrittr)
-
-    ward_names <- params$data$ward_names
-    pop_size_P <- params$data$pop_size_P
-    pop_size_H <- params$data$pop_size_H
-    nVisits <- params$data$nVisits
-    LS <- params$data$LS
-    
-    matContact <- params$data$matContact
-    
-    n_days <- params$n_days %>% seq
-    
-    IMMstate = params$data$IMMstate
-    EPIstate = params$data$EPIstate
-    
-    # No screening area
-    SA = FALSE
-    nH_SA = NULL
-    
-    gdata = params$data$gdata
-    
-    # No contact restriction
-    gdata[["pISO"]] <- 0
-    
-    # No regular screening
-    gdata[c("ptestPWNI","ptestPWLI","ptestPWHI","ptestHNI","ptestHLI","ptestHHI")] <- 0
-    
-    
-    nsim <- params$n_sim
-    nward <- length(ward_names)
-      
-    mwssmodel <- mwss(
-      ward_names,
-      pop_size_P,
-      pop_size_H,
-      nVisits,
-      LS,
-      matContact = matContact,
-      IMMstate = IMMstate,
-      EPIstate = EPIstate,
-      SA = SA,
-      nH_SA = nH_SA,
-      gdata = gdata,
-      tSim  = n_days,
-      verbose = FALSE
-    )
-    
-    baseline_traj <- multisim(mwssmodel, nsim, ward_names)
-    
-```
-
+### Hospital structure and population
 
 ```{r, results='asis'}
-cat('This report present synthetic results of', nsim,' simulations run for a', nward, "-wards healthcare facility. The wards are connected by the professionals. In this report, the simulations run with the baseline scenario: without any control nor surveillance measure (contact restriction, regular random screening, screening area at the admission, are compared to simulations run with:", 
-  c("confinement/contact restriction to detected patients", 
-    "implementation of a screening area at patient admission including contact restriction/clinical examination/test",
-    "screening of patients by implementation of tests on a random subset of patient population at regular intervals",
-    "screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals",
-    "positive probability to test symptomatic patients",
-    "positive probability to test symptomatic healthcare workers")[c("ISO", "SA", "ScreenP", "ScreenH", "TestSympP", "TestSympH") %in% class(params$control_traj)] %>% paste(., collapse = " / "),".")
+cat('We consider a hospital facility with', 24, " wards. The wards are connected by health-care workers." )
 ```
 
+Plots: 
 
-## Results: 
+1. connectivity plot for the newtork of wards
+
+2. Population size (patients, HCWs)
+
+### Epidemiology: pathogen (and immunity level)
+We simulate the diffusion of **pathogen X** in a population with **no/low/high** immunity. 
+
+A couple of key parameters to include:
+
+1. Baseline transmissibility (R0) 
+
+2. Severity (probability of developing (severe) symptoms)
+
+3. Fraction of HCW and PATIENTS with low/high immunity.
+
+### Intervention strategies
+A quick recap of the interventions assumed. 
+
+1. confinement/contact restriction to detected patients
+
+2. implementation of a screening area at patient admission including contact restriction/clinical examination/test 
+
+3. screening of patients by implementation of tests on a random subset of patient population at regular intervals
+
+4. screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals
+
+We compare the results of this intervention scenario with a baseline scenario without any interventions.
+
+## Results 
+
+All plots from the simple version app. 
+
+## Limitations
+
+To discuss.
+
+## Appendix
+
+Full table with parameters. 
+
+
+
+```{r eval=TRUE, message=FALSE, warning=FALSE}
+# library(mwss)
+# library(magrittr)
+# 
+#     ward_names <- params$data$ward_names
+#     pop_size_P <- params$data$pop_size_P
+#     pop_size_H <- params$data$pop_size_H
+#     nVisits <- params$data$nVisits
+#     LS <- params$data$LS
+#     
+#     matContact <- params$data$matContact
+#     
+#     n_days <- params$n_days %>% seq
+#     
+#     IMMstate = params$data$IMMstate
+#     EPIstate = params$data$EPIstate
+#     
+#     # No screening area
+#     SA = FALSE
+#     nH_SA = NULL
+#     
+#     gdata = params$data$gdata
+#     
+#     # No contact restriction
+#     gdata[["pISO"]] <- 0
+#     
+#     # No regular screening
+#     gdata[c("ptestPWNI","ptestPWLI","ptestPWHI","ptestHNI","ptestHLI","ptestHHI")] <- 0
+#     
+#     nsim <- params$n_sim
+#     nward <- length(ward_names)
+#       
+#     mwssmodel <- mwss(
+#       ward_names,
+#       pop_size_P,
+#       pop_size_H,
+#       nVisits,
+#       LS,
+#       matContact = matContact,
+#       IMMstate = IMMstate,
+#       EPIstate = EPIstate,
+#       SA = SA,
+#       nH_SA = nH_SA,
+#       gdata = gdata,
+#       tSim  = n_days,
+#       verbose = FALSE
+#     )
+#     
+#     baseline_traj <- multisim(mwssmodel, nsim, ward_names)
+```
 
 ```{r, results='asis'}
-cat('In the simulations, a median of',
-baseline_traj %>% keyoutput(., scale = 0, focus = "infections") %>% .$H %>% .$quantiles_noso %>% .[["50%"]], 
-'nosocomial infections of professionals were observed in the baseline scenario, when a median of',
-params$control_traj %>% keyoutput(., scale = 0, focus = "infections") %>% .$H %>% .$quantiles_noso %>% .[["50%"]], 
-'nosocomial infections of professionals were observed with the tested surveillance and control measures.')
+# cat('This report present synthetic results of', nsim,' simulations run for a', nward, "-wards healthcare facility. The wards are connected by the professionals. In this report, the simulations run with the baseline scenario: without any control nor surveillance measure (contact restriction, regular random screening, screening area at the admission, are compared to simulations run with:",  c("confinement/contact restriction to detected patients", "implementation of a screening area at patient admission including contact restriction/clinical examination/test", "screening of patients by implementation of tests on a random subset of patient population at regular intervals", "screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals", "positive probability to test symptomatic patients", "positive probability to test symptomatic healthcare workers")[c("ISO", "SA", "ScreenP", "ScreenH", "TestSympP", "TestSympH") %in% class(params$control_traj)] %>% paste(., collapse = " / "),".")
+```
+
+```{r, results='asis'}
+# cat('In the simulations, a median of',
+# baseline_traj %>% keyoutput(., scale = 0, focus = "infections") %>% .$H %>% .$quantiles_noso %>% .[["50%"]], 
+# 'nosocomial infections of professionals were observed in the baseline scenario, when a median of',
+# params$control_traj %>% keyoutput(., scale = 0, focus = "infections") %>% .$H %>% .$quantiles_noso %>% .[["50%"]], 
+# 'nosocomial infections of professionals were observed with the tested surveillance and control measures.')
 ```
 
 
