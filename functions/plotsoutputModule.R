@@ -2,223 +2,229 @@ plotsoutputUI <- function(id) {
   ns <- NS(id)
 
   tagList(fluidRow(
+    # box(
+    #   column(
+    #     4,
+        # numericInput(
+        #   ns('outb_Thhold'),
+        #   'Probability to have at least n nosocomial infection:',
+        #   value = 1,
+        #   min = 0,
+        #   step = 1
+        # ),
+        # checkboxInput(
+        #   ns("pOBlegcol"),
+        #   "Limit the number of colors in the legend",
+        #   value = FALSE
+        # ),
+        # conditionalPanel(
+        #   condition =
+        #     paste0('input[\'', ns('pOBlegcol'), "\'] == 1"),
+        #   sliderInput(
+        #     ns('nlegcolpOB'),
+        #     'Number of colors in the legend:',
+        #     value = 5,
+        #     min = 2,
+        #     max = 10,
+        #     step = 1
+        #   )
+        # ),
+        # hr(),
+        # checkboxInput(ns("pOBoptions"),
+        #               "Layout options",
+        #               value = FALSE),
+        # conditionalPanel(
+        #   condition =
+        #     paste0('input[\'', ns('pOBoptions'), "\'] == 1"),
+        #   selectInput(
+        #     ns('pOBlayout'),
+        #     "Layout",
+        #     c(
+        #       "as_star",
+        #       "as_tree",
+        #       "in_circle",
+        #       "nicely",
+        #       "on_grid",
+        #       "on_sphere",
+        #       "randomly",
+        #       "with_dh",
+        #       "with_fr",
+        #       "with_gem",
+        #       "with_graphopt",
+        #       "with_kk",
+        #       "with_lgl",
+        #       "with_mds",
+        #       "with_sugiyama"
+        #     ),
+        #     selected = "with_fr"
+        #   ),
+        #   sliderInput(
+        #     ns('pOBvertexsize'),
+        #     'Size of the wards:',
+        #     value = 0.5,
+        #     min = 0.1,
+        #     max = 1,
+        #     step = 0.1
+        #   ),
+        #   sliderInput(
+        #     ns('pOBvertexlabelsize'),
+        #     'Size of the names:',
+        #     value = 0.03,
+        #     min = 0.01,
+        #     max = 0.1,
+        #     step = 0.01
+        #   ),
+        #   sliderInput(
+        #     ns('pOBedgearrowsize'),
+        #     'Size of the arrows:',
+        #     value = 0.4,
+        #     min = 0.1,
+        #     max = 1,
+        #     step = 0.1
+        #   ),
+        #   conditionalPanel(
+        #     condition =
+        #       paste0('input[\'', ns('formatP1'), "\'] == \"png\""),
+        #     column(6,
+        #     sliderInput(
+        #       ns('widthP1'),
+        #       'Width (px):',
+        #       value = 1500,
+        #       min = 500,
+        #       max = 2000,
+        #       step = 50
+        #     )),
+        #     column(6,
+        #     sliderInput(
+        #       ns('heightP1'),
+        #       'Height (px):',
+        #       value = 1100,
+        #       min = 500,
+        #       max = 2000,
+        #       step = 50
+        #     )))
+        # ),
+        # radioButtons(
+        #   inputId = ns("formatP1"),
+        #   label = "Select the file type",
+        #   choices = list("png", "pdf")
+        # ),
+        #downloadButton(outputId = ns("down_pOutbreak"), label = "Download the plot")
+    #   ),
+    #   column(8#,
+    #          #plotOutput(ns("pOutbreak"))
+    #          )
+    # ),
     box(
-      column(
-        4,
-        numericInput(
-          ns('outb_Thhold'),
-          'Probability to have at least n nosocomial infection:',
-          value = 1,
-          min = 0,
-          step = 1
-        ),
-        checkboxInput(
-          ns("pOBlegcol"),
-          "Limit the number of colors in the legend",
-          value = FALSE
-        ),
-        conditionalPanel(
-          condition =
-            paste0('input[\'', ns('pOBlegcol'), "\'] == 1"),
-          sliderInput(
-            ns('nlegcolpOB'),
-            'Number of colors in the legend:',
-            value = 5,
-            min = 2,
-            max = 10,
-            step = 1
-          )
-        ),
-        hr(),
-        checkboxInput(ns("pOBoptions"),
-                      "Layout options",
-                      value = FALSE),
-        conditionalPanel(
-          condition =
-            paste0('input[\'', ns('pOBoptions'), "\'] == 1"),
-          selectInput(
-            ns('pOBlayout'),
-            "Layout",
-            c(
-              "as_star",
-              "as_tree",
-              "in_circle",
-              "nicely",
-              "on_grid",
-              "on_sphere",
-              "randomly",
-              "with_dh",
-              "with_fr",
-              "with_gem",
-              "with_graphopt",
-              "with_kk",
-              "with_lgl",
-              "with_mds",
-              "with_sugiyama"
-            ),
-            selected = "with_fr"
-          ),
-          sliderInput(
-            ns('pOBvertexsize'),
-            'Size of the wards:',
-            value = 0.5,
-            min = 0.1,
-            max = 1,
-            step = 0.1
-          ),
-          sliderInput(
-            ns('pOBvertexlabelsize'),
-            'Size of the names:',
-            value = 0.03,
-            min = 0.01,
-            max = 0.1,
-            step = 0.01
-          ),
-          sliderInput(
-            ns('pOBedgearrowsize'),
-            'Size of the arrows:',
-            value = 0.4,
-            min = 0.1,
-            max = 1,
-            step = 0.1
-          ),
-          conditionalPanel(
-            condition =
-              paste0('input[\'', ns('formatP1'), "\'] == \"png\""),
-            column(6,
-            sliderInput(
-              ns('widthP1'),
-              'Width (px):',
-              value = 1500,
-              min = 500,
-              max = 2000,
-              step = 50
-            )),
-            column(6,
-            sliderInput(
-              ns('heightP1'),
-              'Height (px):',
-              value = 1100,
-              min = 500,
-              max = 2000,
-              step = 50
-            )))
-        ),
-        radioButtons(
-          inputId = ns("formatP1"),
-          label = "Select the file type",
-          choices = list("png", "pdf")
-        ),
-        downloadButton(outputId = ns("down_pOutbreak"), label = "Download the plot")
-      ),
-      column(8,
-             plotOutput(ns("pOutbreak")))
-    ),
-    box(
-      column(
-        4,
-        checkboxInput(
-          ns("nosolegcol"),
-          "Limit the number of colors in the legend",
-          value = FALSE
-        ),
-        conditionalPanel(
-          condition =
-            paste0('input[\'', ns('nosolegcol'), "\'] == 1"),
-          sliderInput(
-            ns('nlegcolnosoHaza'),
-            'Number of colors in the legend:',
-            value = 5,
-            min = 2,
-            max = 10,
-            step = 1
-          )
-        ),
-        hr(),
-        checkboxInput(ns("nosoHazaoptions"),
-                      "Layout options",
-                      value = FALSE),
-        conditionalPanel(
-          condition =
-            paste0('input[\'', ns('nosoHazaoptions'), "\'] == 1"),
-          selectInput(
-            inputId = ns('nosoHazalayout'),
-            label = "Layout",
-            choices = c(
-              "as_star",
-              "as_tree",
-              "in_circle",
-              "nicely",
-              "on_grid",
-              "on_sphere",
-              "randomly",
-              "with_dh",
-              "with_fr",
-              "with_gem",
-              "with_graphopt",
-              "with_kk",
-              "with_lgl",
-              "with_mds",
-              "with_sugiyama"
-            ),
-            selected = "with_fr"
-          ),
-          sliderInput(
-            ns('nosoHazavertexsize'),
-            'Size of the wards:',
-            value = 0.5,
-            min = 0.1,
-            max = 1,
-            step = 0.1
-          ),
-          sliderInput(
-            ns('nosoHazavertexlabelsize'),
-            'Size of the names:',
-            value = 0.03,
-            min = 0.01,
-            max = 0.1,
-            step = 0.01
-          ),
-          sliderInput(
-            ns('nosoHazaedgearrowsize'),
-            'Size of the arrows:',
-            value = 0.4,
-            min = 0.1,
-            max = 1,
-            step = 0.1
-          ),
-          conditionalPanel(
-            condition =
-              paste0('input[\'', ns('formatP2'), "\'] == \"png\""),
-            column(6,
-                   sliderInput(
-                     ns('widthP2'),
-                     'Width (px):',
-                     value = 1500,
-                     min = 500,
-                     max = 2000,
-                     step = 50
-                   )),
-            column(6,
-                   sliderInput(
-                     ns('heightP2'),
-                     'Height (px):',
-                     value = 1100,
-                     min = 500,
-                     max = 2000,
-                     step = 50
-                   )))
-        ),
-        radioButtons(
-          inputId = ns("formatP2"),
-          label = "Select the file type",
-          choices = list("png", "pdf")
-        ),
-        downloadButton(outputId = ns("down_nosoHazard"), label = "Download the plot")
-      ),
-      column(8,
-             # div(style = "display: inline-block;vertical-align:top;",
-             plotOutput(ns("nosoHazard")))
+      # column(
+      #   4,
+        # checkboxInput(
+        #   ns("nosolegcol"),
+        #   "Limit the number of colors in the legend",
+        #   value = FALSE
+        # ),
+        # conditionalPanel(
+        #   condition =
+        #     paste0('input[\'', ns('nosolegcol'), "\'] == 1"),
+        #   sliderInput(
+        #     ns('nlegcolnosoHaza'),
+        #     'Number of colors in the legend:',
+        #     value = 5,
+        #     min = 2,
+        #     max = 10,
+        #     step = 1
+        #   )
+        # ),
+        # hr(),
+        # checkboxInput(ns("nosoHazaoptions"),
+        #               "Layout options",
+        #               value = FALSE),
+        # conditionalPanel(
+        #   condition =
+        #     paste0('input[\'', ns('nosoHazaoptions'), "\'] == 1"),
+        #   selectInput(
+        #     inputId = ns('nosoHazalayout'),
+        #     label = "Layout",
+        #     choices = c(
+        #       "as_star",
+        #       "as_tree",
+        #       "in_circle",
+        #       "nicely",
+        #       "on_grid",
+        #       "on_sphere",
+        #       "randomly",
+        #       "with_dh",
+        #       "with_fr",
+        #       "with_gem",
+        #       "with_graphopt",
+        #       "with_kk",
+        #       "with_lgl",
+        #       "with_mds",
+        #       "with_sugiyama"
+        #     ),
+        #     selected = "with_fr"
+        #   ),
+        #   sliderInput(
+        #     ns('nosoHazavertexsize'),
+        #     'Size of the wards:',
+        #     value = 0.5,
+        #     min = 0.1,
+        #     max = 1,
+        #     step = 0.1
+        #   ),
+        #   sliderInput(
+        #     ns('nosoHazavertexlabelsize'),
+        #     'Size of the names:',
+        #     value = 0.03,
+        #     min = 0.01,
+        #     max = 0.1,
+        #     step = 0.01
+        #   ),
+        #   sliderInput(
+        #     ns('nosoHazaedgearrowsize'),
+        #     'Size of the arrows:',
+        #     value = 0.4,
+        #     min = 0.1,
+        #     max = 1,
+        #     step = 0.1
+        #   ),
+        #   conditionalPanel(
+        #     condition =
+        #       paste0('input[\'', ns('formatP2'), "\'] == \"png\""),
+        #     column(6,
+        #            sliderInput(
+        #              ns('widthP2'),
+        #              'Width (px):',
+        #              value = 1500,
+        #              min = 500,
+        #              max = 2000,
+        #              step = 50
+        #            )),
+        #     column(6,
+        #            sliderInput(
+        #              ns('heightP2'),
+        #              'Height (px):',
+        #              value = 1100,
+        #              min = 500,
+        #              max = 2000,
+        #              step = 50
+        #            )))
+        # ),
+        # radioButtons(
+        #   inputId = ns("formatP2"),
+        #   label = "Select the file type",
+        #   choices = list("png", "pdf")
+        # ),
+      #   downloadButton(outputId = ns("down_nosoHazard"), label = "Download the plot")
+      # ),
+      # column(8,
+      #        # div(style = "display: inline-block;vertical-align:top;",
+      #        plotOutput(ns("nosoHazard")))*
+
+      plotOutput(ns("nosoHazard")),
+
+      downloadButton(outputId = ns("down_nosoHazard"), label = "Download the plot"),
+      align = "center"
     ),
     box(
       column(
@@ -418,10 +424,11 @@ plotsoutput <-
 
     ## a plot function
     mynosoHazard <- function() {
-      if (input$nosolegcol == 1)
-        maxcolors <- input$nlegcolnosoHaza
-      else
-        maxcolors <- FALSE
+      # if (input$nosolegcol == 1)
+      #   maxcolors <- input$nlegcolnosoHaza
+      # else
+      #   maxcolors <- FALSE
+      maxcolors = 5 #paramByDefaultVSimp
 
       plot_nosoHazard(
         trajmwss = model(),
@@ -429,10 +436,10 @@ plotsoutput <-
         pop_size_P = variable$pop_size_P,
         LS = variable$LS,
         matContact = variable$matContact,
-        layout = input$nosoHazalayout,
-        vertexsize = input$nosoHazavertexsize,
-        vertexlabelsize = input$nosoHazavertexlabelsize,
-        edgearrowsize = input$nosoHazaedgearrowsize,
+        layout = "with_fr",  #input$nosoHazalayout, #paramByDefaultVSimp
+        vertexsize = 0.5,  #input$nosoHazavertexsize, #paramByDefaultVSimp
+        vertexlabelsize = 0.03, #input$nosoHazavertexlabelsize, #paramByDefaultVSimp
+        edgearrowsize = 0.4, #input$nosoHazaedgearrowsize, #paramByDefaultVSimp
         addtitle = TRUE,
         maxcolors = maxcolors,
         verbose = FALSE
@@ -447,7 +454,7 @@ plotsoutput <-
     # downloadHandler contains 2 arguments as functions, namely filename, content
     output$down_nosoHazard <- downloadHandler(
       filename =  function() {
-        paste("nosocomial_hazard", input$formatP2, sep = ".")
+        paste("nosocomial_hazard", "png" , sep = ".") #input$formatP2 replace by "png" #paramByDefaultVSimp
       },
       # content is a function with argument file. content writes the plot to the device
       content = function(file) {
