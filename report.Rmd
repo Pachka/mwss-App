@@ -100,11 +100,10 @@ Supported by the Département d’information médicale of the Centre hospitalie
 
 Note that simulations were run locally and, to deal with data confidentiality challenges, the parameters and simulations were not saved on our servers.
 
-
 ## Objective: 
 Dynamic epidemiological modeling is a powerful tool to analyse risk of pathogen  persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and health care workers in health care settings, heterogeneity and stochasticity play fundamental roles due to high risk of super-spreading or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population  and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately.
 
-## Methods: .
+## Methods: 
 This report contains synthetic output generated using the open source R package 'MWSS' which uses the Gillespie algorithm, implemented with SimInf R-package.
 
 
