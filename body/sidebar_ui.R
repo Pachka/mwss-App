@@ -11,21 +11,10 @@ sidebar <- dashboardSidebar(
     menuItem("Presentation", icon = icon("book",
                                          verify_fa = FALSE), tabName = "PRS"),
 
-    #################
-    #################
-    ### Structure ###
-    #################
-    #################
 
-    # menuItem("Initialization", icon = icon("gears",
-    #                                   verify_fa = FALSE), tabName = "INI"),
-
-
-    ###################
-    ###################
-    ### Simulations ###
-    ###################
-    ###################
+    ################
+    ### VERISONS ###
+    ################
 
     menuItem("Version simple", icon = icon("play",
                                        verify_fa = FALSE), tabName = "SIM"),
@@ -35,17 +24,8 @@ sidebar <- dashboardSidebar(
     menuItem("Version expert", icon = icon("play",
                                            verify_fa = FALSE), tabName = "Vexp",
              menuSubItem("Initialization", icon = icon("gears", verify_fa = FALSE), tabName = "INI"),
-             menuSubItem('Tab 2', tabName='tab2'),
+             menuSubItem('Simulations', tabName='SIMexp'),
              menuSubItem("More parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS")),
-
-    ##################################
-    ##################################
-    ### Epidemiological parameters ###
-    ##################################
-    ##################################
-
-
-    # menuItem("More parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"),
 
     #############
     #############
