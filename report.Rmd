@@ -177,9 +177,6 @@ params$control_traj %>% keyoutput(., scale = 0, focus = "infections") %>% .$H %>
 'nosocomial infections of professionals were observed with the tested surveillance and control measures.')
 ```
 
-## Conclusions: 
-...
-
 
 ## Modelling project:
 Supported by the Département d’information médicale of the Centre hospitalier Guillaume Régnier (Rennes, France), a simulation modelling project was undertaken during 2020 pandemic to evaluate the effect of infection control protocols on SARS-CoV-2 spread in french long-term care facilities. The modelling was carried out by the french Pasteur Institute, the french Conservatoire national des arts et métiers and the french University of Versailles Saint-Quentin-en-Yvelines, in collaboration with the Department of Disease Control and Epidemiology of the National Veterinary Institute of Sweden. Epidemiological simulation are performed using R-based packages: mwss and SimInf.
