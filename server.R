@@ -8,11 +8,11 @@ server <- function(input, output, session) {
     help_dir = "helpfiles",
     withMathJax = FALSE
   )
-  
+
   ###############################
   ####  Tables initialization ###
   ###############################
-  
+
   # make reactive to record wards
   data <- shiny::reactiveValues(
     # Wards structure
@@ -30,55 +30,55 @@ server <- function(input, output, session) {
     EPIstate = NULL,
     gdata = NULL
   )
-  
+
   # load test
   callModule(module = loadTestdt,
              id = "loadtest",
              variable = data)
-  
+
   # reset inputs
   callModule(module = resetreactives,
              id = "resetall",
              variable = data)
-  
-  
+
+
   observe({
     if (!is.null(data$Hplanning)){
       contacts <- data$Hplanning
-      
+
       matContact <- lapply(data$ward_names, function(W) {
         W <- contacts$professionals %>% endsWith(., paste0("_", W)) %>% contacts[., ]
         W %<>% .[, mget(c(names(.)[names(.) != "professionals"]))] %>% colSums
         W %<>% divide_by(sum(.)) %>% multiply_by((100))
         W
       }) %>% do.call(rbind, .)
-      
+
       rownames(matContact) <- colnames(matContact)
       data$matContact <- matContact
     }
   })
-  
+
   #####################################
   #######    Structure panel     ######
   #####################################
-  
+
   ###
   ### Sidebar
   ###
-  
+
   #### Upload dataset
   # Layout load button once the file is uploaded
   ####
-  
+
   # conditional display
   output$fileUploaded <- reactive({
     return(!is.null(input$loadwards))
   })
-  
+
   outputOptions(output,
                 'fileUploaded',
                 suspendWhenHidden = FALSE)
-  
+
   # ask for confirmation
   observeEvent(input$uploadSTR, {
     ask_confirmation(
@@ -89,16 +89,16 @@ server <- function(input, output, session) {
       text = "Note that loading a dataset will erase the currently recorded structure."
     )
   })
-  
+
   # ask for confirmation
   observeEvent(
     eventExpr = input$myconfirmation,
     handlerExpr = {
       if (isTRUE(input$myconfirmation)) {
         req(input$loadwards)
-        
+
         load(input$loadwards$datapath)
-        
+
         if (exists("saveInputs")) {
           # structure
           data$ward_names = saveInputs$ward_names
@@ -609,9 +609,9 @@ server <- function(input, output, session) {
   #######    Parameters panel    ######
   #####################################
 
-  ## Choose variant, update parameters baseline values
+  ## Choose disease, update parameters baseline values
   callModule(module = updateParams,
-             id = "variant")
+             id = "disease")
 
   ###
   ### Download set of parameters
@@ -1015,43 +1015,30 @@ server <- function(input, output, session) {
                    input$pISO,
                    0)
 
+    t_ctcH_PSA = timeinputinday(input$t_ctcH_PSA)
+    t_ctcP_PSA = timeinputinday(input$t_ctcP_PSA)
+    t_ctcH_PW = timeinputinday(input$t_ctcH_PW)
+
+    t_ctcP_PW = timeinputinday(input$t_ctcP_PW)
+    t_ctcH_H = timeinputinday(input$t_ctcH_H)
+    t_ctcV_PW = timeinputinday(input$t_ctcV_PW)
+
+    tSA = timeinputinday(input$tSA)
+    ttestSA = timeinputinday(input$ttestSA)
+
     gdata <- build_gdata(
       ##### Infection
       n_ctcH_PSA = input$n_ctcH_PSA,
-      t_ctcH_PSA = (as.numeric(strftime(
-        input$t_ctcH_PSA, "%M"
-      )) / 60 + as.numeric(strftime(
-        input$t_ctcH_PSA, "%H"
-      ))) / 24,
+      t_ctcH_PSA = t_ctcH_PSA,
       n_ctcP_PSA = input$n_ctcH_PSA,
-      t_ctcP_PSA = (as.numeric(strftime(
-        input$t_ctcP_PSA, "%M"
-      )) / 60 + as.numeric(strftime(
-        input$t_ctcP_PSA, "%H"
-      ))) / 24,
+      t_ctcP_PSA = t_ctcP_PSA,
       n_ctcH_PW = input$n_ctcH_PW,
-      t_ctcH_PW = (as.numeric(strftime(
-        input$t_ctcH_PW, "%M"
-      )) / 60 + as.numeric(strftime(
-        input$t_ctcH_PW, "%H"
-      ))) / 24,
+      t_ctcH_PW = t_ctcH_PW,
       n_ctcP_PW = input$n_ctcP_PW,
-      t_ctcP_PW = (as.numeric(strftime(
-        input$t_ctcP_PW, "%M"
-      )) / 60 + as.numeric(strftime(
-        input$t_ctcP_PW, "%H"
-      ))) / 24,
+      t_ctcP_PW = t_ctcP_PW,
       n_ctcH_H = input$n_ctcH_H,
-      t_ctcH_H = (as.numeric(strftime(
-        input$t_ctcH_H, "%M"
-      )) / 60 + as.numeric(strftime(
-        input$t_ctcH_H, "%H"
-      ))) / 24,
-      t_ctcV_PW = (as.numeric(strftime(
-        input$t_ctcV_PW, "%M"
-      )) / 60 + as.numeric(strftime(
-        input$t_ctcV_PW, "%H"
-      ))) / 24,
+      t_ctcH_H = t_ctcH_H,
+      t_ctcV_PW = t_ctcV_PW,
       # daily incidence (https://www.gouvernement.fr/info-coronavirus/carte-et-donnees)
       I = input$I / 100000,
       # disease duration (days)
@@ -1060,8 +1047,7 @@ server <- function(input, output, session) {
       R0 = input$R0,
       # https://www.gouvernement.fr/info-coronavirus/carte-et-donnees
       tw = input$tw,
-      tSA  = (as.numeric(strftime(input$tSA, "%M")) / 60 + as.numeric(strftime(input$tSA, "%H"))) /
-        24,
+      tSA  = tSA,
       # average duration before full admission (in screening area for clinical exam, administrative procedure, etc)
       tIC  = input$tIC,
       # average duration of stay in intensive care
@@ -1099,11 +1085,7 @@ server <- function(input, output, session) {
       epsHHW = input$epsHHW %>% as.numeric,
       #from HW in W
       ## Test in ward
-      ttestSA = (as.numeric(strftime(
-        input$ttestSA, "%M"
-      )) / 60 + as.numeric(strftime(
-        input$ttestSA, "%H"
-      ))) / 24,
+      ttestSA = ttestSA,
       # test duration in screening area
       ttestPW = ttestPW,
       # test duration in ward for screening patients
@@ -1218,7 +1200,34 @@ server <- function(input, output, session) {
     data$gdata <- gdata
   })
 
-  runmodel <- eventReactive(input$runmodel, {
+  output$runbutton <- renderUI({
+      conditionalPanel(
+        "output.atleastoneward == true" ,
+        conditionalPanel(
+          condition = "$(\'html\').hasClass(\'shiny-busy\')",
+          # tags$div(class = "loader"),
+          tags$div(class = "prevent_click")
+        ),
+        actionButton(
+          "runmodelVsimp",
+          "Run",
+          # span("Run", id = "UpdateAnimate", class = "loading dots"),
+          icon = icon("play",
+                      verify_fa = FALSE),
+          style = "color: #fff; background-color: #063567; border-color: #2e6da4"
+        ),
+        div(
+          style = "display: inline-block;vertical-align:top;",
+          conditionalPanel(
+            "output.simoutput == true",
+            synthreportUI("report_exp"),
+            exporttrajUI("export_traj")
+          )
+        )
+      )
+  })
+
+  runmodel <- eventReactive(input$runmodelVsimp, {
 
     ward_names <- data$ward_names
     pop_size_P <- data$pop_size_P
@@ -1244,19 +1253,6 @@ server <- function(input, output, session) {
     EPIstate = data$EPIstate
 
     gdata = data$gdata
-
-    # save(ward_names, file = "tmpdata/ward_names.Rda")
-    # save(pop_size_P, file = "tmpdata/pop_size_P.Rda")
-    # save(pop_size_H, file = "tmpdata/pop_size_H.Rda")
-    # save(nVisits, file = "tmpdata/nVisits.Rda")
-    # save(LS, file = "tmpdata/LS.Rda")
-    # save(matContact, file = "tmpdata/matContact.Rda")
-    # save(IMMstate, file = "tmpdata/IMMstate.Rda")
-    # save(EPIstate,  file = "tmpdata/EPIstate.Rda")
-    # save(SA,  file = "tmpdata/SA.Rda")
-    # save(nH_SA,  file = "tmpdata/nH_SA.Rda")
-    # save(gdata,  file = "tmpdata/gdata.Rda")
-    # save(n_days,  file = "tmpdata/n_days.Rda")
 
     mwssmodel <- mwss(
       ward_names,
