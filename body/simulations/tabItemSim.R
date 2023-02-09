@@ -105,8 +105,8 @@ tabItemSim <- function() {
                     "Control and surveillance:",
                     c(
                       "Impose isolation/contact restrictions to detected patients?" = "ISO",
-                      "Implement random tests at regular intervals? for patients?" = "testPat",
-                      "Implement random tests at regular intervals? for professionals?" = "testProf",
+                      "Implement random tests at regular intervals for patients?" = "testPat",
+                      "Implement random tests at regular intervals for professionals?" = "testProf",
                       "Implement a test at patient admission?" = "SA"
                     )
                   )
