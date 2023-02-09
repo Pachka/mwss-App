@@ -6,7 +6,7 @@
 
 
 tabItemSim <- function() {
-  tabItem("SIM",
+  tabItem("Vsimp",
           tabsetPanel(
             id = "tabsSIM",
             tabPanel(
@@ -66,32 +66,36 @@ tabItemSim <- function() {
               title = "Simulations",
               icon = icon("sliders-h",
                           verify_fa = FALSE),
-              div(style = "display: inline-block;vertical-align:top;",
-                  updateParamsUI("variant")),
-              div(
-                style = "display: inline-block;vertical-align:top;",
-                fileInput(
-                  "loadparams",
-                  "Upload a pre-recorded set of parameters",
-                  buttonLabel = "Browse RDA file",
-                  accept = c("rda", ".Rda")
-                )
+              # div(
+              #   style = "display: inline-block;vertical-align:top;",
+              #   fileInput(
+              #     "loadparams",
+              #     "Upload a pre-recorded set of parameters",
+              #     buttonLabel = "Browse RDA file",
+              #     accept = c("rda", ".Rda")
+              #   )
+              # ),
+              # div(
+              #   style = "display: inline-block;vertical-align:top;",
+              #   conditionalPanel(
+              #     "output.paramsUploaded == true",
+              #     actionButton(
+              #       inputId = "applyParamsLoad",
+              #       label = "Upload",
+              #       icon = icon("upload",
+              #                   verify_fa = FALSE),
+              #       style = "color: #fff; background-color: red; border-color: #fff; padding: 5px 5px 5px 5px; margin: 10px 5px 5px 5px; "
+              #     )
+              #   )
+              # ),
+              # div(style = "display: inline-block;vertical-align:top;",
+              #     downloadParamsUI("dwloadParams")),
+              hr(),
+              box(
+                width = 12,
+                loadTestdtUI("loadtest"),
+                updateParamsUI_simp("disease"),
               ),
-              div(
-                style = "display: inline-block;vertical-align:top;",
-                conditionalPanel(
-                  "output.paramsUploaded == true",
-                  actionButton(
-                    inputId = "applyParamsLoad",
-                    label = "Upload",
-                    icon = icon("upload",
-                                verify_fa = FALSE),
-                    style = "color: #fff; background-color: red; border-color: #fff; padding: 5px 5px 5px 5px; margin: 10px 5px 5px 5px; "
-                  )
-                )
-              ),
-              div(style = "display: inline-block;vertical-align:top;",
-                  downloadParamsUI("dwloadParams")),
               hr(),
               fluidRow(
                 box(
@@ -100,259 +104,26 @@ tabItemSim <- function() {
                     "CSprotocols",
                     "Control and surveillance:",
                     c(
-                      "Impose confinement/contact restriction to detected patients?" = "ISO",
-                      "Implement random tests at regular intervals?" = "regscreen",
-                      "Implement a screening area at patient admission including contact restriction/clinical examination/test?" = "SA"
+                      "Impose isolation/contact restrictions to detected patients?" = "ISO",
+                      "Implement random tests at regular intervals? for patients?" = "testPat",
+                      "Implement random tests at regular intervals? for professionals?" = "testProf",
+                      "Implement a test at patient admission?" = "SA"
                     )
                   )
                 ),
-                conditionalPanel(condition = "input.CSprotocols.includes('ISO')",
-                                 box(
-                                   width = 12,
-                                 sliderInput(
-                                   "pISO",
-                                   label = 'Level of contact restriction or probability to implement contact restriction (0: no contact restriction, 1: no contact).',
-                                   min = 0,
-                                   max = 1,
-                                   value = 1,
-                                   step = 0.01
-                                 ))
-                                 ),
-                conditionalPanel(condition = "input.CSprotocols.includes('regscreen')",
-                                 box(
-                                   width = 12,
-                                   checkboxGroupInput(
-                                     "regscreenPop",
-                                     "Implement random tests at regular intervals to:",
-                                     c("Patients" = "screenstrP",
-                                       "Professionals" = "screenstrH")
-                                   ),
-                                   column(
-                                     6,
-                                     conditionalPanel(
-                                       condition = "input.regscreenPop.includes('screenstrP')",
-                                       numericInput(
-                                         'tbtwtestP',
-                                         'Interval between two screening tests for patients (days)',
-                                         value = 14,
-                                         min = 1,
-                                         step = 1
-                                       ),
-                                       box(
-                                         width = 12,
-                                         title = "Proportion of the population sampled to be tested:",
-                                         solidHeader = TRUE,
-                                         sliderInput(
-                                           "ptestPWNI",
-                                           label = 'Patients with no history of infection or vaccination',
-                                           min = 0,
-                                           max = 1,
-                                           value = .75,
-                                           step = 0.01
-                                         ),
-                                         sliderInput(
-                                           "ptestPWLI",
-                                           label = 'Patients with old (>3 month) history of infection or vaccination',
-                                           min = 0,
-                                           max = 1,
-                                           value = .5,
-                                           step = 0.01
-                                         ),
-                                         sliderInput(
-                                           "ptestPWHI",
-                                           label = 'Patients with recent (<= 3 month) history of infection or vaccination',
-                                           min = 0,
-                                           max = 1,
-                                           value = 0.1,
-                                           step = 0.01
-                                         )
-                                       )
-                                     )
-                                   ),
-                                   column(
-                                     6,
-                                     conditionalPanel(
-                                       condition = "input.regscreenPop.includes('screenstrH')",
-                                       numericInput(
-                                         'tbtwtestH',
-                                         'Interval between two screening tests for professionals (days)',
-                                         value = 28,
-                                         min = 1,
-                                         step = 1
-                                       ),
-                                       box(
-                                         width = 12,
-                                         title = "Proportion of the population sampled to be tested:",
-                                         solidHeader = TRUE,
-                                         sliderInput(
-                                           "ptestHNI",
-                                           label = 'Professionals with no history of infection or vaccination',
-                                           min = 0,
-                                           max = 1,
-                                           value = .75,
-                                           step = 0.01
-                                         ),
-                                         sliderInput(
-                                           "ptestHLI",
-                                           label = 'Professionals with old (>3 month) history of infection or vaccination',
-                                           min = 0,
-                                           max = 1,
-                                           value = .5,
-                                           step = 0.01
-                                         ),
-                                         sliderInput(
-                                           "ptestHHI",
-                                           label = 'Professionals with recent (<= 3 month) history of infection or vaccination',
-                                           min = 0,
-                                           max = 1,
-                                           value = .2,
-                                           step = 0.01
-                                         )
-                                       )
-                                     ),
-                                     style = 'border-left: 1px solid'
-                                   )
-                                 )),
-                conditionalPanel(condition = "input.CSprotocols.includes('SA')",
-                                 box(
-                                   width = 12,
-                                   column(
-                                     6,
-                                     timeInput(
-                                       "tSA",
-                                       'Average duration of the whole screening process (H:M)',
-                                       seconds = FALSE,
-                                       value = strptime("02:00", "%R")
-                                     ),
-                                     numericInput(
-                                       "nH_SA",
-                                       label = 'Limit the number of healthcare professionals allocated to the screening area?',
-                                       min = 1,
-                                       value = 1
-                                     ),
-                                     h4('Probability to test patients:'),
-                                     splitLayout(
-                                       sliderInput(
-                                         inputId = 'ptestPSAsymp',
-                                         label = HTML('Symptomatic <br/> &nbsp;'),
-                                         min = 0,
-                                         max = 1,
-                                         value = 1,
-                                         step = 0.01
-                                       ),
-                                       sliderInput(
-                                         inputId = 'ptestPSANI',
-                                         label = HTML('With no history of <br/> vaccination or infection?'),
-                                         min = 0,
-                                         max = 1,
-                                         value = 0.75,
-                                         step = 0.1
-                                       ),
-                                       sliderInput(
-                                         inputId = 'ptestPSALI',
-                                         label = HTML('With old history of <br/> vaccination or infection?'),
-                                         min = 0,
-                                         max = 1,
-                                         value = 0.50,
-                                         step = 0.01
-                                       ),
-                                       sliderInput(
-                                         inputId = 'ptestPSAHI',
-                                         label = HTML('With recent history of <br/> vaccination or infection?'),
-                                         min = 0,
-                                         max = 1,
-                                         value = 0.25,
-                                         step = 0.01
-                                       )
-                                     ),
-                                     timeInput(
-                                       "ttestSA",
-                                       'Average duration of test used during the screening (H:M)',
-                                       seconds = FALSE,
-                                       value = strptime("02:00", "%R")
-                                     ),
-                                     radioButtons(
-                                       'testSA',
-                                       "What kind of test are you using to test asymptomatic patients?",
-                                       choiceNames =
-                                         list("Ag-RDT", "RT-PCR"),
-                                       choiceValues =
-                                         list("Ag-RDT", "RT-PCR"),
-                                       inline = TRUE
-                                     )
-                                   ),
-                                   column(
-                                     6,
-                                     h4("Contacts"),
-                                     numericInput(
-                                       "n_ctcH_PSA",
-                                       label = 'How many healthcare professionals on average each patient comes in contact with during the screening?',
-                                       min = 1,
-                                       value = 2
-                                     ),
-                                     timeInput(
-                                       "t_ctcH_PSA",
-                                       'Average duration of a contact with an healthcare professional (H:M)',
-                                       seconds = FALSE,
-                                       value = strptime("00:10", "%R")
-                                     ),
-                                     radioButtons(
-                                       "epsHPSA",
-                                       "During those contacts, how would you characterize the level of infection control for patients?",
-                                       choiceNames =
-                                         list("low", "regular", "high"),
-                                       choiceValues =
-                                         list(0.2, 0.5, 0.8),
-                                       inline = TRUE
-                                     ),
-                                     radioButtons(
-                                       "epsPHSA",
-                                       "During those contacts, how would you characterize the level of infection control for healthcare professionals?",
-                                       choiceNames =
-                                         list("low", "regular", "high"),
-                                       choiceValues =
-                                         list(0.2, 0.5, 0.8),
-                                       inline = TRUE
-                                     ),
-                                     numericInput(
-                                       "n_ctcP_PSA",
-                                       label = 'How many other patients on average each patient comes in contact with during the screening?',
-                                       min = 0,
-                                       value = 0
-                                     ),
-                                     conditionalPanel(
-                                       condition = "input.n_ctcP_PSA > 0",
-                                       timeInput(
-                                         "t_ctcP_PSA",
-                                         'Average duration of a contact with another patient (H:M)',
-                                         seconds = FALSE,
-                                         value = strptime("00:05", "%R")
-                                       ),
-                                       radioButtons(
-                                         "epsPPSA",
-                                         "How would you characterize the level of infection control for patients in contact with other patients?",
-                                         choiceNames =
-                                           list("low", "regular", "high"),
-                                         choiceValues =
-                                           list(0.2, 0.5, 0.8),
-                                         inline = TRUE
-                                       )
-                                     )
-                                   )
-                                 )),
                 box(
                   title = "Simulations parameters",
                   solidHeader = T,
                   width = 12,
                   status = "primary",
                   # Only show this panel if the plot type is a histogram
-                  numericInput(
-                    'n_sim',
-                    'Number of simulations',
-                    value = 50,
-                    min = 1,
-                    step = 1
-                  ),
+                  # numericInput(
+                  #   'n_sim',
+                  #   'Number of simulations',
+                  #   value = 50,
+                  #   min = 1,
+                  #   step = 1
+                  # ),
                   numericInput(
                     'n_days',
                     'Number of simulated days',
@@ -375,30 +146,31 @@ tabItemSim <- function() {
                   #     format = "dd/mm/yy"
                   #   )
                   # ),
-                  conditionalPanel(
-                    "output.atleastoneward == true",
-                    conditionalPanel(
-                      condition = "$(\'html\').hasClass(\'shiny-busy\')",
-                      # tags$div(class = "loader"),
-                      tags$div(class = "prevent_click")
-                    ),
-                    actionButton(
-                      "runmodel",
-                      "Run",
-                      # span("Run", id = "UpdateAnimate", class = "loading dots"),
-                      icon = icon("play",
-                                  verify_fa = FALSE),
-                      style = "color: #fff; background-color: #063567; border-color: #2e6da4"
-                    ),
-                    div(
-                      style = "display: inline-block;vertical-align:top;",
-                      conditionalPanel(
-                        "output.simoutput == true",
-                        synthreportUI("report_exp"),
-                        exporttrajUI("export_traj")
-                      )
-                    )
-                  ),
+                  # conditionalPanel(
+                  #   "output.atleastoneward == true" ,
+                  #   conditionalPanel(
+                  #     condition = "$(\'html\').hasClass(\'shiny-busy\')",
+                  #     # tags$div(class = "loader"),
+                  #     tags$div(class = "prevent_click")
+                  #   ),
+                  #   actionButton(
+                  #     "runmodelVsimp",
+                  #     "Run",
+                  #     # span("Run", id = "UpdateAnimate", class = "loading dots"),
+                  #     icon = icon("play",
+                  #                 verify_fa = FALSE),
+                  #     style = "color: #fff; background-color: #063567; border-color: #2e6da4"
+                  #   ),
+                  #   div(
+                  #     style = "display: inline-block;vertical-align:top;",
+                  #     conditionalPanel(
+                  #       "output.simoutput == true",
+                  #       synthreportUI("report_exp"),
+                  #       exporttrajUI("export_traj")
+                  #     )
+                  #   )
+                  # ),
+                  uiOutput("runbutton"),
                   # display load spinner when shiny is busy
                   conditionalPanel(
                     condition = "$(\'html\').hasClass(\'shiny-busy\')",

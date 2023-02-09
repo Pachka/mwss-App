@@ -4,7 +4,7 @@ list.of.packages <- c("shiny", "dplyr", "DT",
                       "ggplot2", "statnet", "igraph",
                       "network", "shinydashboard", "shinyjs",
                       "plotly", "magrittr", "SimInf", "data.table", "shinyWidgets",
-                      "shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools", "tinytex")
+                      "dipsaus","shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools", "tinytex")
 
 #checking missing packages from list
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -18,15 +18,15 @@ sapply(list.of.packages, function(pck){
 
 outdatedpck <- old.packages()
 if(TRUE %in% (list.of.packages %in% outdatedpck))
-  warning(paste("You might need to update the following packages:", 
+  warning(paste("You might need to update the following packages:",
                 paste(list.of.packages[which(list.of.packages %in% outdatedpck)], collapse = ", ")))
 
 install_github("MESuRS-Lab/mwss", quiet = T)
 library("mwss")
 
 # Parameters dataset
-source('data/O1.R', local = TRUE)
-source('data/O2.R', local = TRUE)
+source('data/Covid.R', local = TRUE)
+source('data/Influenza.R', local = TRUE)
 
 #### Source function
 source('functions/buttonsUI.R', local = TRUE)
@@ -45,7 +45,7 @@ source('functions/resetreactivesModule.R', local = TRUE)
 source('functions/synthreportModule.R', local = TRUE)
 source('functions/exporttrajModule.R', local = TRUE)
 source('functions/loadTestdtModule.R', local = TRUE)
-
+source('functions/timeinputinday.R', local = TRUE)
 
 
 # App Structure function
