@@ -68,13 +68,17 @@ server <- function(input, output, session) {
 
   observeEvent(input$versionSimple, {
 
+    updateTabsetPanel(session, "sidebarMenu",
+                      selected = "Vsimp")
+
     output$menu <- renderUI({
         ################
         ### VERISONS ###
         ################
 
         menuItem("Version simple", icon = icon("play",
-                                               verify_fa = FALSE), tabName = "Vsimp")
+                                               verify_fa = FALSE),
+                 tabName = "Vsimp")
 
         })
   })
