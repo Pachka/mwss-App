@@ -221,6 +221,7 @@ plotsoutputUI <- function(id) {
       #        # div(style = "display: inline-block;vertical-align:top;",
       #        plotOutput(ns("nosoHazard")))*
 
+      title =  h2("Nosocomial hazard", align="center"),
       plotOutput(ns("nosoHazard")),
 
       downloadButton(outputId = ns("down_nosoHazard"), label = "Download the plot"),
@@ -288,11 +289,12 @@ plotsoutputUI <- function(id) {
       # ),
       # column(8,
       #        plotOutput(ns("plotIncidence")))
+      title =  h2("Daily incidence (entire facility)", align="center"),
       plotOutput(ns("plotIncidence")),
       downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
       align = "center"
   ),
-    box(title =  h1("Daily number of tests", align="center"),
+    box(title =  h2("Daily number of tests", align="center"),
       #column(
        # 4,
         # selectInput(
@@ -364,7 +366,7 @@ plotsoutputUI <- function(id) {
       align = "center"
 
     ),
-  box(
+  box(title =  h2("Peak incidence by service", align="center"),
     plotOutput(ns("pPeak")),
     downloadButton(outputId = ns("down_pPeak"), label = "Download the plot"),
     align = "center"
@@ -641,8 +643,7 @@ plotsoutput <-
           geom_line(aes(time, mean_incH, colour = "Professionals")) +
           xlab("Time (day)") +
           ylab("Median daily incidence") +
-          labs(colour = "",
-               title = "Daily incidence among all patients and professionals") +
+          labs(colour = "") +
           geom_errorbar(aes(time, mean_incP,
                             ymin = ifelse(mean_incP - sd_incP >= 0,
                                           mean_incP - sd_incP, 0),
