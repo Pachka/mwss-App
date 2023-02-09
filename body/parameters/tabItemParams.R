@@ -58,7 +58,7 @@ tabItemParams <- function() {
           <br>
           The national proportions and duration of each immunity and epidemiological stages,
           as well as the probability of receiving a vaccination dose can be modify within the 'More advanced parameters' box at the bottom of the page.
-          
+
           "
         ),
         br(),
@@ -93,7 +93,7 @@ tabItemParams <- function() {
             ),
             numericInput(
               'd',
-              'Average disease duration',
+              'Average disease duration (days)',
               # FIX ME: add help (https://www.gouvernement.fr/info-coronavirus/carte-et-donnees)
               value = 10,
               min = 0,
@@ -343,7 +343,7 @@ tabItemParams <- function() {
               #             "Position of the ward names (angle)",
               #             min = 1, max = 10, value = 2),
               h4('Legend: Red: proportion of non immune individuals;
-              Orange: proportion of individuals with low immunity; 
+              Orange: proportion of individuals with low immunity;
                  Gree: proportion of individuals with high immunity.'),
                 plotOutput("imm_plot")),
               # div(
@@ -351,7 +351,7 @@ tabItemParams <- function() {
                   # )
             )
           ),
-          
+
           box(
             title = "More advanced parameters",
             width = 12,
