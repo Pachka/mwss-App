@@ -385,7 +385,7 @@ plotsoutput <-
     ns <- session$ns
 
     #########
-    ######### Network plot
+    ######### Peak incidence plot
     #########
     
     mypPeak <- function() {
@@ -409,17 +409,24 @@ plotsoutput <-
                         inc = c(0,diff(inc))),
                  by = c("node", "iteration")]
         
+        trajmwss[, `:=`(mean_incP = mean(incP), sd_incP = sd(incP),
+                        mean_incPsymp = mean(incPsymp), sd_incPsymp = sd(incPsymp),
+                        mean_incH = mean(incH), sd_incH = sd(incH), mean_incHsymp = mean(incHsymp),
+                        sd_incHsymp = sd(incHsymp), mean_inc = mean(inc),
+                        sd_inc = sd(inc)), by = c("node","time")]
+        
         trajmwss = trajmwss %>%
-          select(node, incP, incH) %>%
+          select(node, mean_incP, mean_incH) %>%
           group_by(node) %>%
-          summarise(maxP = max(incP), maxH = max(incH)) %>%
+          summarise(maxP = max(mean_incP), maxH = max(mean_incH)) %>%
           rename(Patients = maxP, Professionals = maxH) %>%
           melt("node")
         
         p = ggplot(trajmwss) +
-          facet_wrap(~variable) +
-          geom_col(aes(node, value)) +
-          labs(x = "Service", y = "Peak daily incidence")
+          geom_col(aes(node, value, fill = variable), position = "dodge") +
+          geom_errorbar(aes(node, value, ymin=value-0.1, ymax=value+0.1, group = variable),
+                        position = "dodge") + #TODO replace with actual mean+-sd
+          labs(x = "Service", y = "Peak daily incidence", fill = "")
         
         return(p)
       }
@@ -639,8 +646,8 @@ plotsoutput <-
                         sd_inc = sd(inc)), by = c("time")]
 
         p <- ggplot(trajmwss) +
-          geom_line(aes(time, mean_incP, colour = "Patients")) +
           geom_line(aes(time, mean_incH, colour = "Professionals")) +
+          geom_line(aes(time, mean_incP, colour = "Patients")) +
           xlab("Time (day)") +
           ylab("Median daily incidence") +
           labs(colour = "") +
