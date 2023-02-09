@@ -1255,7 +1255,7 @@ server <- function(input, output, session) {
           conditionalPanel(
             "output.simoutput == true",
             synthreportUI("report_exp"),
-            exporttrajUI("export_traj")
+            # exporttrajUI("export_traj")
           )
         )
       )
@@ -1270,16 +1270,6 @@ server <- function(input, output, session) {
     LS <- data$LS
     LS[LS == 0] <- 1
 
-
-    # Screening area
-    if ('SA' %in% input$CSprotocols) {
-      SA = TRUE
-      nH_SA = input$nH_SA
-    } else{
-      SA = FALSE
-      nH_SA = NULL
-    }
-
     matContact <- data$matContact
 
     n_days <- input$n_days %>% seq
@@ -1289,9 +1279,45 @@ server <- function(input, output, session) {
 
     gdata = data$gdata
 
-    # Screening area
+    # Isolation
     if ('ISO' %in% input$CSprotocols) {
-      ### gdata$...
+      gdata[['pISO']] = 1
+    }
+    # Testing for patients
+    if ('testPat' %in% input$CSprotocols) {
+      gdata[['tbtwtestP']] = 7
+      gdata[['ptestPWNI']] = 0.75
+      gdata[['ptestPWLI']] = 0.5
+      gdata[['ptestPWHI']] = 0.1
+    }
+    # Testing for professionals
+    if ('testProf' %in% input$CSprotocols) {
+      gdata[['tbtwtestH']] = 14
+      gdata[['ptestHNI']] = 0.75
+      gdata[['ptestHLI']] = 0.5
+      gdata[['ptestHHI']] = 0.2
+    }
+    # Screening area
+    if ('SA' %in% input$CSprotocols) {
+      SA = TRUE
+      # nH_SA = input$nH_SA
+      nH_SA = 1
+      gdata[['tSA']] = 2/24
+      gdata[['ptestPSAsymp']] = 1
+      gdata[['ptestPSANI']] = 0.75
+      gdata[['ptestPSALI']] = 0.5
+      gdata[['ptestPSAHI']] = 0.25
+      gdata[['ttestSA']] = 2/24
+      gdata[['n_ctcH_PSA']] = 2
+      gdata[['t_ctcH_PSA']] = (10/60)/24
+      gdata[['epsHPSA']] = 0.5
+      gdata[['epsPHSA']] = 0.5
+      gdata[['n_ctcP_PSA']] = 0
+      gdata[['t_ctcP_PSA']] = (5/60)/24
+      gdata[['epsPPSA']] = 0.5
+    } else{
+      SA = FALSE
+      nH_SA = NULL
     }
 
     # save(ward_names, file = "tmpdata/ward_names.Rda")
