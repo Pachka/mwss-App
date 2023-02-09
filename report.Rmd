@@ -98,7 +98,7 @@ options(tinytex.verbose = TRUE)
 ## Objective
 Dynamic epidemiological modeling is a powerful tool to analyse risk of pathogen persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and health care workers in health care settings, heterogeneity and stochasticity play fundamental roles due to risk of super-spreading events or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately.
 
-Here we use a network-structured model to simulate disease spreading accross wards inside a healthcare facility and test the efficacy of intervention strategies on disease control. 
+We use here a network-structured model to simulate disease spreading accross wards inside a healthcare facility and test the efficacy of intervention strategies on disease control. 
 
 ## Methods 
 
