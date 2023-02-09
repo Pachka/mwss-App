@@ -11,7 +11,6 @@ synthreport <- function(input, output, session, model, variable, n_days, n_sim) 
 
   ####### Generating downloadable reports
   output$downloadReport <- downloadHandler(
-    
     # For PDF output, change this to "test.pdf"
     filename = function() {
       paste("MWSS_report-", Sys.Date(), ".html", sep = "")
@@ -27,7 +26,7 @@ synthreport <- function(input, output, session, model, variable, n_days, n_sim) 
           params <- list(control_traj = model(),
                          data = variable(),
                          n_days = n_days(),
-                         n_sim = n_sim())
+                         n_sim = 10)#n_sim())
         # str(params)
         # print(params)
         # save(params, file = "paramsReport.rda")
@@ -41,7 +40,7 @@ synthreport <- function(input, output, session, model, variable, n_days, n_sim) 
                           envir = new.env(parent = globalenv())
         )
     }
-  
+
   )
 
     }

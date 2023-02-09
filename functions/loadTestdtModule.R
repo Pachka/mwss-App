@@ -1,29 +1,24 @@
 loadTestdtUI <- function(id) {
   ns <- NS(id)
 
-  tagList(
-    fluidRow(
-      box(
-        selectInput(
-          ns("structure"), "Structure:",
-          c("Network 1" = "1",
-            "Network 2" = "2")),
-        actionButton(
-          ns("testds"),
-          "Load example dataset",
-          icon = icon("download",
-                      verify_fa = FALSE),
-          style = "color: #fff; background-color: #063567; border-color: #2e6da4"
+  selectizeInput(ns("structure"), "Structure",
+                 choices = setNames(
+                   list("1", "2"),
+                   list("Network 1", "Network 2")
+                 ),
+        selected = NULL,
+        options = list(
+          placeholder = 'Select hospital structure',
+          onInitialize = I('function() { this.setValue(""); }')
         )
       )
-    )
-  )
 }
 
 loadTestdt <- function(input, output, session, variable) {
   ns <- session$ns
 
-  observeEvent(input$testds, {
+  observeEvent(input$structure, {
+    if(input$structure %in% c("1", "2")){
     # ask for confirmation
     ask_confirmation(
       inputId = "confirmuploadtestdt",
@@ -54,7 +49,7 @@ loadTestdt <- function(input, output, session, variable) {
                        variable$EPIstate = saveInputs$EPIstate
                      }
                    }}, ignoreNULL = FALSE)
-
+}
                  })
 
   }
