@@ -1267,7 +1267,7 @@ server <- function(input, output, session) {
         showModal(modalDialog(
           title = "Important message",
           "Select a pathogen!"
-        )) } else{
+        )) } else {
     ward_names <- data$ward_names
     pop_size_P <- data$pop_size_P
     pop_size_H <- data$pop_size_H
