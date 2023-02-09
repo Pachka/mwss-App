@@ -535,13 +535,20 @@ plotsoutput <-
           trajmwss[[sim]]
         })
         trajmwss %<>% do.call(rbind, .)
-        trajmwss[, `:=`(incP = sum(incPA + incPM + incPS),
-                        incPsymp = sum(incPM + incPS),
-                        incH = sum(incHA + incHM + incHS),
-                        incHsymp = sum(incHM + incHS),
-                        inc = sum(incPA + incPM + incPS + incHA + incHM + incHS)),
+        trajmwss[, `:=`(incP = (sum(incPA + incPM + incPS)),
+                        incPsymp = (sum(incPM + incPS)),
+                        incH = (sum(incHA + incHM + incHS)),
+                        incHsymp = (sum(incHM + incHS)),
+                        inc = (sum(incPA + incPM + incPS + incHA + incHM + incHS))),
                  by = c("iteration", "time")]
-
+        
+        trajmwss[, `:=`(incP = c(0,diff(incP)),
+                        incPsymp = c(0,diff(incPsymp)),
+                        incH = c(0,diff(incH)),
+                        incHsymp = c(0,diff(incHsymp)),
+                        inc = c(0,diff(inc))),
+                 by = c("node", "iteration")]
+        
         trajmwss[, `:=`(mean_incP = mean(incP), sd_incP = sd(incP),
                         mean_incPsymp = mean(incPsymp), sd_incPsymp = sd(incPsymp),
                         mean_incH = mean(incH), sd_incH = sd(incH), mean_incHsymp = mean(incHsymp),
@@ -554,7 +561,7 @@ plotsoutput <-
           xlab("Time (day)") +
           ylab("Median daily incidence") +
           labs(colour = "",
-               title = "Cumulative incidence among all patients and professionals") +
+               title = "Daily incidence among all patients and professionals") +
           geom_errorbar(aes(time, mean_incP,
                             ymin = ifelse(mean_incP - sd_incP >= 0,
                                           mean_incP - sd_incP, 0),
