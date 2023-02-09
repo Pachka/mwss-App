@@ -292,7 +292,7 @@ plotsoutputUI <- function(id) {
       downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
       align = "center"
   ),
-    box(
+    box(title =  h1("Daily number of tests", align="center"),
       #column(
        # 4,
         # selectInput(
@@ -622,14 +622,14 @@ plotsoutput <-
                         incHsymp = (sum(incHM + incHS)),
                         inc = (sum(incPA + incPM + incPS + incHA + incHM + incHS))),
                  by = c("iteration", "time")]
-        
+
         trajmwss[, `:=`(incP = c(0,diff(incP)),
                         incPsymp = c(0,diff(incPsymp)),
                         incH = c(0,diff(incH)),
                         incHsymp = c(0,diff(incHsymp)),
                         inc = c(0,diff(inc))),
                  by = c("node", "iteration")]
-        
+
         trajmwss[, `:=`(mean_incP = mean(incP), sd_incP = sd(incP),
                         mean_incPsymp = mean(incPsymp), sd_incPsymp = sd(incPsymp),
                         mean_incH = mean(incH), sd_incH = sd(incH), mean_incHsymp = mean(incHsymp),
@@ -682,7 +682,7 @@ plotsoutput <-
           png(file) # open the png device
 
         myIncidence()
-        
+
         # draw the plot
         dev.off()  # turn the device off
       }
