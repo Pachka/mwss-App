@@ -363,7 +363,12 @@ plotsoutputUI <- function(id) {
       downloadButton(outputId = ns("down_nTest"), label = "Download the plot"),
       align = "center"
 
-    )
+    ),
+  box(
+    plotOutput(ns("pPeak")),
+    downloadButton(outputId = ns("down_pPeak"), label = "Download the plot"),
+    align = "center"
+  )
   ))
 }
 
@@ -377,6 +382,82 @@ plotsoutput <-
     # model()
     ns <- session$ns
 
+    #########
+    ######### Network plot
+    #########
+    
+    mypPeak <- function() {
+      simple_plot_peak = function(trajmwss) {
+        trajmwss <- lapply(seq(length(trajmwss)), function(sim) {
+          trajmwss[[sim]][, `:=`(iteration, sim)]
+          trajmwss[[sim]]
+        })
+        trajmwss %<>% do.call(rbind, .)
+        trajmwss[, `:=`(incP = (sum(incPA + incPM + incPS)),
+                        incPsymp = (sum(incPM + incPS)),
+                        incH = (sum(incHA + incHM + incHS)),
+                        incHsymp = (sum(incHM + incHS)),
+                        inc = (sum(incPA + incPM + incPS + incHA + incHM + incHS))),
+                 by = c("iteration", "time")]
+        
+        trajmwss[, `:=`(incP = c(0,diff(incP)),
+                        incPsymp = c(0,diff(incPsymp)),
+                        incH = c(0,diff(incH)),
+                        incHsymp = c(0,diff(incHsymp)),
+                        inc = c(0,diff(inc))),
+                 by = c("node", "iteration")]
+        
+        trajmwss = trajmwss %>%
+          select(node, incP, incH) %>%
+          group_by(node) %>%
+          summarise(maxP = max(incP), maxH = max(incH)) %>%
+          rename(Patients = maxP, Professionals = maxH) %>%
+          melt("node")
+        
+        p = ggplot(trajmwss) +
+          facet_wrap(~variable) +
+          geom_col(aes(node, value)) +
+          labs(x = "Service", y = "Peak daily incidence")
+        
+        return(p)
+      }
+      
+      # plot_incidence(
+      #   trajmwss = model(),
+      #   scale = scale,
+      #   pop = pop,
+      #   iter = iter,
+      #   ward = ward,
+      #   display_sd = display_sdInc
+      # )
+      simple_plot_peak(trajmwss = model())
+      
+    }
+
+    output$pPeak <- renderPlot({
+      mypPeak()
+    })
+
+    # downloadHandler contains 2 arguments as functions, namely filename, content
+    output$down_pPeak <- downloadHandler(
+      filename =  function() {
+        paste("outbreak_probability", "png", sep = ".")
+      },
+      # content is a function with argument file. content writes the plot to the device
+      content = function(file) {
+          png(file, res = 150,
+              width = 500,
+              height = 500
+              ) # open the png device
+
+        mypPeak()
+
+        # draw the plot
+        dev.off()  # turn the device off
+      }
+    )
+    
+    
     #########
     ######### Network plot
     #########
