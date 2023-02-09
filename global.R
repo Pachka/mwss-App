@@ -4,7 +4,7 @@ list.of.packages <- c("shiny", "dplyr", "DT",
                       "ggplot2", "statnet", "igraph",
                       "network", "shinydashboard", "shinyjs",
                       "plotly", "magrittr", "SimInf", "data.table", "shinyWidgets",
-                      "shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools", "tinytex")
+                      "dipsaus","shinyhelper", "shinyTime", "shinyalert", "knitr", "devtools", "tinytex")
 
 #checking missing packages from list
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -45,7 +45,7 @@ source('functions/resetreactivesModule.R', local = TRUE)
 source('functions/synthreportModule.R', local = TRUE)
 source('functions/exporttrajModule.R', local = TRUE)
 source('functions/loadTestdtModule.R', local = TRUE)
-
+source('functions/timeinputinday.R', local = TRUE)
 
 
 # App Structure function
