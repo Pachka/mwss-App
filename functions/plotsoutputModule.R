@@ -548,7 +548,8 @@ plotsoutput <-
           geom_line(aes(time, mean_incH, colour = "Professionals")) +
           xlab("Time (day)") + 
           ylab("Median daily incidence") +
-          labs(colour = "") +
+          labs(colour = "",
+               title = "Cumulative incidence among all patients and professionals") +
           geom_errorbar(aes(time, mean_incP,
                             ymin = ifelse(mean_incP - sd_incP >= 0,
                                           mean_incP - sd_incP, 0),
@@ -585,10 +586,10 @@ plotsoutput <-
       },
       # content is a function with argument file. content writes the plot to the device
       content = function(file) {
-          png(file) # open the png device
+        png(file) # open the png device
         
         myIncidence()
-
+        
         # draw the plot
         dev.off()  # turn the device off
       }
