@@ -32,7 +32,7 @@ updateParams_simp  <- function(input, output, session, variable){
                      if (isTRUE(input$confirmdiseasechange)) {
 
                          # structure
-                         variable$gdata = build_gdata()
+                         variable$gdata = build_gdata(input$disease_id)
 
                      }}, ignoreNULL = FALSE)
   })
