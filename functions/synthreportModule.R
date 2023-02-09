@@ -27,7 +27,7 @@ synthreport <- function(input, output, session, model, variable, n_days, n_sim) 
           params <- list(control_traj = model(),
                          data = variable(),
                          n_days = n_days(),
-                         n_sim = n_sim())
+                         n_sim = 10)#n_sim())
         # str(params)
         # print(params)
         # save(params, file = "paramsReport.rda")
