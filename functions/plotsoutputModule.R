@@ -292,7 +292,7 @@ plotsoutputUI <- function(id) {
       downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
       align = "center"
   ),
-    box(title="Daily number of tests",
+    box(title =  h1("Daily number of tests", align="center"),
       #column(
        # 4,
         # selectInput(
