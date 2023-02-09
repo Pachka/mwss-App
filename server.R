@@ -1263,6 +1263,11 @@ server <- function(input, output, session) {
 
   runmodel <- eventReactive(input$runmodelVsimp, {
 
+    if(is.null(data$gdata)){
+        showModal(modalDialog(
+          title = "Important message",
+          "Select a pathogen!"
+        )) } else{
     ward_names <- data$ward_names
     pop_size_P <- data$pop_size_P
     pop_size_H <- data$pop_size_H
@@ -1353,7 +1358,7 @@ server <- function(input, output, session) {
     # trajmwss <- multisim(mwssmodel, input$n_sim, ward_names)
     trajmwss <- multisim(mwssmodel, 50, ward_names)
 
-    return(trajmwss)
+    return(trajmwss)}
   })
 
   output$simoutput <- reactive({
