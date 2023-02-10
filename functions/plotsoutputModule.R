@@ -45,41 +45,40 @@ plotsoutput <-
 
     mypPeak <- function() {
       simple_plot_peak = function(trajmwss) {
+        # add iteration
         trajmwss <- lapply(seq(length(trajmwss)), function(sim) {
           trajmwss[[sim]][, `:=`(iteration, sim)]
           trajmwss[[sim]]
         })
         trajmwss %<>% do.call(rbind, .)
         trajmwss[, `:=`(incP = (sum(incPA + incPM + incPS)),
-                        incPsymp = (sum(incPM + incPS)),
-                        incH = (sum(incHA + incHM + incHS)),
-                        incHsymp = (sum(incHM + incHS)),
-                        inc = (sum(incPA + incPM + incPS + incHA + incHM + incHS))),
+                        incH = (sum(incHA + incHM + incHS))),
                  by = c("iteration", "time")]
 
         trajmwss[, `:=`(incP = c(0,diff(incP)),
-                        incPsymp = c(0,diff(incPsymp)),
-                        incH = c(0,diff(incH)),
-                        incHsymp = c(0,diff(incHsymp)),
-                        inc = c(0,diff(inc))),
+                        incH = c(0,diff(incH))),
                  by = c("node", "iteration")]
 
-        trajmwss[, `:=`(mean_incP = mean(incP), sd_incP = sd(incP),
-                        mean_incPsymp = mean(incPsymp), sd_incPsymp = sd(incPsymp),
-                        mean_incH = mean(incH), sd_incH = sd(incH), mean_incHsymp = mean(incHsymp),
-                        sd_incHsymp = sd(incHsymp), mean_inc = mean(inc),
-                        sd_inc = sd(inc)), by = c("node","time")]
+        trajmwss %<>% .[, c("time","node", "iteration", "incP", "incH"), with=FALSE]
+        setnames(trajmwss, "incP", "Patients")
+        setnames(trajmwss, "incH", "Professionals")
+        trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
 
-        trajmwss = trajmwss %>%
-          select(node, mean_incP, mean_incH) %>%
-          group_by(node) %>%
-          summarise(maxP = max(mean_incP), maxH = max(mean_incH)) %>%
-          rename(Patients = maxP, Professionals = maxH) %>%
-          melt("node")
+        trajmwss[, `:=`(mean = mean(value),
+                        sd = sd(value)),
+                 by = c("node","time", "variable")]
+        trajmwss %<>% .[, c("time","node", "variable", "value", "mean","sd"), with=FALSE]
 
-        p = ggplot(trajmwss) +
-          geom_col(aes(node, value, fill = variable), position = "dodge") +
-          geom_errorbar(aes(node, value, ymin=value-0.1, ymax=value+0.1, group = variable),
+
+        trajmwss[, `:=`(maxInc = max(mean)),
+                 by = c("node", "variable")]
+
+        trajmwss %<>% .[, c("node", "variable", "mean","sd", "maxInc"), with=FALSE]
+        trajmwss %<>% unique
+
+        p <- ggplot(trajmwss) +
+          geom_col(aes(node, maxInc, fill = variable), position = "dodge") +
+          geom_errorbar(aes(node, maxInc, ymin=maxInc-0.1, ymax=maxInc+0.1, group = variable),
                         position = "dodge") + #TODO replace with actual mean+-sd
           labs(x = "Service", y = "Peak daily incidence", fill = "")
 
@@ -185,57 +184,52 @@ plotsoutput <-
     })
 
     #QL edit here to use simple version
-    myIncidence <- function() {
 
-      #redefine plot_incidence()
+    myIncidence <- function(){
 
-      simple_plot_incidence = function(trajmwss) {
-        trajmwss <- lapply(seq(length(trajmwss)), function(sim) {
-          trajmwss[[sim]][, `:=`(iteration, sim)]
-          trajmwss[[sim]]
-        })
-        trajmwss %<>% do.call(rbind, .)
-        trajmwss[, `:=`(incP = (sum(incPA + incPM + incPS)),
-                        incPsymp = (sum(incPM + incPS)),
-                        incH = (sum(incHA + incHM + incHS)),
-                        incHsymp = (sum(incHM + incHS)),
-                        inc = (sum(incPA + incPM + incPS + incHA + incHM + incHS))),
-                 by = c("iteration", "time")]
+    simple_plot_incidence = function(trajmwss){
+      trajmwss <- lapply(seq(length(trajmwss)), function(sim) {
+        trajmwss[[sim]][, `:=`(iteration, sim)]
+        trajmwss[[sim]]
+      })
+      trajmwss %<>% do.call(rbind, .)
 
-        trajmwss[, `:=`(incP = c(0,diff(incP)),
-                        incPsymp = c(0,diff(incPsymp)),
-                        incH = c(0,diff(incH)),
-                        incHsymp = c(0,diff(incHsymp)),
-                        inc = c(0,diff(inc))),
-                 by = c("node", "iteration")]
+      # incidence by pop
+      trajmwss[, `:=`(incP = (sum(incPA + incPM + incPS)),
+                      incH = (sum(incHA + incHM + incHS))),
+               by = c("iteration", "node","time")]
 
-        trajmwss[, `:=`(mean_incP = mean(incP), sd_incP = sd(incP),
-                        mean_incPsymp = mean(incPsymp), sd_incPsymp = sd(incPsymp),
-                        mean_incH = mean(incH), sd_incH = sd(incH), mean_incHsymp = mean(incHsymp),
-                        sd_incHsymp = sd(incHsymp), mean_inc = mean(inc),
-                        sd_inc = sd(inc)), by = c("time")]
+      trajmwss %<>% .[, c("time","node", "iteration", "incP", "incH"), with=FALSE]
 
-        p <- ggplot(trajmwss) +
-          geom_line(aes(time, mean_incH, colour = "Professionals")) +
-          geom_line(aes(time, mean_incP, colour = "Patients")) +
-          xlab("Time (day)") +
-          ylab("Median daily incidence") +
-          labs(colour = "") +
-          geom_errorbar(aes(time, mean_incP,
-                            ymin = ifelse(mean_incP - sd_incP >= 0,
-                                          mean_incP - sd_incP, 0),
-                            ymax = mean_incP + sd_incP, colour = "Patients"),
-                        alpha = 0.75, width = 0.2, position = position_dodge(0.9)) +
-          geom_errorbar(aes(time, mean_incH,ymin = ifelse(mean_incH - sd_incH >= 0,
-                                                          mean_incH - sd_incH, 0),
-                            ymax = mean_incH + sd_incH, colour = "Professionals"),
-                        alpha = 0.75, width = 0.2, position = position_dodge(0.9))
+      trajmwss[, `:=`(incP = c(0,diff(incP)),
+                      incH = c(0,diff(incH))),
+               by = c("node", "iteration")]
 
-        return(p)
-      }
+      trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
 
-      simple_plot_incidence(trajmwss = model())
+      trajmwss[, `:=`(mean = mean(value),
+                      sd = sd(value)), by = c("time", "variable")]
 
+      trajmwss %<>% .[, c("time", "variable", "value", "mean","sd"), with=FALSE]
+
+      trajmwss %<>% unique
+
+      trajmwss[, `:=`(min_error = ifelse(mean-sd < 0 , 0, mean-sd),
+                      max_error = mean+sd),
+               by = c("time", "variable")]
+
+      p <- ggplot(trajmwss, aes(x=time, y=mean, group=variable, color=variable)) +
+        geom_line() +
+        geom_point()+
+        xlab("Time (day)") +
+        ylab("Mean daily incidence") +
+        geom_errorbar(aes(ymin=min_error, ymax=max_error), width=.2,
+                      position=position_dodge(0.95))
+
+      return(p)
+    }
+
+    simple_plot_incidence(trajmwss = model())
     }
 
     output$plotIncidence <- renderPlot({
