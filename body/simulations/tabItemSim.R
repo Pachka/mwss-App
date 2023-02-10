@@ -137,45 +137,6 @@ tabItemSim <- function() {
                     min = 1,
                     step = 1
                   ),
-                  # checkboxInput(
-                  #   "simP",
-                  #   "Do you want to use simulated prevalences and proportion of vaccinated individuals?",
-                  #   value = FALSE,
-                  #   width = NULL
-                  # ),
-                  # conditionalPanel(
-                  #   condition = "input.simP == 1",
-                  #   dateInput(
-                  #     "startSimP",
-                  #     "Simulate prevalences and vacc. proportions from:",
-                  #     value = "2022-01-01",
-                  #     format = "dd/mm/yy"
-                  #   )
-                  # ),
-                  # conditionalPanel(
-                  #   "output.atleastoneward == true" ,
-                  #   conditionalPanel(
-                  #     condition = "$(\'html\').hasClass(\'shiny-busy\')",
-                  #     # tags$div(class = "loader"),
-                  #     tags$div(class = "prevent_click")
-                  #   ),
-                  #   actionButton(
-                  #     "runmodelVsimp",
-                  #     "Run",
-                  #     # span("Run", id = "UpdateAnimate", class = "loading dots"),
-                  #     icon = icon("play",
-                  #                 verify_fa = FALSE),
-                  #     style = "color: #fff; background-color: #063567; border-color: #2e6da4"
-                  #   ),
-                  #   div(
-                  #     style = "display: inline-block;vertical-align:top;",
-                  #     conditionalPanel(
-                  #       "output.simoutput == true",
-                  #       synthreportUI("report_exp"),
-                  #       exporttrajUI("export_traj")
-                  #     )
-                  #   )
-                  # ),
                   uiOutput("runbutton"),
                   # display load spinner when shiny is busy
                   conditionalPanel(
