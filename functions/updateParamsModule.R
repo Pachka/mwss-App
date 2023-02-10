@@ -18,23 +18,23 @@ updateParams_simp  <- function(input, output, session, variable){
 
   observeEvent(input$disease_id, {
 if(input$disease_id %in% c("Covid", "Influenza")){
-      # ask for confirmation
-      ask_confirmation(
-        inputId = "confirmdiseasechange",
-        title = "Want to confirm ?",
-        type = "warning",
-        btn_labels = c("Cancel", "Confirm"),
-        text = "Note that choosing another disease will erase the current set of parameters."
-      )
-
-      observeEvent(eventExpr = input$confirmdiseasechange,
-                   handlerExpr = {
-                     if (isTRUE(input$confirmdiseasechange)) {
+      # # ask for confirmation
+      # ask_confirmation(
+      #   inputId = "confirmdiseasechange",
+      #   title = "Want to confirm ?",
+      #   type = "warning",
+      #   btn_labels = c("Cancel", "Confirm"),
+      #   text = "Note that choosing another disease will erase the current set of parameters."
+      # )
+      #
+      # observeEvent(eventExpr = input$confirmdiseasechange,
+      #              handlerExpr = {
+      #                if (isTRUE(input$confirmdiseasechange)) {
 
                          # structure
                          variable$gdata = build_gdata(input$disease_id)
 
-                     }}, ignoreNULL = FALSE)
+                     # }}, ignoreNULL = FALSE)
       }
   })
 

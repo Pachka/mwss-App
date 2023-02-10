@@ -68,8 +68,6 @@ server <- function(input, output, session) {
 
   observeEvent(input$versionSimple, {
 
-    updateTabsetPanel(session, "sidebarMenu",
-                      selected = "Vsimp")
 
     output$menu <- renderUI({
         ################
@@ -81,22 +79,32 @@ server <- function(input, output, session) {
                  tabName = "Vsimp")
 
         })
+
+    updateTabsetPanel(session, "sidebarMenu",
+                      selected = "Vsimp")
   })
 
 
   observeEvent(input$versionExp, {
+
+
     output$menu <- renderUI({
         ################
         ### VERISONS ###
         ################
 
         menuItem("Version expert", icon = icon("play",
-                                               verify_fa = FALSE), tabName = "Vexp",
+                                               verify_fa = FALSE), startExpanded = TRUE,
+                 tabName = "Vexp",
                  menuSubItem("Initialization", icon = icon("gears", verify_fa = FALSE), tabName = "INI"),
                  menuSubItem('Simulations', tabName = 'SIMexp'),
                  menuSubItem("More parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"))
 
       })
+
+
+    updateTabsetPanel(session, "sidebarMenu",
+                      selected = "Vexp")
   })
 
 
@@ -133,20 +141,20 @@ server <- function(input, output, session) {
 
         load(input$loadwards$datapath)
 
-        if (exists("saveInputs")) {
+        if (exists("network_input")) {
           # structure
-          data$ward_names = saveInputs$ward_names
-          data$pop_size_P = saveInputs$pop_size_P
-          data$pop_size_H = saveInputs$pop_size_H
-          data$nVisits = saveInputs$nVisits
-          data$LS = saveInputs$LS
+          data$ward_names = network_input$ward_names
+          data$pop_size_P = network_input$pop_size_P
+          data$pop_size_H = network_input$pop_size_H
+          data$nVisits = network_input$nVisits
+          data$LS = network_input$LS
           # Contacts
-          data$Hplanning = saveInputs$Hplanning
-          data$matContact = saveInputs$matContact
+          data$Hplanning = network_input$Hplanning
+          data$matContact = network_input$matContact
           # Immunity
-          data$IMMstate = saveInputs$IMMstate
+          data$IMMstate = network_input$IMMstate
           # Epidemiological states // infections
-          data$EPIstate = saveInputs$EPIstate
+          data$EPIstate = network_input$EPIstate
         } #FIX ME: warn me if the object is missing
       }
     },
@@ -174,7 +182,7 @@ server <- function(input, output, session) {
       paste("data-", Sys.Date(), ".rda", sep = "")
     },
     content = function(filename) {
-      saveInputs <- list(
+      network_input <- list(
         ward_names = data$ward_names,
         pop_size_P = data$pop_size_P,
         pop_size_H = data$pop_size_H,
@@ -190,9 +198,9 @@ server <- function(input, output, session) {
       )
 
       if (endsWith(filename, ".rda") | endsWith(filename, ".Rda"))
-        save(saveInputs, file = filename)
+        save(network_input, file = filename)
       else
-        save(saveInputs, file = paste0(filename, ".rda"))
+        save(network_input, file = paste0(filename, ".rda"))
     }
   )
 

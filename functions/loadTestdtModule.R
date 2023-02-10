@@ -1,55 +1,53 @@
 loadTestdtUI <- function(id) {
   ns <- NS(id)
 
-  selectizeInput(ns("structure"), "Structure",
+  selectizeInput(ns("structure"), "Level of clustering",
                  choices = setNames(
-                   list("1", "2"),
-                   list("Network 1", "Network 2")
+                   list("1", "2", "3"),
+                   list("High clustering",
+                        "Medium clustering",
+                        "Low clustering")
                  ),
-        selected = NULL,
-        options = list(
-          placeholder = 'Select hospital structure',
-          onInitialize = I('function() { this.setValue(""); }')
-        )
-      )
+                 selected = NULL,
+                 options = list(
+                   placeholder = 'Select hospital structure',
+                   onInitialize = I('function() { this.setValue(""); }')
+                 )
+  )
 }
 
 loadTestdt <- function(input, output, session, variable) {
   ns <- session$ns
 
   observeEvent(input$structure, {
-    if(input$structure %in% c("1", "2")){
-    # ask for confirmation
-    ask_confirmation(
-      inputId = "confirmuploadtestdt",
-      title = "Want to confirm ?",
-      type = "warning",
-      btn_labels = c("Cancel", "Confirm"),
-      text = "Note that loading the test dataset will erase the current structure."
-    )
+    if(input$structure %in% c("1", "2", "3")){
 
-    observeEvent(eventExpr = input$confirmuploadtestdt,
-                 handlerExpr = {
-                   if (isTRUE(input$confirmuploadtestdt)) {
-                     load(paste0("./data/structure",input$structure,".rda"))
+      # Highly clustered
+      if(input$structure == "1")
+        network_input <- build_network(within_clust_lev = 0.5, between_clust_lev = 0.1, clust_ratio_inout = 0.95)
+      # Medium clustered
+      if(input$structure == "2")
+        network_input <- build_network(within_clust_lev = 0.5, between_clust_lev = 0.1, clust_ratio_inout = 0.8)
+      # Homogeneous
+      if(input$structure == "3")
+        network_input <- build_network(within_clust_lev = 0.5, between_clust_lev = 0.1, clust_ratio_inout = 0.55)
 
-                     if (exists("saveInputs")) {
-                       # structure
-                       variable$ward_names = saveInputs$ward_names
-                       variable$pop_size_P = saveInputs$pop_size_P
-                       variable$pop_size_H = saveInputs$pop_size_H
-                       variable$nVisits = saveInputs$nVisits
-                       variable$LS = saveInputs$LS
-                       # Contacts
-                       variable$Hplanning = saveInputs$Hplanning
-                       variable$matContact = saveInputs$matContact
-                       # Immunity
-                       variable$IMMstate = saveInputs$IMMstate
-                       # Epidemiological states // infections
-                       variable$EPIstate = saveInputs$EPIstate
-                     }
-                   }}, ignoreNULL = FALSE)
+      if (exists("network_input")) {
+        # structure
+        variable$ward_names = network_input$ward_names
+        variable$pop_size_P = network_input$pop_size_P
+        variable$pop_size_H = network_input$pop_size_H
+        variable$nVisits = network_input$nVisits
+        variable$LS = network_input$LS
+        # Contacts
+        variable$Hplanning = NULL
+        variable$matContact = network_input$matContact
+        # Immunity
+        variable$IMMstate = NULL
+        # Epidemiological states // infections
+        variable$EPIstate = NULL
+      }
+    }
+    })
+
 }
-                 })
-
-  }

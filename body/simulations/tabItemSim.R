@@ -92,9 +92,15 @@ tabItemSim <- function() {
               #     downloadParamsUI("dwloadParams")),
               hr(),
               box(
-                width = 12,
+                width = 6,
                 loadTestdtUI("loadtest"),
                 updateParamsUI_simp("disease"),
+              ),
+              box(
+                width = 6,
+                # title = "Clustering",
+                # solidHeader = T,
+                plotOutput("network_plot")
               ),
               hr(),
               fluidRow(

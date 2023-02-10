@@ -148,11 +148,12 @@ tabItemInitialization <- function() {
                   div(style = "display: inline-block;vertical-align:top;",
                       wardRemoveUI("removeward", ""))
                 ),
-                box(
-                  title = "Connectivity",
-                  solidHeader = T,
-                  plotOutput("network_plot")
-                )),
+                # box(
+                #   title = "Connectivity",
+                #   solidHeader = T,
+                #   plotOutput("network_plot")
+                # )
+                ),
               hr(),
               fluidRow(
                 conditionalPanel(
