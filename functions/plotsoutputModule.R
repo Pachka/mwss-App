@@ -63,24 +63,24 @@ plotsoutput <-
         setnames(trajmwss, "incP", "Patients")
         setnames(trajmwss, "incH", "Professionals")
         trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
-
-        trajmwss[, `:=`(mean = mean(value),
-                        sd = sd(value)),
-                 by = c("node","time", "variable")]
+        
+        trajmwss[, `:=`(maxInc = max(value)),
+                 by = c("node", "variable", "iteration")]
+        
+        trajmwss[, `:=`(mean = mean(maxInc),
+                        sd = sd(maxInc)),
+                 by = c("node", "variable")]
         trajmwss %<>% .[, c("time","node", "variable", "value", "mean","sd"), with=FALSE]
 
-
-        trajmwss[, `:=`(maxInc = max(mean)),
-                 by = c("node", "variable")]
-
-        trajmwss %<>% .[, c("node", "variable", "mean","sd", "maxInc"), with=FALSE]
         trajmwss %<>% unique
 
         p <- ggplot(trajmwss) +
-          geom_col(aes(node, maxInc, fill = variable), position = "dodge") +
-          geom_errorbar(aes(node, maxInc, ymin=maxInc-0.1, ymax=maxInc+0.1, group = variable),
-                        position = "dodge") + #TODO replace with actual mean+-sd
-          labs(x = "Service", y = "Peak daily incidence", fill = "")
+          geom_col(aes(node, mean, fill = variable), position = "dodge") +
+          geom_errorbar(aes(node, mean, ymin=mean-sd, ymax=mean+sd, group = variable),
+                        position = "dodge") + 
+          labs(x = "Service", y = "Peak daily incidence", fill = "") +
+          theme_bw() +
+          theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
         return(p)
       }
@@ -204,7 +204,10 @@ plotsoutput <-
       trajmwss[, `:=`(incP = c(0,diff(incP)),
                       incH = c(0,diff(incH))),
                by = c("node", "iteration")]
-
+      
+      setnames(trajmwss, "incP", "Patients")
+      setnames(trajmwss, "incH", "Professionals")
+      
       trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
 
       trajmwss[, `:=`(mean = mean(value),
@@ -218,13 +221,15 @@ plotsoutput <-
                       max_error = mean+sd),
                by = c("time", "variable")]
 
-      p <- ggplot(trajmwss, aes(x=time, y=mean, group=variable, color=variable)) +
+      p <- ggplot(trajmwss, aes(x=time, y=mean, colour=variable)) +
         geom_line() +
-        geom_point()+
-        xlab("Time (day)") +
-        ylab("Mean daily incidence") +
-        geom_errorbar(aes(ymin=min_error, ymax=max_error), width=.2,
-                      position=position_dodge(0.95))
+        geom_point() +
+        facet_wrap(~variable) +
+        geom_errorbar(aes(ymin=min_error, ymax=max_error), width=.2) +
+        labs(x = "Time (day)", y = "Mean daily incidence") +
+        guides(colour = "none") +
+        theme_bw()
+        
 
       return(p)
     }
