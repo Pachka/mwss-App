@@ -1286,7 +1286,12 @@ server <- function(input, output, session) {
         showModal(modalDialog(
           title = "Important message",
           "Select a pathogen!"
-        )) } else {
+        )) } else
+          if(input$n_days == 0){
+            showModal(modalDialog(
+              title = "Important message",
+              "The number of simulated days must be up to 0."
+            )) } else {
     ward_names <- data$ward_names
     pop_size_P <- data$pop_size_P
     pop_size_H <- data$pop_size_H
@@ -1379,6 +1384,7 @@ server <- function(input, output, session) {
 
     return(trajmwss)}
   })
+
 
   output$simoutput <- reactive({
     return("mwss" %in% class(runmodel()))
