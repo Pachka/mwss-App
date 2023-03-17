@@ -8,7 +8,7 @@ gdata <- list(
   # disease duration (days)
   d = 10,
   #  basic reproduction number
-  R0 = 1.29, # https://www.gouvernement.fr/info-coronavirus/carte-et-donnees
+  R0 = 13, # https://www.gouvernement.fr/info-coronavirus/carte-et-donnees
 
   ################
   ### Duration ###
