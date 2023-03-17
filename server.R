@@ -365,9 +365,9 @@ server <- function(input, output, session) {
   ###
 
   output$network_plot <- renderPlot({
-    num_nodes <- length(data$ward_names)
+    num_nodes <- data$ward_names %>% length
 
-    if (num_nodes == 1) {
+    if(num_nodes == 1) {
       my_sociomatrix <- matrix(rep(0, num_nodes * num_nodes),
                                # edge values
                                nrow = num_nodes,
@@ -405,10 +405,17 @@ server <- function(input, output, session) {
 
     }
 
-    if (num_nodes > 1) {
+    if(num_nodes > 1) {
+      # FIX ME colors only for preprocessed test datasets
       plot_connectivity(
-        data$matContact,
-        as.numeric(data$pop_size_P) + as.numeric(data$pop_size_H),
+        matContact = data$matContact,
+        size = as.numeric(data$pop_size_P) + as.numeric(data$pop_size_H),
+        vertexcexrate = 3,
+        vertexcol = c(rep("red",3),
+                      rep("blue",4),
+                      rep("white",5),
+                      rep("yellow",8),
+                      rep("orange",9)),
         verbose = FALSE
       )
     }
@@ -905,8 +912,8 @@ server <- function(input, output, session) {
       #  get the network
 
       g <- plot_connectivity(
-        data$matContact,
-        as.numeric(data$pop_size_P) + as.numeric(data$pop_size_H),
+        matContact = data$matContact,
+        size = as.numeric(data$pop_size_P) + as.numeric(data$pop_size_H),
         netobj = TRUE,
         verbose = FALSE
       ) %>% intergraph::asIgraph(.)
