@@ -82,6 +82,7 @@ plotsoutput <-
                         position = "dodge") + #TODO replace with actual mean+-sd
           labs(x = "Service", y = "Peak daily incidence", fill = "")
 
+        print(p)
         return(p)
       }
 
@@ -140,7 +141,6 @@ plotsoutput <-
         verbose = FALSE
       )
     }
-
 
     output$nosoHazard <- renderPlot({
       mynosoHazard()
@@ -225,7 +225,7 @@ plotsoutput <-
         ylab("Mean daily incidence") +
         geom_errorbar(aes(ymin=min_error, ymax=max_error), width=.2,
                       position=position_dodge(0.95))
-
+      print(p)
       return(p)
     }
 
@@ -304,14 +304,11 @@ plotsoutput <-
     # downloadHandler contains 2 arguments as functions, namely filename, content
     output$down_nTest <- downloadHandler(
       filename =  function() {
-        paste("daily_test_counter", "png" , sep = ".") #input$formatP4 change in "png" for VSimp
+        paste("daily_test_counter", "png", sep = ".")
       },
       # content is a function with argument file. content writes the plot to the device
       content = function(file) {
-        #if (input$formatP4 == "png")
         png(file) # open the png device
-        #else
-        #  pdf(file) # open the pdf device
 
         myTestcounter()
 
