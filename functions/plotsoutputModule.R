@@ -34,7 +34,6 @@ plotsoutput <-
            output,
            session,
            model,
-           variable,
            ndays) {
     # model()
     ns <- session$ns
@@ -86,7 +85,7 @@ plotsoutput <-
         return(p)
       }
 
-      simple_plot_peak(trajmwss = model())
+      simple_plot_peak(trajmwss = model()[["trajmwss"]])
 
     }
 
@@ -127,11 +126,11 @@ plotsoutput <-
       maxcolors = 5 #paramByDefaultVSimp
 
       plot_nosoHazard(
-        trajmwss = model(),
-        ward_names = variable$ward_names,
-        pop_size_P = variable$pop_size_P,
-        LS = variable$LS,
-        matContact = variable$matContact,
+        trajmwss = model()[["trajmwss"]],
+        ward_names = model()[["ward_names"]],
+        pop_size_P = model()[["pop_size_P"]],
+        LS = model()[["LS"]],
+        matContact = model()[["matContact"]],
         layout = "with_fr",  #input$nosoHazalayout, #paramByDefaultVSimp
         vertexsize = 0.5,  #input$nosoHazavertexsize, #paramByDefaultVSimp
         vertexlabelsize = 0.03, #input$nosoHazavertexlabelsize, #paramByDefaultVSimp
@@ -171,7 +170,7 @@ plotsoutput <-
       selectInput(
         inputId = ns("iter_inc"),
         label = "Select a simulation",
-        choices = seq(length(model()))
+        choices = seq(length(model()[["trajmwss"]]))
       )
     })
 
@@ -179,7 +178,7 @@ plotsoutput <-
       selectInput(
         inputId = ns("ward_inc"),
         label = "Select a ward",
-        choices = variable$ward_names
+        choices = model()[["ward_names"]]
       )
     })
 
@@ -229,7 +228,7 @@ plotsoutput <-
       return(p)
     }
 
-    simple_plot_incidence(trajmwss = model())
+    simple_plot_incidence(trajmwss = model()[["trajmwss"]])
     }
 
     output$plotIncidence <- renderPlot({
@@ -260,7 +259,7 @@ plotsoutput <-
       selectInput(
         inputId = ns("iter_test"),
         label = "Select a simulation",
-        choices = seq(length(model()))
+        choices = seq(length(model()[["trajmwss"]]))
       )
     })
 
@@ -268,7 +267,7 @@ plotsoutput <-
       selectInput(
         inputId = ns("ward_test"),
         label = "Select a ward",
-        choices = variable$ward_names
+        choices = model()[["ward_names"]]
       )
     })
 
@@ -286,7 +285,7 @@ plotsoutput <-
     myTestcounter <- function() {
 
       plot_testcount(
-        trajmwss = model(),
+        trajmwss = model()[["trajmwss"]],
         scale = 0, #scale,
         pop = NULL, #pop,
         iter = FALSE, #iter,

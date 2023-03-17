@@ -1382,12 +1382,23 @@ server <- function(input, output, session) {
     # trajmwss <- multisim(mwssmodel, input$n_sim, ward_names)
     trajmwss <- multisim(mwssmodel, 50, ward_names)
 
-    return(trajmwss)}
+    trajmwss_data <- list(
+      trajmwss = trajmwss,
+      ward_names = ward_names,
+      pop_size_P = pop_size_P,
+      pop_size_H = pop_size_H,
+      nVisits = nVisits,
+      LS = LS,
+      matContact = matContact,
+      IMMstate = IMMstate,
+      EPIstate = EPIstate)
+
+    return(trajmwss_data)}
   })
 
 
   output$simoutput <- reactive({
-    return("mwss" %in% class(runmodel()))
+    return("mwss" %in% class(runmodel()[["trajmwss"]]))
   })
 
   outputOptions(output,
@@ -1401,7 +1412,6 @@ server <- function(input, output, session) {
   callModule(module = plotsoutput,
              id = "simulationPlots",
              model = runmodel,
-             variable = data,
              ndays = reactive(input$n_days))
 
   callModule(module = synthreport,
