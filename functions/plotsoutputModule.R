@@ -44,34 +44,51 @@ plotsoutput <-
 
     mypPeak <- function() {
       simple_plot_peak = function(trajmwss) {
+        n_it <- seq(length(trajmwss))
+
         # add iteration
-        trajmwss <- lapply(seq(length(trajmwss)), function(sim) {
+        trajmwss <- lapply(n_it, function(sim) {
           trajmwss[[sim]][, `:=`(iteration, sim)]
           trajmwss[[sim]]
         })
+
+        # group into unique data.table
         trajmwss %<>% do.call(rbind, .)
+
+        #  cummulative daily incidence per node per iteration
         trajmwss[, `:=`(incP = (sum(incPA + incPM + incPS)),
                         incH = (sum(incHA + incHM + incHS))),
-                 by = c("iteration", "time")]
+                 by = c("iteration", "time", "node")]
 
-        trajmwss[, `:=`(incP = c(0,diff(incP)),
-                        incH = c(0,diff(incH))),
+        #  daily incidence per node per iteration
+        trajmwss[, `:=`(d_incP = diff(c(0,incP)),
+                        d_incH = diff(c(0,incH))),
                  by = c("node", "iteration")]
 
-        trajmwss %<>% .[, c("time","node", "iteration", "incP", "incH"), with=FALSE]
-        setnames(trajmwss, "incP", "Patients")
-        setnames(trajmwss, "incH", "Professionals")
+        #  remove unused columns
+        trajmwss %<>% .[, c("time","node", "iteration", "d_incP", "d_incH"), with=FALSE]
+
+
+        #  renames variables
+        setnames(trajmwss, "d_incP", "Patients")
+        setnames(trajmwss, "d_incH", "Healthcare workers")
+
+        #  remove unused columns
         trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
 
+        # Compute average daily incidence over simulations
         trajmwss[, `:=`(mean = mean(value),
                         sd = sd(value)),
                  by = c("node","time", "variable")]
+
+        #  remove unused columns
         trajmwss %<>% .[, c("time","node", "variable", "value", "mean","sd"), with=FALSE]
 
-
+        # select max daily incidence
         trajmwss[, `:=`(maxInc = max(mean)),
                  by = c("node", "variable")]
 
+        #  remove unused columns
         trajmwss %<>% .[, c("node", "variable", "mean","sd", "maxInc"), with=FALSE]
         trajmwss %<>% unique
 
