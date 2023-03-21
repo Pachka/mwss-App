@@ -20,8 +20,8 @@ valueboxoutput <- function(input, output, session, model) {
 
   output$nosoH <- renderValueBox({
     valueBox(
-      ifelse("mwss" %in% class(model()),
-             keyoutput(model(),
+      ifelse("mwss" %in% class(model()[["trajmwss"]]),
+             keyoutput(model()[["trajmwss"]],
                      scale = 0,
                      focus = "infections")$H$quantiles_noso[["50%"]],
              ""),
@@ -34,8 +34,8 @@ valueboxoutput <- function(input, output, session, model) {
 
   output$nosoP <- renderValueBox({
     valueBox(
-      ifelse("mwss" %in% class(model()),
-             keyoutput(model(),
+      ifelse("mwss" %in% class(model()[["trajmwss"]]),
+             keyoutput(model()[["trajmwss"]],
                      scale = 0,
                      focus = "infections")$P$quantiles_noso[["50%"]],
              ""),
@@ -51,8 +51,8 @@ valueboxoutput <- function(input, output, session, model) {
   output$nSev <- renderValueBox({
     valueBox(
       ifelse(
-        "mwss" %in% class(model()),
-        keyoutput(model(),
+        "mwss" %in% class(model()[["trajmwss"]]),
+        keyoutput(model()[["trajmwss"]],
                 scale = 0,
                 focus = "incidence")$incidence[, incPS] %>%  median,
         ""
@@ -69,8 +69,8 @@ valueboxoutput <- function(input, output, session, model) {
   output$ntestP <- renderValueBox({
     valueBox(
       ifelse(
-        "mwss" %in% class(model()),
-          keyoutput(model(),
+        "mwss" %in% class(model()[["trajmwss"]]),
+          keyoutput(model()[["trajmwss"]],
                 scale = 0,
                 focus = "test")$quantilesP[["50%"]],
         ""
@@ -86,8 +86,8 @@ valueboxoutput <- function(input, output, session, model) {
   output$ntestH <- renderValueBox({
     valueBox(
       ifelse(
-        "mwss" %in% class(model()),
-        keyoutput(model(),
+        "mwss" %in% class(model()[["trajmwss"]]),
+        keyoutput(model()[["trajmwss"]],
                 scale = 0,
                 focus = "test")$quantilesH[["50%"]],
         ""
@@ -106,9 +106,9 @@ valueboxoutput <- function(input, output, session, model) {
 
     valueBox(
       ifelse(
-        "mwss" %in% class(model()),
-        ifelse("ISO" %in% class(model()),
-               keyoutput(model(),
+        "mwss" %in% class(model()[["trajmwss"]]),
+        ifelse("ISO" %in% class(model()[["trajmwss"]]),
+               keyoutput(model()[["trajmwss"]],
                          scale = 0)$ISO$quantiles[["50%"]], 0),
         ""
       ),
@@ -127,8 +127,8 @@ valueboxoutput <- function(input, output, session, model) {
   output$SL <- renderValueBox({
     valueBox(
       ifelse(
-        "mwss" %in% class(model()),
-        keyoutput(model(),
+        "mwss" %in% class(model()[["trajmwss"]]),
+        keyoutput(model()[["trajmwss"]],
                 scale = 0)$SL$quantiles[["50%"]],
         ""
       ),

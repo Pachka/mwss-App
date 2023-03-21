@@ -23,7 +23,7 @@ synthreport <- function(input, output, session, model, variable, n_days, n_sim) 
         file.copy("report.Rmd", tempReport, overwrite = TRUE)
 
         # Set up parameters to pass to Rmd document
-          params <- list(control_traj = model(),
+          params <- list(control_traj = model()[["trajmwss"]],
                          data = variable(),
                          n_days = n_days(),
                          n_sim = 10)#n_sim())

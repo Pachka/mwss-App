@@ -106,15 +106,27 @@ tabItemSim <- function() {
               fluidRow(
                 box(
                   width = 12,
-                  checkboxGroupInput(
-                    "CSprotocols",
-                    "Control and surveillance:",
-                    c(
-                      "Impose isolation/contact restrictions to detected patients?" = "ISO",
-                      "Implement random tests at regular intervals for patients?" = "testPat",
-                      "Implement random tests at regular intervals for professionals?" = "testProf",
-                      "Implement a test at patient admission?" = "SA"
-                    )
+
+                  helper(
+                    shiny_tag = checkboxGroupInput(
+                      "CSprotocols",
+                      "Control and surveillance:",
+                      c(
+                        "Impose isolation/contact restrictions to detected patients?" = "ISO",
+                        "Implement random tests at regular intervals for patients?" = "testPat",
+                        "Implement random tests at regular intervals for professionals?" = "testProf",
+                        "Implement a test at patient admission?" = "SA"
+                      )
+                    ),
+                    icon = "question-circle",
+                    colour = "orange",
+                    type = "markdown",
+                    title = "",
+                    content = "HelpBoxSC",
+                    size = "m",
+                    buttonLabel = "Okay",
+                    easyClose = TRUE,
+                    fade = FALSE
                   )
                 ),
                 box(

@@ -365,9 +365,9 @@ server <- function(input, output, session) {
   ###
 
   output$network_plot <- renderPlot({
-    num_nodes <- length(data$ward_names)
+    num_nodes <- data$ward_names %>% length
 
-    if (num_nodes == 1) {
+    if(num_nodes == 1) {
       my_sociomatrix <- matrix(rep(0, num_nodes * num_nodes),
                                # edge values
                                nrow = num_nodes,
@@ -405,10 +405,17 @@ server <- function(input, output, session) {
 
     }
 
-    if (num_nodes > 1) {
+    if(num_nodes > 1) {
+      # FIX ME colors only for preprocessed test datasets
       plot_connectivity(
-        data$matContact,
-        as.numeric(data$pop_size_P) + as.numeric(data$pop_size_H),
+        matContact = data$matContact,
+        size = as.numeric(data$pop_size_P) + as.numeric(data$pop_size_H),
+        vertexcexrate = 3,
+        vertexcol = c(rep("red",3),
+                      rep("blue",4),
+                      rep("white",5),
+                      rep("yellow",8),
+                      rep("orange",9)),
         verbose = FALSE
       )
     }
@@ -905,8 +912,8 @@ server <- function(input, output, session) {
       #  get the network
 
       g <- plot_connectivity(
-        data$matContact,
-        as.numeric(data$pop_size_P) + as.numeric(data$pop_size_H),
+        matContact = data$matContact,
+        size = as.numeric(data$pop_size_P) + as.numeric(data$pop_size_H),
         netobj = TRUE,
         verbose = FALSE
       ) %>% intergraph::asIgraph(.)
@@ -1279,7 +1286,12 @@ server <- function(input, output, session) {
         showModal(modalDialog(
           title = "Important message",
           "Select a pathogen!"
-        )) } else {
+        )) } else
+          if(input$n_days == 0){
+            showModal(modalDialog(
+              title = "Important message",
+              "The number of simulated days must be up to 0."
+            )) } else {
     ward_names <- data$ward_names
     pop_size_P <- data$pop_size_P
     pop_size_H <- data$pop_size_H
@@ -1370,11 +1382,23 @@ server <- function(input, output, session) {
     # trajmwss <- multisim(mwssmodel, input$n_sim, ward_names)
     trajmwss <- multisim(mwssmodel, 50, ward_names)
 
-    return(trajmwss)}
+    trajmwss_data <- list(
+      trajmwss = trajmwss,
+      ward_names = ward_names,
+      pop_size_P = pop_size_P,
+      pop_size_H = pop_size_H,
+      nVisits = nVisits,
+      LS = LS,
+      matContact = matContact,
+      IMMstate = IMMstate,
+      EPIstate = EPIstate)
+
+    return(trajmwss_data)}
   })
 
+
   output$simoutput <- reactive({
-    return("mwss" %in% class(runmodel()))
+    return("mwss" %in% class(runmodel()[["trajmwss"]]))
   })
 
   outputOptions(output,
@@ -1388,7 +1412,6 @@ server <- function(input, output, session) {
   callModule(module = plotsoutput,
              id = "simulationPlots",
              model = runmodel,
-             variable = data,
              ndays = reactive(input$n_days))
 
   callModule(module = synthreport,

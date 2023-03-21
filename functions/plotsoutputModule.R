@@ -34,7 +34,6 @@ plotsoutput <-
            output,
            session,
            model,
-           variable,
            ndays) {
     # model()
     ns <- session$ns
@@ -45,24 +44,38 @@ plotsoutput <-
 
     mypPeak <- function() {
       simple_plot_peak = function(trajmwss) {
+        n_it <- seq(length(trajmwss))
+
         # add iteration
-        trajmwss <- lapply(seq(length(trajmwss)), function(sim) {
+        trajmwss <- lapply(n_it, function(sim) {
           trajmwss[[sim]][, `:=`(iteration, sim)]
           trajmwss[[sim]]
         })
+
+        # group into unique data.table
         trajmwss %<>% do.call(rbind, .)
+
+        #  cummulative daily incidence per node per iteration
         trajmwss[, `:=`(incP = (sum(incPA + incPM + incPS)),
                         incH = (sum(incHA + incHM + incHS))),
-                 by = c("iteration", "time")]
+                 by = c("iteration", "time", "node")]
 
-        trajmwss[, `:=`(incP = c(0,diff(incP)),
-                        incH = c(0,diff(incH))),
+        #  daily incidence per node per iteration
+        trajmwss[, `:=`(d_incP = diff(c(0,incP)),
+                        d_incH = diff(c(0,incH))),
                  by = c("node", "iteration")]
 
-        trajmwss %<>% .[, c("time","node", "iteration", "incP", "incH"), with=FALSE]
-        setnames(trajmwss, "incP", "Patients")
-        setnames(trajmwss, "incH", "Professionals")
+        #  remove unused columns
+        trajmwss %<>% .[, c("time","node", "iteration", "d_incP", "d_incH"), with=FALSE]
+
+
+        #  renames variables
+        setnames(trajmwss, "d_incP", "Patients")
+        setnames(trajmwss, "d_incH", "Healthcare workers")
+
+        #  remove unused columns
         trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+<<<<<<< HEAD
         
         trajmwss[, `:=`(maxInc = max(value)),
                  by = c("node", "variable", "iteration")]
@@ -72,6 +85,23 @@ plotsoutput <-
                  by = c("node", "variable")]
         trajmwss %<>% .[, c("time","node", "variable", "value", "mean","sd"), with=FALSE]
 
+=======
+
+        # Compute average daily incidence over simulations
+        trajmwss[, `:=`(mean = mean(value),
+                        sd = sd(value)),
+                 by = c("node","time", "variable")]
+
+        #  remove unused columns
+        trajmwss %<>% .[, c("time","node", "variable", "value", "mean","sd"), with=FALSE]
+
+        # select max daily incidence
+        trajmwss[, `:=`(maxInc = max(mean)),
+                 by = c("node", "variable")]
+
+        #  remove unused columns
+        trajmwss %<>% .[, c("node", "variable", "mean","sd", "maxInc"), with=FALSE]
+>>>>>>> main
         trajmwss %<>% unique
 
         p <- ggplot(trajmwss) +
@@ -82,10 +112,11 @@ plotsoutput <-
           theme_bw() +
           theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
+        print(p)
         return(p)
       }
 
-      simple_plot_peak(trajmwss = model())
+      simple_plot_peak(trajmwss = model()[["trajmwss"]])
 
     }
 
@@ -126,11 +157,11 @@ plotsoutput <-
       maxcolors = 5 #paramByDefaultVSimp
 
       plot_nosoHazard(
-        trajmwss = model(),
-        ward_names = variable$ward_names,
-        pop_size_P = variable$pop_size_P,
-        LS = variable$LS,
-        matContact = variable$matContact,
+        trajmwss = model()[["trajmwss"]],
+        ward_names = model()[["ward_names"]],
+        pop_size_P = model()[["pop_size_P"]],
+        LS = model()[["LS"]],
+        matContact = model()[["matContact"]],
         layout = "with_fr",  #input$nosoHazalayout, #paramByDefaultVSimp
         vertexsize = 0.5,  #input$nosoHazavertexsize, #paramByDefaultVSimp
         vertexlabelsize = 0.03, #input$nosoHazavertexlabelsize, #paramByDefaultVSimp
@@ -140,7 +171,6 @@ plotsoutput <-
         verbose = FALSE
       )
     }
-
 
     output$nosoHazard <- renderPlot({
       mynosoHazard()
@@ -171,7 +201,7 @@ plotsoutput <-
       selectInput(
         inputId = ns("iter_inc"),
         label = "Select a simulation",
-        choices = seq(length(model()))
+        choices = seq(length(model()[["trajmwss"]]))
       )
     })
 
@@ -179,7 +209,7 @@ plotsoutput <-
       selectInput(
         inputId = ns("ward_inc"),
         label = "Select a ward",
-        choices = variable$ward_names
+        choices = model()[["ward_names"]]
       )
     })
 
@@ -223,6 +253,7 @@ plotsoutput <-
 
       p <- ggplot(trajmwss, aes(x=time, y=mean, colour=variable)) +
         geom_line() +
+<<<<<<< HEAD
         geom_point() +
         facet_wrap(~variable) +
         geom_errorbar(aes(ymin=min_error, ymax=max_error), width=.2) +
@@ -231,10 +262,18 @@ plotsoutput <-
         theme_bw()
         
 
+=======
+        geom_point()+
+        xlab("Time (day)") +
+        ylab("Mean daily incidence") +
+        geom_errorbar(aes(ymin=min_error, ymax=max_error), width=.2,
+                      position=position_dodge(0.95))
+      print(p)
+>>>>>>> main
       return(p)
     }
 
-    simple_plot_incidence(trajmwss = model())
+    simple_plot_incidence(trajmwss = model()[["trajmwss"]])
     }
 
     output$plotIncidence <- renderPlot({
@@ -265,7 +304,7 @@ plotsoutput <-
       selectInput(
         inputId = ns("iter_test"),
         label = "Select a simulation",
-        choices = seq(length(model()))
+        choices = seq(length(model()[["trajmwss"]]))
       )
     })
 
@@ -273,7 +312,7 @@ plotsoutput <-
       selectInput(
         inputId = ns("ward_test"),
         label = "Select a ward",
-        choices = variable$ward_names
+        choices = model()[["ward_names"]]
       )
     })
 
@@ -291,7 +330,7 @@ plotsoutput <-
     myTestcounter <- function() {
 
       plot_testcount(
-        trajmwss = model(),
+        trajmwss = model()[["trajmwss"]],
         scale = 0, #scale,
         pop = NULL, #pop,
         iter = FALSE, #iter,
@@ -309,14 +348,11 @@ plotsoutput <-
     # downloadHandler contains 2 arguments as functions, namely filename, content
     output$down_nTest <- downloadHandler(
       filename =  function() {
-        paste("daily_test_counter", "png" , sep = ".") #input$formatP4 change in "png" for VSimp
+        paste("daily_test_counter", "png", sep = ".")
       },
       # content is a function with argument file. content writes the plot to the device
       content = function(file) {
-        #if (input$formatP4 == "png")
         png(file) # open the png device
-        #else
-        #  pdf(file) # open the pdf device
 
         myTestcounter()
 

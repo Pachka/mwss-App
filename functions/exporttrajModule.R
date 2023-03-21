@@ -19,7 +19,7 @@ exporttraj <- function(input, output, session, model) {
     },
     content = function(file) {
 
-      trajmwss <- model()
+      trajmwss <- model()[["trajmwss"]]
       save(trajmwss, file = file)
     }
   )
