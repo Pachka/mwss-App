@@ -1419,10 +1419,10 @@ server <- function(input, output, session) {
              model = runmodel,
              variable = reactive(data),
              n_days = reactive(input$n_days),
-             # n_sim = reactive(input$n_sim))
-              n_sim = 50)
+             n_sim = 50)
 
   callModule(module = exporttraj,
              id = "export_traj",
              model = runmodel)
+
 } # end server function
