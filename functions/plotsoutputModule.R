@@ -13,11 +13,21 @@ plotsoutputUI <- function(id) {
     box(
       width = 8,
       title =  h2("Daily imported and nosocomial cases (entire facility)", align="center"),
-      plotOutput(ns("plotIncidence")),
+      plotOutput(ns("plotIncidence1")),
+      downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
+      align = "center"
+    ),
+    box(
+      title =  h2("Daily imported and nosocomial cases (entire facility)", align="center"),
+      plotOutput(ns("plotIncidence2")),
+      align = "center"
+    ),
+    box(
+      title =  h2("Daily imported and nosocomial cases (entire facility)", align="center"),
+      plotOutput(ns("plotIncidence3")),
       selectInput(inputId = ns("iteration_id"), label = "Explore iteration", choices = 1:50,
                   selectize = F,  width = "230px"
       ),
-      downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
       align = "center"
     ),
     box(
@@ -210,9 +220,9 @@ plotsoutput <-
 
     #QL edit here to use simple version
 
-    myIncidence <- function(){
+    myIncidence <- function(x){
 
-      simple_plot_incidence = function(trajmwss){
+      simple_plot_incidence1 = function(trajmwss){
 
         n_it <- seq(length(trajmwss))
 
@@ -277,7 +287,7 @@ plotsoutput <-
         return(p)
       }
 
-      simple_plot_incidence1 = function(trajmwss){
+      simple_plot_incidence2 = function(trajmwss){
         n_it <- seq(length(trajmwss))
 
         # add iteration
@@ -328,7 +338,7 @@ plotsoutput <-
         return(p)
       }
 
-      simple_plot_incidence2 = function(trajmwss){
+      simple_plot_incidence3 = function(trajmwss){
         n_it <- seq(length(trajmwss))
 
         # add iteration
@@ -399,12 +409,28 @@ plotsoutput <-
         return(p)
       }
 
+      if(x == 1)
       simple_plot_incidence1(trajmwss = model()[["trajmwss"]])
+
+      if(x == 2)
+        simple_plot_incidence2(trajmwss = model()[["trajmwss"]])
+
+      if(x == 3)
+        simple_plot_incidence3(trajmwss = model()[["trajmwss"]])
 
     }
 
-    output$plotIncidence <- renderPlot({
-      myIncidence()
+    output$plotIncidence1 <- renderPlot({
+      myIncidence(1)
+    })
+
+
+    output$plotIncidence2 <- renderPlot({
+      myIncidence(2)
+    })
+
+    output$plotIncidence3 <- renderPlot({
+      myIncidence(3)
     })
 
     # downloadHandler contains 2 arguments as functions, namely filename, content
