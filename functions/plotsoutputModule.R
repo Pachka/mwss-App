@@ -3,6 +3,7 @@ plotsoutputUI <- function(id) {
 
   tagList(fluidRow(
     box(
+      width = 4,
       title =  h2("Nosocomial hazard", align="center"),
       plotOutput(ns("nosoHazard")),
 
@@ -10,21 +11,29 @@ plotsoutputUI <- function(id) {
       align = "center"
     ),
     box(
+      width = 8,
       title =  h2("Daily imported and nosocomial cases (entire facility)", align="center"),
       plotOutput(ns("plotIncidence")),
+      selectInput(inputId = ns("iteration_id"), label = "Explore iteration", choices = 1:50,
+                  selectize = F,  width = "230px"
+      ),
       downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
       align = "center"
     ),
-    box(title =  h2("Daily number of tests", align="center"),
-        plotOutput(ns("plottest")),
-        downloadButton(outputId = ns("down_nTest"), label = "Download the plot"),
-        align = "center"
+    box(
+      width = 4,
+      title =  h2("Daily number of tests", align="center"),
+      plotOutput(ns("plottest")),
+      downloadButton(outputId = ns("down_nTest"), label = "Download the plot"),
+      align = "center"
 
     ),
-    box(title =  h2("Peak incidence by service", align="center"),
-        plotOutput(ns("pPeak")),
-        downloadButton(outputId = ns("down_pPeak"), label = "Download the plot"),
-        align = "center"
+    box(
+      width = 8,
+      title =  h2("Peak incidence by service", align="center"),
+      plotOutput(ns("pPeak")),
+      downloadButton(outputId = ns("down_pPeak"), label = "Download the plot"),
+      align = "center"
     )
   ))
 }
@@ -203,76 +212,195 @@ plotsoutput <-
 
     myIncidence <- function(){
 
-    simple_plot_incidence = function(trajmwss){
+      simple_plot_incidence = function(trajmwss){
 
-      n_it <- seq(length(trajmwss))
+        n_it <- seq(length(trajmwss))
 
-      # add iteration
-      trajmwss <- lapply(n_it, function(sim) {
-        trajmwss[[sim]][, `:=`(iteration = sim)]
-        trajmwss[[sim]]
-      })
+        # add iteration
+        trajmwss <- lapply(n_it, function(sim) {
+          trajmwss[[sim]][, `:=`(iteration = sim)]
+          trajmwss[[sim]]
+        })
 
-      trajmwss %<>% do.call(rbind, .)
+        trajmwss %<>% do.call(rbind, .)
 
-      setDT(trajmwss)
-      # incidence by pop
-      # trajmwss[, `:=`(incP = (sum(incPA, incPM, incPS)),
-      #                 incH = (sum(incHA, incHM, incHS))),
-      #          by = c("iteration", "node","time")]
+        setDT(trajmwss)
 
-      trajmwss[, `:=`(casImpP = sum(admE, admEA, admES, admIA, admIM, admIS),
-                      casImpH = infHout),
-               by = c("iteration", "node","time")]
+        trajmwss[, `:=`(casImpP = sum(admE, admEA, admES, admIA, admIM, admIS),
+                        casImpH = infHout),
+                 by = c("iteration", "node","time")]
 
-      trajmwss %<>% .[, c("time","node", "iteration", "casImpP", "casImpH", "infP", "infH"), with=FALSE]
+        trajmwss %<>% .[, c("time","node", "iteration", "casImpP", "casImpH", "infP", "infH"), with=FALSE]
 
-      trajmwss[, `:=`(casImpP = c(0,diff(casImpP)),
-                      casImpH = c(0,diff(casImpH)),
-                      infP = c(0,diff(infP)),
-                      infH = c(0,diff(infH))),
-               by = c("node", "iteration")]
+        trajmwss[, `:=`(casImpP = c(0,diff(casImpP)),
+                        casImpH = c(0,diff(casImpH)),
+                        infP = c(0,diff(infP)),
+                        infH = c(0,diff(infH))),
+                 by = c("node", "iteration")]
 
-      trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+        trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
 
-      trajmwss[, `:=`(value = sum(value)),
-               by = c("time", "iteration", "variable")]
+        trajmwss[, `:=`(value = sum(value)),
+                 by = c("time", "iteration", "variable")]
 
-      trajmwss %<>% .[, c("time", "variable", "value"), with=FALSE]
+        trajmwss %<>% .[, c("time", "variable", "value"), with=FALSE]
 
-      trajmwss[, `:=`(mean = mean(value),
-                      sd = sd(value)),
-               by = c("time", "variable")]
+        trajmwss[, `:=`(mean = mean(value),
+                        sd = sd(value)),
+                 by = c("time", "variable")]
 
 
-      p <- ggplot(trajmwss, aes(x=time, y=value, group=variable, color = variable, fill = variable)) +
-        geom_smooth(span = 0.5) +
-        geom_point(data = trajmwss[mean != 0], aes(x=time, y=mean, group=variable, color = variable)) +
-        xlab("Time (day)") +
-        ylab("Avearge daily number of cases") +
-        scale_fill_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
-                          name = "",
-                          limits = c("casImpP", "infP","casImpH", "infH"),
-                          labels = c("Imported (patients)",
-                                     "Nosocomial (patients)",
-                                     "Imported (healthcare workers)",
-                                     "Nosocomial (healthcare workers)"
-                          )) +
-        scale_colour_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
+        p <- ggplot(trajmwss, aes(x=time, y=value, group=variable, color = variable, fill = variable)) +
+          geom_smooth(span = 0.5) +
+          geom_point(data = trajmwss[mean != 0], aes(x=time, y=mean, group=variable, color = variable)) +
+          xlab("Time (day)") +
+          ylab("Avearge daily number of cases") +
+          scale_fill_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
                             name = "",
                             limits = c("casImpP", "infP","casImpH", "infH"),
                             labels = c("Imported (patients)",
                                        "Nosocomial (patients)",
                                        "Imported (healthcare workers)",
                                        "Nosocomial (healthcare workers)"
-                            )
-        )
+                            )) +
+          scale_colour_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
+                              name = "",
+                              limits = c("casImpP", "infP","casImpH", "infH"),
+                              labels = c("Imported (patients)",
+                                         "Nosocomial (patients)",
+                                         "Imported (healthcare workers)",
+                                         "Nosocomial (healthcare workers)"
+                              )
+          )
 
-      print(p)
-      return(p)
-    }
+        print(p)
+        return(p)
+      }
 
-    simple_plot_incidence(trajmwss = model()[["trajmwss"]])
+      simple_plot_incidence1 = function(trajmwss){
+        n_it <- seq(length(trajmwss))
+
+        # add iteration
+        trajmwss <- lapply(n_it, function(sim) {
+          trajmwss[[sim]][, `:=`(iteration = sim)]
+          trajmwss[[sim]]
+        })
+
+        trajmwss %<>% do.call(rbind, .)
+
+        setDT(trajmwss)
+
+        trajmwss[, `:=`(casImpP = sum(admE, admEA, admES, admIA, admIM, admIS),
+                        casImpH = infHout),
+                 by = c("iteration", "node","time")]
+
+        trajmwss %<>% .[, c("time","node", "iteration", "casImpP", "casImpH", "infP", "infH"), with=FALSE]
+
+        trajmwss[, `:=`(casImpP = c(0,diff(casImpP)),
+                        casImpH = c(0,diff(casImpH)),
+                        infP = c(0,diff(infP)),
+                        infH = c(0,diff(infH))),
+                 by = c("node", "iteration")]
+
+        trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+
+        trajmwss[, `:=`(value = sum(value)),
+                 by = c("time", "iteration", "variable")]
+
+        trajmwss[, node := NULL]
+
+        trajmwss %<>% unique
+
+        # New facet label names for supp variable
+        var_labs <- c("Patients: imported cases", "Healthcare workers: imported cases",
+                      "Patients: nosocomial cases", "Healthcare workers: nosocomial cases")
+        names(var_labs) <- trajmwss$variable %>% unique
+
+        # Create the plot
+        p <- ggplot(trajmwss) +
+          geom_line(aes(x=time, y=value, group=factor(iteration), colour = factor(iteration)), linewidth = 0.1, alpha = 0.5) +
+          # geom_smooth(aes(x=time, y=value), span = 0.5) +
+          facet_wrap(. ~ variable,
+                     labeller = labeller(variable = var_labs)) +
+          theme(legend.position = "none")
+
+        print(p)
+        return(p)
+      }
+
+      simple_plot_incidence2 = function(trajmwss){
+        n_it <- seq(length(trajmwss))
+
+        # add iteration
+        trajmwss <- lapply(n_it, function(sim) {
+          trajmwss[[sim]][, `:=`(iteration = sim)]
+          trajmwss[[sim]]
+        })
+
+        trajmwss %<>% do.call(rbind, .)
+
+        setDT(trajmwss)
+
+        trajmwss[, `:=`(casImpP = sum(admE, admEA, admES, admIA, admIM, admIS),
+                        casImpH = infHout),
+                 by = c("iteration", "node","time")]
+
+        trajmwss %<>% .[, c("time","node", "iteration", "casImpP", "casImpH", "infP", "infH"), with=FALSE]
+
+        trajmwss[, `:=`(casImpP = c(0,diff(casImpP)),
+                        casImpH = c(0,diff(casImpH)),
+                        infP = c(0,diff(infP)),
+                        infH = c(0,diff(infH))),
+                 by = c("node", "iteration")]
+
+        trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+
+        trajmwss[, `:=`(value = sum(value)),
+                 by = c("time", "iteration", "variable")]
+
+        trajmwss[, node := NULL]
+
+        trajmwss %<>% unique
+
+        trajmwss[, `:=`(mean = mean(value),
+                        sd = sd(value),
+                        yhat_lower = quantile(value,0.025),
+                        yhat_upper = quantile(value,0.925)),
+                 by = c("time", "variable")]
+
+        p <- ggplot(trajmwss, aes(x=time, y=value, group=variable, color = variable, fill = variable)) +
+          geom_point() +
+          geom_ribbon(aes(ymin = yhat_lower, ymax = yhat_upper),
+                      alpha = 0.1,
+                      na.rm = TRUE,
+                      color = NA) +
+          geom_line(data = trajmwss[iteration == input$iteration_id], linewidth = 1) +
+          xlab("Time (day)") +
+          ylab("Avearge daily number of cases") +
+          scale_fill_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
+                            name = "",
+                            limits = c("casImpP", "infP","casImpH", "infH"),
+                            labels = c("Imported (patients)",
+                                       "Nosocomial (patients)",
+                                       "Imported (healthcare workers)",
+                                       "Nosocomial (healthcare workers)"
+                            )) +
+          scale_colour_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
+                              name = "",
+                              limits = c("casImpP", "infP","casImpH", "infH"),
+                              labels = c("Imported (patients)",
+                                         "Nosocomial (patients)",
+                                         "Imported (healthcare workers)",
+                                         "Nosocomial (healthcare workers)"
+                              )
+          )
+
+        print(p)
+        return(p)
+      }
+
+      simple_plot_incidence1(trajmwss = model()[["trajmwss"]])
+
     }
 
     output$plotIncidence <- renderPlot({
