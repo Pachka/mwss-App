@@ -25,7 +25,7 @@ valueboxoutput <- function(input, output, session, model) {
                      scale = 0,
                      focus = "infections")$H$quantiles_noso[["50%"]],
              ""),
-      HTML("Number of nosocomial  <br/> infection among professionals"),
+      HTML("Number of nosocomial (imported)  <br/> infections among professionals"),
       icon = icon("user-md", verify_fa = FALSE),
       color = "red",
       width = NULL
@@ -39,7 +39,7 @@ valueboxoutput <- function(input, output, session, model) {
                      scale = 0,
                      focus = "infections")$P$quantiles_noso[["50%"]],
              ""),
-      HTML("Number of nosocomial  <br/> infection among patients"),
+      HTML("Number of nosocomial (imported)  <br/> infections among patients"),
       icon = icon("bed",
                   verify_fa = FALSE),
       color = "red",

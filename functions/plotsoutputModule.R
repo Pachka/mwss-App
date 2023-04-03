@@ -332,7 +332,7 @@ plotsoutput <-
           # geom_smooth(aes(x=time, y=value), span = 0.5) +
           facet_wrap(. ~ variable,
                      labeller = labeller(variable = var_labs)) +
-          theme(legend.position = "none")
+          theme(legend.position = "none") + theme_bw()
 
         print(p)
         return(p)
@@ -381,10 +381,10 @@ plotsoutput <-
         p <- ggplot(trajmwss, aes(x=time, y=value, group=variable, color = variable, fill = variable)) +
           geom_point() +
           geom_ribbon(aes(ymin = yhat_lower, ymax = yhat_upper),
-                      alpha = 0.1,
+                      alpha = 0.4,
                       na.rm = TRUE,
                       color = NA) +
-          geom_line(data = trajmwss[iteration == input$iteration_id], linewidth = 1) +
+          geom_line(data = trajmwss[iteration == input$iteration_id], linewidth = .6) +
           xlab("Time (day)") +
           ylab("Avearge daily number of cases") +
           scale_fill_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
@@ -403,7 +403,8 @@ plotsoutput <-
                                          "Imported (healthcare workers)",
                                          "Nosocomial (healthcare workers)"
                               )
-          )
+          ) +
+          theme_bw()
 
         print(p)
         return(p)
