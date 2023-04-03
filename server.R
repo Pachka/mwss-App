@@ -1403,6 +1403,8 @@ server <- function(input, output, session) {
       IMMstate = IMMstate,
       EPIstate = EPIstate)
 
+    # save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
+
     return(trajmwss_data)}
   })
 

@@ -3,7 +3,6 @@ plotsoutputUI <- function(id) {
 
   tagList(fluidRow(
     box(
-      width = 4,
       title =  h2("Nosocomial hazard", align="center"),
       plotOutput(ns("nosoHazard")),
 
@@ -11,8 +10,8 @@ plotsoutputUI <- function(id) {
       align = "center"
     ),
     box(
-      width = 8,
-      title =  h2("Daily imported and nosocomial cases (entire facility)", align="center"),
+      title =  h2("Daily cases over the entire facility", align="center"),
+      footer = "29 wards, 500 patients and 900 healthcare workers",
       plotOutput(ns("plotIncidence1")),
       downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
       align = "center"
@@ -31,7 +30,6 @@ plotsoutputUI <- function(id) {
       align = "center"
     ),
     box(
-      width = 4,
       title =  h2("Daily number of tests", align="center"),
       plotOutput(ns("plottest")),
       downloadButton(outputId = ns("down_nTest"), label = "Download the plot"),
@@ -39,7 +37,6 @@ plotsoutputUI <- function(id) {
 
     ),
     box(
-      width = 8,
       title =  h2("Peak incidence by service", align="center"),
       plotOutput(ns("pPeak")),
       downloadButton(outputId = ns("down_pPeak"), label = "Download the plot"),
