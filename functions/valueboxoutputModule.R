@@ -21,9 +21,9 @@ valueboxoutput <- function(input, output, session, model) {
   output$nosoH <- renderValueBox({
     valueBox(
       ifelse("mwss" %in% class(model()[["trajmwss"]]),
-             paste(keyoutput(model()[["trajmwss"]],
+             paste (keyoutput(model()[["trajmwss"]],
                              scale = 0,
-                             focus = "infections")$H$quantiles_noso[["50%"]] %>% ceiling,"(",
+                             focus = "infections")$H$quantiles_noso[["50%"]] %>% ceiling," (",
                    keyoutput(model()[["trajmwss"]],
                              scale = 0,
                              focus = "infections")$H$quantiles_out[["50%"]] %>% ceiling
@@ -39,9 +39,9 @@ valueboxoutput <- function(input, output, session, model) {
   output$nosoP <- renderValueBox({
     valueBox(
       ifelse("mwss" %in% class(model()[["trajmwss"]]),
-             paste(keyoutput(model()[["trajmwss"]],
+             paste (keyoutput(model()[["trajmwss"]],
                      scale = 0,
-                     focus = "infections")$P$quantiles_noso[["50%"]] %>% ceiling,"(",
+                     focus = "infections")$P$quantiles_noso[["50%"]] %>% ceiling," (",
                    keyoutput(model()[["trajmwss"]],
                              scale = 0,
                              focus = "infections")$P$quantiles_intro[["50%"]] %>% ceiling

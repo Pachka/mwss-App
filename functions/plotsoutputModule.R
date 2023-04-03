@@ -11,22 +11,9 @@ plotsoutputUI <- function(id) {
     ),
     box(
       title =  h2("Daily cases over the entire facility", align="center"),
-      footer = "29 wards, 500 patients and 900 healthcare workers",
-      plotOutput(ns("plotIncidence1")),
-      downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
-      align = "center"
-    ),
-    box(
-      title =  h2("Daily imported and nosocomial cases (entire facility)", align="center"),
-      plotOutput(ns("plotIncidence2")),
-      align = "center"
-    ),
-    box(
-      title =  h2("Daily imported and nosocomial cases (entire facility)", align="center"),
+      footer = "29 wards, 500 patients and 900 healthcare workers. Four stochastic simulations are illustrated here among the 50. The orange shadow is the 95% prediction interval estimated from the 50 simulations.",
       plotOutput(ns("plotIncidence3")),
-      selectInput(inputId = ns("iteration_id"), label = "Explore iteration", choices = 1:50,
-                  selectize = F,  width = "230px"
-      ),
+      downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
       align = "center"
     ),
     box(
@@ -349,8 +336,7 @@ plotsoutput <-
         setDT(trajmwss)
 
         trajmwss[, `:=`(casImpP = sum(admE, admEA, admES, admIA, admIM, admIS),
-                        casImpH = infHout),
-                 by = c("iteration", "node","time")]
+                        casImpH = infHout)]
 
         trajmwss %<>% .[, c("time","node", "iteration", "casImpP", "casImpH", "infP", "infH"), with=FALSE]
 
@@ -359,49 +345,39 @@ plotsoutput <-
                         infP = c(0,diff(infP)),
                         infH = c(0,diff(infH))),
                  by = c("node", "iteration")]
+        
+        trajmwss[, `:=`(infections = casImpP + casImpH + infP + infH)]
+        
+        trajmwss %<>% .[, c("time","node", "iteration", "infections"), with=FALSE]
+        
+        # trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
 
-        trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
-
-        trajmwss[, `:=`(value = sum(value)),
-                 by = c("time", "iteration", "variable")]
+        trajmwss[, `:=`(infections = sum(infections)),
+                 by = c("time", "iteration")]
 
         trajmwss[, node := NULL]
 
         trajmwss %<>% unique
 
-        trajmwss[, `:=`(mean = mean(value),
-                        sd = sd(value),
-                        yhat_lower = quantile(value,0.025),
-                        yhat_upper = quantile(value,0.925)),
-                 by = c("time", "variable")]
+        trajmwss[, `:=`(mean = mean(infections),
+                        sd = sd(infections),
+                        yhat_lower = quantile(infections, 0.025),
+                        yhat_upper = quantile(infections, 0.925)),
+                 by = c("time")]
 
-        p <- ggplot(trajmwss, aes(x=time, y=value, group=variable, color = variable, fill = variable)) +
-          geom_point() +
-          geom_ribbon(aes(ymin = yhat_lower, ymax = yhat_upper),
-                      alpha = 0.4,
+        p <- ggplot(trajmwss) +
+          # geom_point() +
+          geom_ribbon(aes(x=time, ymin = yhat_lower, ymax = yhat_upper),
+                      alpha = 0.3,
                       na.rm = TRUE,
-                      color = NA) +
-          geom_line(data = trajmwss[iteration == input$iteration_id], linewidth = .6) +
+                      fill = "#f68323") +
+          geom_line(data = trajmwss[iteration %in% 1:4], 
+                    aes(x=time, y=infections, group=factor(iteration), 
+                        color = factor(iteration)), linewidth = .2) +
           xlab("Time (day)") +
           ylab("Avearge daily number of cases") +
-          scale_fill_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
-                            name = "",
-                            limits = c("casImpP", "infP","casImpH", "infH"),
-                            labels = c("Imported (patients)",
-                                       "Nosocomial (patients)",
-                                       "Imported (healthcare workers)",
-                                       "Nosocomial (healthcare workers)"
-                            )) +
-          scale_colour_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
-                              name = "",
-                              limits = c("casImpP", "infP","casImpH", "infH"),
-                              labels = c("Imported (patients)",
-                                         "Nosocomial (patients)",
-                                         "Imported (healthcare workers)",
-                                         "Nosocomial (healthcare workers)"
-                              )
-          ) +
-          theme_bw()
+          theme(panel.background = element_rect(fill = "white", colour = "grey50")) +
+          guides(color="none") 
 
         print(p)
         return(p)
@@ -440,7 +416,7 @@ plotsoutput <-
       content = function(file) {
         png(file) # open the png device
 
-        myIncidence()
+        myIncidence(3)
 
         # draw the plot
         dev.off()  # turn the device off

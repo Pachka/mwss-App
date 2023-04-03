@@ -9,6 +9,7 @@ When imposing isolation/contact restrictions to detected patients, the model con
 For patients, the model considers that, every week, 75% of patients with no vaccinate or infection history are randomly tested every week, 50% of patients with old vaccinate or infection history and 10% of patients with old vaccinate or infection history.
 
 For professionals, the model considers that, every two weeks, 75% of professionals with no vaccinate or infection history are randomly tested every week, 50% of professionals with old vaccinate or infection history and 20% of professionals with old vaccinate or infection history.
+Nevertheless, the probabilities considered for an healthcare worker to take a sick leave are 100% if he develops severe symptoms, 30% if he develops mild symptoms but is not tested or tested negative and 50% if he is tested positive.
 
 Note that the model considers that a tested individual will not be tested again before a minimal duration fixed as the duration of the disease (eg 10 days for covid).
 

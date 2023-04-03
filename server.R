@@ -1331,6 +1331,7 @@ server <- function(input, output, session) {
       gdata[['ptestHNI']] = 0.75
       gdata[['ptestHLI']] = 0.5
       gdata[['ptestHHI']] = 0.2
+      gdata[['pSLT']] = 0.2
     } else{
       gdata[['ptestHNI']] = 0
       gdata[['ptestHLI']] = 0
@@ -1403,7 +1404,7 @@ server <- function(input, output, session) {
       IMMstate = IMMstate,
       EPIstate = EPIstate)
 
-    # save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
+    save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
 
     return(trajmwss_data)}
   })
