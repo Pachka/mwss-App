@@ -121,9 +121,8 @@ valueboxoutput <- function(input, output, session, model) {
         ""
       ),
       HTML(
-        "Maximal number of beds <br/>simulataneously under confinement"
+        "Maximal number of beds <br/>simultaneously under confinement"
       ),
-      # "Maximal number of beds simulataneously under confinement",
       icon = icon("bed",
                   verify_fa = FALSE),
       color = "green",
@@ -141,7 +140,7 @@ valueboxoutput <- function(input, output, session, model) {
         ""
       ),
       HTML(
-        "Maximal number of professionals <br/>simulataneously in sick leave"
+        "Maximal number of professionals <br/>simultaneously in sick leave"
       ),
       icon = icon("user-md", verify_fa = FALSE),
       color = "green",
