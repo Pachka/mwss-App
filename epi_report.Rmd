@@ -1,5 +1,5 @@
 ---
-title: "07_tester.Rmd"
+title: "Epidemiological simulation report"
 author: "CB"
 date: "2/10/2021"
 output: pdf_document
@@ -10,22 +10,21 @@ options(tinytex.verbose = TRUE)
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+## Objective
+Dynamic epidemiological modeling is a powerful tool to analyse risk of pathogen persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and health care workers in health care settings, heterogeneity and stochasticity play fundamental roles due to high risk of super-spreading or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+## Methods
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+This report contains synthetic output generated using the open source R package ‘MWSS’ which uses the Gillespie algorithm, implemented with SimInf R-package.
 
-```{r cars}
-summary(cars)
-```
+This report presents synthetic results of 50 simulations run for a 24 -wards healthcare facility. The wards are connected by the professionals. In this report, the simulations run with the baseline scenario: without any control nor surveillance measure (contact restriction, regular random screening, screening area at the admission, are compared to simulations run with: confinement/contact restriction to detected patients / implementation of a screening area at patient admission including contact restriction/clinical examination/test / screening of patients by implementation of tests on a random subset of patient population at regular intervals / positive probability to test symptomatic patients / positive probability to test symptomatic healthcare workers.
 
-## Including Plots
+## Results:
+In the simulations, a median of 1 nosocomial infections of professionals were observed in the baseline scenario, when a median of 0 nosocomial infections of professionals were observed with the tested surveillance and control measures.
 
-You can also testingwithout plots, for example:
+## Conclusions:
+…
 
-```{r pressure, echo=FALSE}
-summary(cars)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Modelling project:
+Supported by the Département d’information médicale of the Centre hospitalier Guillaume Régnier (Rennes, France), a simulation modelling project was undertaken during 2020 pandemic to evaluate the effect of infection control protocols on SARS-CoV-2 spread in french long-term care facilities. The modelling was carried out by the french Pasteur Institute, the french Conservatoire national des arts et métiers and the french University of Versailles Saint-Quentin-en-Yvelines, in collaboration with the Department of Disease Control and Epidemiology of the National Veterinary Institute of Sweden. Epidemiological simulation are performed using R-based packages: mwss and SimInf.
+Note that simulations were run locally and, to deal with data confidentiality challenges, the parameters and simulations were not saved on our servers.
