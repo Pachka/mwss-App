@@ -11,20 +11,44 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Objective
-Dynamic epidemiological modeling is a powerful tool to analyse risk of pathogen persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and health care workers in health care settings, heterogeneity and stochasticity play fundamental roles due to high risk of super-spreading or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately.
+Dynamic epidemiological modeling is a powerful tool to analyse risk of pathogen persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and health care workers in health care settings, heterogeneity and stochasticity play fundamental roles due to risk of super-spreading events or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately.
+
+We use here a network-structured model to simulate disease spreading accross wards inside a healthcare facility and test the efficacy of intervention strategies on disease control.
 
 ## Methods
+### Hospital structure and population
+This report presents synthetic results of 50 simulations run for a 29-wards healthcare facility. The wards are connected by the professionals. 
 
-This report contains synthetic output generated using the open source R package ‘MWSS’ which uses the Gillespie algorithm, implemented with SimInf R-package.
+<!-- Plots: 1. connectivity plot for the newtork of wards // 2. Population size (patients, HCWs) -->
 
-This report presents synthetic results of 50 simulations run for a 24 -wards healthcare facility. The wards are connected by the professionals. In this report, the simulations run with the baseline scenario: without any control nor surveillance measure (contact restriction, regular random screening, screening area at the admission, are compared to simulations run with: confinement/contact restriction to detected patients / implementation of a screening area at patient admission including contact restriction/clinical examination/test / screening of patients by implementation of tests on a random subset of patient population at regular intervals / positive probability to test symptomatic patients / positive probability to test symptomatic healthcare workers.
+### Epidemiology: pathogen (and immunity level)
+We simulate the diffusion of **pathogen X** in a population with **no/low/high** immunity/ in a population with heterogeneous immunity.
 
-## Results:
-In the simulations, a median of 1 nosocomial infections of professionals were observed in the baseline scenario, when a median of 0 nosocomial infections of professionals were observed with the tested surveillance and control measures.
+<!-- A couple of key parameters to include: -->
+<!-- 1. Baseline transmissibility (R0) -->
+<!-- 2. Severity (probability of developing (severe) symptoms) -->
+<!-- 3. Fraction of HCW and PATIENTS with low/high immunity. -->
+### Intervention strategies
+<!-- A quick recap of the interventions assumed.  -->
+<!-- 1. confinement/contact restriction to detected patients -->
+<!-- 2. implementation of a screening area at patient admission including contact restriction/clinical examination/test -->
+<!-- 3. screening of patients by implementation of tests on a random subset of patient population at regular intervals -->
+<!-- 4. screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals -->
+We compare the results of this intervention scenario with a baseline scenario without any interventions.
+## Results
+<!-- All plots from the simple version app. -->
+<!-- ## Limitations -->
+<!-- To discuss. -->
+## Appendix
+<!-- Full table with parameters. -->
 
 ## Conclusions:
 …
 
 ## Modelling project:
 Supported by the Département d’information médicale of the Centre hospitalier Guillaume Régnier (Rennes, France), a simulation modelling project was undertaken during 2020 pandemic to evaluate the effect of infection control protocols on SARS-CoV-2 spread in french long-term care facilities. The modelling was carried out by the french Pasteur Institute, the french Conservatoire national des arts et métiers and the french University of Versailles Saint-Quentin-en-Yvelines, in collaboration with the Department of Disease Control and Epidemiology of the National Veterinary Institute of Sweden. Epidemiological simulation are performed using R-based packages: mwss and SimInf.
+
+
+Results presented in this report were generated using the open source R package ‘MWSS’ which uses the Gillespie algorithm, implemented with mwss R-package.
+
 Note that simulations were run locally and, to deal with data confidentiality challenges, the parameters and simulations were not saved on our servers.
