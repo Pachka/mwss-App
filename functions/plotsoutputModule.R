@@ -95,7 +95,7 @@ plotsoutput <-
 
         p <- ggplot(trajmwss) +
           facet_wrap(~variable) +
-          geom_col(aes(node, mean), fill = "grey", position = "dodge") +
+          geom_col(aes(node, mean, fill = variable), position = "dodge") +
           # geom_col(data = trajmwss[, tail(.SD,4),by = .(variable)],
           #          aes(node, mean, fill = variable),
           #          position = "dodge") +
