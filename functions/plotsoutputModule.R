@@ -25,6 +25,7 @@ plotsoutputUI <- function(id) {
     ),
     box(
       title =  h2("Peak incidence by service", align="center"),
+      footer = "For each population, the five highest peaks are displayed in color.",
       plotOutput(ns("pPeak")),
       downloadButton(outputId = ns("down_pPeak"), label = "Download the plot"),
       align = "center"
