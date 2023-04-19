@@ -1273,8 +1273,7 @@ server <- function(input, output, session) {
           style = "display: inline-block;vertical-align:top;",
           conditionalPanel(
             "output.simoutput == true",
-            synthreportUI("report_exp"),
-            # exporttrajUI("export_traj")
+            downloadButton("Markdown", "Generate report")
           )
         )
       )
@@ -1427,15 +1426,29 @@ server <- function(input, output, session) {
              model = runmodel,
              ndays = reactive(input$n_days))
 
-  callModule(module = synthreport,
-             id = "report_exp",
-             model = runmodel,
-             variable = reactive(data),
-             n_days = reactive(input$n_days),
-             n_sim = 50)
-
   callModule(module = exporttraj,
              id = "export_traj",
              model = runmodel)
+
+  output$Markdown <- downloadHandler(
+    # For PDF output, change this to "report.pdf"
+    filename = "report.pdf",
+    content = function(file) {
+      # Copy the report file to a temporary directory before processing it, in
+      # case we don't have write permissions to the current working dir (which
+      # can happen when deployed).
+
+
+      tempReport <- file.path(tempdir(), "epi_report.Rmd")
+      file.copy("epi_report.Rmd", tempReport, overwrite = TRUE)
+
+      # Knit the document, passing in the `params` list, and eval it in a
+      # child of the global environment (this isolates the code in the document
+      # from the code in this app).
+      output <- rmarkdown::render(
+        input = tempReport
+      )
+      file.copy(output, file)
+    })
 
 } # end server function
