@@ -78,20 +78,33 @@ plotsoutput <-
 
         #  remove unused columns
         trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+        # select maximal incidence in each node for each simulation
         trajmwss[, `:=`(maxInc = max(value)),
                  by = c("node", "variable", "iteration")]
 
+        trajmwss %<>% .[, c("node", "variable", "maxInc"), with=FALSE]
+
+        # calculate mean peak and sd per node over all simulations
         trajmwss[, `:=`(mean = mean(maxInc),
                         sd = sd(maxInc)),
                  by = c("node", "variable")]
-        trajmwss %<>% .[, c("time","node", "variable", "value", "mean","sd"), with=FALSE]
+
+        trajmwss %<>% .[, c("node", "variable", "maxInc", "mean","sd"), with=FALSE]
         trajmwss %<>% unique
+
 
         p <- ggplot(trajmwss) +
           facet_wrap(~variable) +
-          geom_col(aes(node, mean, fill = variable), position = "dodge") +
-          geom_errorbar(aes(node, mean, ymin=mean-sd, ymax=mean+sd, group = variable),
-                        position = "dodge") + #TODO replace with actual mean+-sd
+          geom_col(aes(node, mean), fill = "grey", position = "dodge") +
+          # geom_col(data = trajmwss[, tail(.SD,4),by = .(variable)],
+          #          aes(node, mean, fill = variable),
+          #          position = "dodge") +
+          geom_errorbar(aes(node,
+                            mean,
+                            ymin = ifelse((mean-sd) < 0, 0, (mean-sd)),
+                            ymax = mean+sd,
+                            group = variable),
+                        position = "dodge") +
           labs(x = "Service", y = "Peak daily incidence") +
           theme_bw() +
           theme(axis.text.x = element_text(angle=45, hjust=1, size = 5)) +
