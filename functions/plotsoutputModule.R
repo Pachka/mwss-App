@@ -10,21 +10,24 @@ plotsoutputUI <- function(id) {
       align = "center"
     ),
     box(
-      title =  h2("Daily incidence (entire facility)", align="center"),
-      plotOutput(ns("plotIncidence")),
+      title =  h2("Daily cases over the entire facility", align="center"),
+      footer = "29 wards, 500 patients and 900 healthcare workers. Four stochastic simulations are illustrated here among the 50. The orange shadow is the 95% prediction interval estimated from the 50 simulations.",
+      plotOutput(ns("plotIncidence3")),
       downloadButton(outputId = ns("down_Incidence"), label = "Download the plot"),
       align = "center"
     ),
-    box(title =  h2("Daily number of tests", align="center"),
-        plotOutput(ns("plottest")),
-        downloadButton(outputId = ns("down_nTest"), label = "Download the plot"),
-        align = "center"
+    box(
+      title =  h2("Daily number of tests", align="center"),
+      plotOutput(ns("plottest")),
+      downloadButton(outputId = ns("down_nTest"), label = "Download the plot"),
+      align = "center"
 
     ),
-    box(title =  h2("Peak incidence by service", align="center"),
-        plotOutput(ns("pPeak")),
-        downloadButton(outputId = ns("down_pPeak"), label = "Download the plot"),
-        align = "center"
+    box(
+      title =  h2("Peak incidence by service", align="center"),
+      plotOutput(ns("pPeak")),
+      downloadButton(outputId = ns("down_pPeak"), label = "Download the plot"),
+      align = "center"
     )
   ))
 }
@@ -48,7 +51,7 @@ plotsoutput <-
 
         # add iteration
         trajmwss <- lapply(n_it, function(sim) {
-          trajmwss[[sim]][, `:=`(iteration, sim)]
+          trajmwss[[sim]][, `:=`(iteration = sim)]
           trajmwss[[sim]]
         })
 
@@ -56,8 +59,8 @@ plotsoutput <-
         trajmwss %<>% do.call(rbind, .)
 
         #  cummulative daily incidence per node per iteration
-        trajmwss[, `:=`(incP = (sum(incPA + incPM + incPS)),
-                        incH = (sum(incHA + incHM + incHS))),
+        trajmwss[, `:=`(incP = (sum(incPA, incPM,  incPS)),
+                        incH = (sum(incHA, incHM, incHS))),
                  by = c("iteration", "time", "node")]
 
         #  daily incidence per node per iteration
@@ -75,42 +78,25 @@ plotsoutput <-
 
         #  remove unused columns
         trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
-<<<<<<< HEAD
-        
         trajmwss[, `:=`(maxInc = max(value)),
                  by = c("node", "variable", "iteration")]
-        
+
         trajmwss[, `:=`(mean = mean(maxInc),
                         sd = sd(maxInc)),
                  by = c("node", "variable")]
         trajmwss %<>% .[, c("time","node", "variable", "value", "mean","sd"), with=FALSE]
-
-=======
-
-        # Compute average daily incidence over simulations
-        trajmwss[, `:=`(mean = mean(value),
-                        sd = sd(value)),
-                 by = c("node","time", "variable")]
-
-        #  remove unused columns
-        trajmwss %<>% .[, c("time","node", "variable", "value", "mean","sd"), with=FALSE]
-
-        # select max daily incidence
-        trajmwss[, `:=`(maxInc = max(mean)),
-                 by = c("node", "variable")]
-
-        #  remove unused columns
-        trajmwss %<>% .[, c("node", "variable", "mean","sd", "maxInc"), with=FALSE]
->>>>>>> main
         trajmwss %<>% unique
 
         p <- ggplot(trajmwss) +
+          facet_wrap(~variable) +
           geom_col(aes(node, mean, fill = variable), position = "dodge") +
           geom_errorbar(aes(node, mean, ymin=mean-sd, ymax=mean+sd, group = variable),
-                        position = "dodge") + 
-          labs(x = "Service", y = "Peak daily incidence", fill = "") +
+                        position = "dodge") + #TODO replace with actual mean+-sd
+          labs(x = "Service", y = "Peak daily incidence") +
           theme_bw() +
-          theme(axis.text.x = element_text(angle = 45, hjust = 1))
+          theme(axis.text.x = element_text(angle=45, hjust=1, size = 5)) +
+          guides(fill = "none")
+        #try displaying top 10 only maybe, then rest in grey? to clearly show where highest burden is
 
         print(p)
         return(p)
@@ -132,7 +118,7 @@ plotsoutput <-
       # content is a function with argument file. content writes the plot to the device
       content = function(file) {
         png(file, res = 150,
-            width = 500,
+            width = 700,
             height = 500
         ) # open the png device
 
@@ -197,6 +183,7 @@ plotsoutput <-
     ######### Cumulative incidences
     #########
 
+
     output$iter_choiceInc <- renderUI({
       selectInput(
         inputId = ns("iter_inc"),
@@ -215,86 +202,225 @@ plotsoutput <-
 
     #QL edit here to use simple version
 
-    myIncidence <- function(){
+    myIncidence <- function(x){
 
-    simple_plot_incidence = function(trajmwss){
-      trajmwss <- lapply(seq(length(trajmwss)), function(sim) {
-        trajmwss[[sim]][, `:=`(iteration, sim)]
-        trajmwss[[sim]]
-      })
-      trajmwss %<>% do.call(rbind, .)
+      simple_plot_incidence1 = function(trajmwss){
 
-      # incidence by pop
-      trajmwss[, `:=`(incP = (sum(incPA + incPM + incPS)),
-                      incH = (sum(incHA + incHM + incHS))),
-               by = c("iteration", "node","time")]
+        n_it <- seq(length(trajmwss))
 
-      trajmwss %<>% .[, c("time","node", "iteration", "incP", "incH"), with=FALSE]
+        # add iteration
+        trajmwss <- lapply(n_it, function(sim) {
+          trajmwss[[sim]][, `:=`(iteration = sim)]
+          trajmwss[[sim]]
+        })
 
-      trajmwss[, `:=`(incP = c(0,diff(incP)),
-                      incH = c(0,diff(incH))),
-               by = c("node", "iteration")]
-      
-      setnames(trajmwss, "incP", "Patients")
-      setnames(trajmwss, "incH", "Professionals")
-      
-      trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+        trajmwss %<>% do.call(rbind, .)
 
-      trajmwss[, `:=`(mean = mean(value),
-                      sd = sd(value)), by = c("time", "variable")]
+        setDT(trajmwss)
 
-      trajmwss %<>% .[, c("time", "variable", "value", "mean","sd"), with=FALSE]
+        trajmwss[, `:=`(casImpP = sum(admE, admEA, admES, admIA, admIM, admIS),
+                        casImpH = infHout),
+                 by = c("iteration", "node","time")]
 
-      trajmwss %<>% unique
+        trajmwss %<>% .[, c("time","node", "iteration", "casImpP", "casImpH", "infP", "infH"), with=FALSE]
 
-      trajmwss[, `:=`(min_error = ifelse(mean-sd < 0 , 0, mean-sd),
-                      max_error = mean+sd),
-               by = c("time", "variable")]
+        trajmwss[, `:=`(casImpP = c(0,diff(casImpP)),
+                        casImpH = c(0,diff(casImpH)),
+                        infP = c(0,diff(infP)),
+                        infH = c(0,diff(infH))),
+                 by = c("node", "iteration")]
 
-      p <- ggplot(trajmwss, aes(x=time, y=mean, colour=variable)) +
-        geom_line() +
-<<<<<<< HEAD
-        geom_point() +
-        facet_wrap(~variable) +
-        geom_errorbar(aes(ymin=min_error, ymax=max_error), width=.2) +
-        labs(x = "Time (day)", y = "Mean daily incidence") +
-        guides(colour = "none") +
-        theme_bw()
-        
+        trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
 
-=======
-        geom_point()+
-        xlab("Time (day)") +
-        ylab("Mean daily incidence") +
-        geom_errorbar(aes(ymin=min_error, ymax=max_error), width=.2,
-                      position=position_dodge(0.95))
-      print(p)
->>>>>>> main
-      return(p)
+        trajmwss[, `:=`(value = sum(value)),
+                 by = c("time", "iteration", "variable")]
+
+        trajmwss %<>% .[, c("time", "variable", "value"), with=FALSE]
+
+        trajmwss[, `:=`(mean = mean(value),
+                        sd = sd(value)),
+                 by = c("time", "variable")]
+
+
+        p <- ggplot(trajmwss, aes(x=time, y=value, group=variable, color = variable, fill = variable)) +
+          geom_smooth(span = 0.5) +
+          geom_point(data = trajmwss[mean != 0], aes(x=time, y=mean, group=variable, color = variable)) +
+          xlab("Time (day)") +
+          ylab("Avearge daily number of cases") +
+          scale_fill_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
+                            name = "",
+                            limits = c("casImpP", "infP","casImpH", "infH"),
+                            labels = c("Imported (patients)",
+                                       "Nosocomial (patients)",
+                                       "Imported (healthcare workers)",
+                                       "Nosocomial (healthcare workers)"
+                            )) +
+          scale_colour_manual(values =  c("#f6ec23", "#f68323", "#6495ED", "#CCCCFF"),
+                              name = "",
+                              limits = c("casImpP", "infP","casImpH", "infH"),
+                              labels = c("Imported (patients)",
+                                         "Nosocomial (patients)",
+                                         "Imported (healthcare workers)",
+                                         "Nosocomial (healthcare workers)"
+                              )
+          )
+
+        print(p)
+        return(p)
+      }
+
+      simple_plot_incidence2 = function(trajmwss){
+        n_it <- seq(length(trajmwss))
+
+        # add iteration
+        trajmwss <- lapply(n_it, function(sim) {
+          trajmwss[[sim]][, `:=`(iteration = sim)]
+          trajmwss[[sim]]
+        })
+
+        trajmwss %<>% do.call(rbind, .)
+
+        setDT(trajmwss)
+
+        trajmwss[, `:=`(casImpP = sum(admE, admEA, admES, admIA, admIM, admIS),
+                        casImpH = infHout),
+                 by = c("iteration", "node","time")]
+
+        trajmwss %<>% .[, c("time","node", "iteration", "casImpP", "casImpH", "infP", "infH"), with=FALSE]
+
+        trajmwss[, `:=`(casImpP = c(0,diff(casImpP)),
+                        casImpH = c(0,diff(casImpH)),
+                        infP = c(0,diff(infP)),
+                        infH = c(0,diff(infH))),
+                 by = c("node", "iteration")]
+
+        trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+
+        trajmwss[, `:=`(value = sum(value)),
+                 by = c("time", "iteration", "variable")]
+
+        trajmwss[, node := NULL]
+
+        trajmwss %<>% unique
+
+        # New facet label names for supp variable
+        var_labs <- c("Patients: imported cases", "Healthcare workers: imported cases",
+                      "Patients: nosocomial cases", "Healthcare workers: nosocomial cases")
+        names(var_labs) <- trajmwss$variable %>% unique
+
+        # Create the plot
+        p <- ggplot(trajmwss) +
+          geom_line(aes(x=time, y=value, group=factor(iteration), colour = factor(iteration)), linewidth = 0.1, alpha = 0.5) +
+          # geom_smooth(aes(x=time, y=value), span = 0.5) +
+          facet_wrap(. ~ variable,
+                     labeller = labeller(variable = var_labs)) +
+          theme(legend.position = "none") + theme_bw()
+
+        print(p)
+        return(p)
+      }
+
+      simple_plot_incidence3 = function(trajmwss){
+        n_it <- seq(length(trajmwss))
+
+        # add iteration
+        trajmwss <- lapply(n_it, function(sim) {
+          trajmwss[[sim]][, `:=`(iteration = sim)]
+          trajmwss[[sim]]
+        })
+
+        trajmwss %<>% do.call(rbind, .)
+
+        setDT(trajmwss)
+
+        trajmwss[, `:=`(casImpP = sum(admE, admEA, admES, admIA, admIM, admIS),
+                        casImpH = infHout)]
+
+        trajmwss %<>% .[, c("time","node", "iteration", "casImpP", "casImpH", "infP", "infH"), with=FALSE]
+
+        trajmwss[, `:=`(casImpP = c(0,diff(casImpP)),
+                        casImpH = c(0,diff(casImpH)),
+                        infP = c(0,diff(infP)),
+                        infH = c(0,diff(infH))),
+                 by = c("node", "iteration")]
+
+        trajmwss[, `:=`(infections = casImpP + casImpH + infP + infH)]
+
+        trajmwss %<>% .[, c("time","node", "iteration", "infections"), with=FALSE]
+
+        # trajmwss %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+
+        trajmwss[, `:=`(infections = sum(infections)),
+                 by = c("time", "iteration")]
+
+        trajmwss[, node := NULL]
+
+        trajmwss %<>% unique
+
+        trajmwss[, `:=`(mean = mean(infections),
+                        sd = sd(infections),
+                        yhat_lower = quantile(infections, 0.025),
+                        yhat_upper = quantile(infections, 0.925)),
+                 by = c("time")]
+
+        p <- ggplot(trajmwss) +
+          # geom_point() +
+          geom_ribbon(aes(x=time, ymin = yhat_lower, ymax = yhat_upper),
+                      alpha = 0.3,
+                      na.rm = TRUE,
+                      fill = "#f68323") +
+          geom_line(data = trajmwss[iteration %in% 1:4],
+                    aes(x=time, y=infections, group=factor(iteration),
+                        color = factor(iteration)), linewidth = .2) +
+          xlab("Time (day)") +
+          ylab("Avearge daily number of cases") +
+          theme(panel.background = element_rect(fill = "white", colour = "grey50")) +
+          guides(color="none")
+
+        print(p)
+        return(p)
+      }
+
+      if(x == 1)
+        simple_plot_incidence1(trajmwss = model()[["trajmwss"]])
+
+      if(x == 2)
+        simple_plot_incidence2(trajmwss = model()[["trajmwss"]])
+
+      if(x == 3)
+        simple_plot_incidence3(trajmwss = model()[["trajmwss"]])
+
     }
 
-    simple_plot_incidence(trajmwss = model()[["trajmwss"]])
-    }
+    output$plotIncidence1 <- renderPlot({
+      myIncidence(1)
+    })
 
-    output$plotIncidence <- renderPlot({
-      myIncidence()
+
+    output$plotIncidence2 <- renderPlot({
+      myIncidence(2)
+    })
+
+    output$plotIncidence3 <- renderPlot({
+      myIncidence(3)
     })
 
     # downloadHandler contains 2 arguments as functions, namely filename, content
     output$down_Incidence <- downloadHandler(
       filename =  function() {
-        paste("daily_incidence", "png", sep = ".") #edited to remove call to input$formatP3
+        paste("daily_cases", "png", sep = ".") #edited to remove call to input$formatP3
       },
       # content is a function with argument file. content writes the plot to the device
       content = function(file) {
         png(file) # open the png device
 
-        myIncidence()
+        myIncidence(3)
 
         # draw the plot
         dev.off()  # turn the device off
       }
     )
+
 
     #########
     ######### Daily test boxplot
@@ -336,7 +462,7 @@ plotsoutput <-
         iter = FALSE, #iter,
         ward = FALSE, #ward,
         daysint = 7 #daysint
-      )
+      ) + theme_bw()
 
     }
 

@@ -25,8 +25,6 @@ install_github("MESuRS-Lab/mwss", quiet = T)
 library("mwss")
 
 # Parameters dataset
-# source('data/O1.R', local = TRUE)
-# source('data/O2.R', local = TRUE)
 
 #### Source function
 source('functions/buttonsUI.R', local = TRUE)

@@ -24,10 +24,10 @@ loadTestdt <- function(input, output, session, variable) {
 
       # Highly clustered
       if(input$structure == "1")
-        network_input <- build_network(within_clust_lev = 0.9, between_clust_lev = 0.05, clust_ratio_inout = 0.9)
+        network_input <- build_network(within_clust_lev = 0.9, between_clust_lev = 0.01, clust_ratio_inout = 0.95)
       # Medium clustered
       if(input$structure == "2")
-        network_input <- build_network(within_clust_lev = 0.4, between_clust_lev = 0.1, clust_ratio_inout = 0.4)
+        network_input <- build_network(within_clust_lev = 0.4, between_clust_lev = 0.05, clust_ratio_inout = 0.7)
       # Homogeneous
       if(input$structure == "3")
         network_input <- build_network(within_clust_lev = 0.2, between_clust_lev = 0.1, clust_ratio_inout = 0.2)

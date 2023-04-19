@@ -1311,13 +1311,19 @@ server <- function(input, output, session) {
     # Isolation
     if ('ISO' %in% input$CSprotocols) {
       gdata[['pISO']] = 1
-    }
+    } else
+      gdata[['pISO']] = 0
+
     # Testing for patients
     if ('testPat' %in% input$CSprotocols) {
       gdata[['tbtwtestP']] = 7
       gdata[['ptestPWNI']] = 0.75
       gdata[['ptestPWLI']] = 0.5
       gdata[['ptestPWHI']] = 0.1
+    } else {
+      gdata[['ptestPWNI']] = 0
+      gdata[['ptestPWLI']] = 0
+      gdata[['ptestPWHI']] = 0
     }
     # Testing for professionals
     if ('testProf' %in% input$CSprotocols) {
@@ -1325,6 +1331,11 @@ server <- function(input, output, session) {
       gdata[['ptestHNI']] = 0.75
       gdata[['ptestHLI']] = 0.5
       gdata[['ptestHHI']] = 0.2
+      gdata[['pSLT']] = 0.2
+    } else{
+      gdata[['ptestHNI']] = 0
+      gdata[['ptestHLI']] = 0
+      gdata[['ptestHHI']] = 0
     }
     # Screening area
     if ('SA' %in% input$CSprotocols) {
@@ -1393,6 +1404,8 @@ server <- function(input, output, session) {
       IMMstate = IMMstate,
       EPIstate = EPIstate)
 
+    # save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
+
     return(trajmwss_data)}
   })
 
@@ -1419,10 +1432,10 @@ server <- function(input, output, session) {
              model = runmodel,
              variable = reactive(data),
              n_days = reactive(input$n_days),
-             # n_sim = reactive(input$n_sim))
-              n_sim = 50)
+             n_sim = 50)
 
   callModule(module = exporttraj,
              id = "export_traj",
              model = runmodel)
+
 } # end server function
