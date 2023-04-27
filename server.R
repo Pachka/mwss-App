@@ -85,26 +85,33 @@ server <- function(input, output, session) {
   })
 
 
+  observeEvent(input$versionAdv, {
+    shinyalert(title = paste("Advanced mode is under development."),
+               type = "info",
+               size = "l")
+  })
+
   observeEvent(input$versionExp, {
-
-
-    output$menu <- renderUI({
-        ################
-        ### VERISONS ###
-        ################
-
-        menuItem("Version expert", icon = icon("play",
-                                               verify_fa = FALSE), startExpanded = TRUE,
-                 tabName = "Vexp",
-                 menuSubItem("Initialization", icon = icon("gears", verify_fa = FALSE), tabName = "INI"),
-                 menuSubItem('Simulations', tabName = 'SIMexp'),
-                 menuSubItem("More parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"))
-
-      })
-
-
-    updateTabsetPanel(session, "sidebarMenu",
-                      selected = "Vexp")
+      shinyalert(title = paste("Expert mode is under development."),
+                 type = "info",
+                 size = "l")
+    # output$menu <- renderUI({
+    #     ################
+    #     ### VERISONS ###
+    #     ################
+    #
+    #     menuItem("Version expert", icon = icon("play",
+    #                                            verify_fa = FALSE), startExpanded = TRUE,
+    #              tabName = "Vexp",
+    #              menuSubItem("Initialization", icon = icon("gears", verify_fa = FALSE), tabName = "INI"),
+    #              menuSubItem('Simulations', tabName = 'SIMexp'),
+    #              menuSubItem("More parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"))
+    #
+    #   })
+    #
+    #
+    # updateTabsetPanel(session, "sidebarMenu",
+    #                   selected = "Vexp")
   })
 
 

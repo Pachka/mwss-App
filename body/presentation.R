@@ -12,9 +12,11 @@ tabItemPresentation <- function() {
             width = "100%"
           ),
             column(12, align="center", offset = 3,
-                   actionButtonStyled("versionSimple", "Simple version", icon = NULL, width = NULL,
+                   actionButtonStyled("versionSimple", "Simple mode", icon = NULL, width = NULL,
                                       btn_type = "button", type = "warning", class = "btn-lg"),
-                   actionButtonStyled("versionExp", "Expert version", icon = NULL, width = NULL,
+                   actionButtonStyled("versionAdv", "Advanced mode", icon = NULL, width = NULL,
+                                      btn_type = "button", type = "warning", class = "btn-lg"),
+                   actionButtonStyled("versionExp", "Expert mode", icon = NULL, width = NULL,
                                       btn_type = "button", type = "warning", class = "btn-lg"),
          tags$style(type='text/css', "#button { vertical-align- middle; height- 50px; width- 100%; font-size- 30px;}")
                    ),
