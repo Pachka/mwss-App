@@ -24,18 +24,13 @@ tabItemPresentation <- function() {
          br(),
          br(),
           p(
-            "MWSS-App contains three sections (left panel):"),
-          p("The first one allows to initialize the tool.
-          In this section, describe the healthcare structure with its different wards and how healthcare workers are shared between them.
-          In short and technical words, this is where you parameterize the demographic model.
-          You will also describe epidemiological settings inherent to your facility."),
-          p("The second section allows to run simulation according to different monitoring and control scenarios.
-          The predictions can be visualized and downloaded in the section."),
-          p("The last section concerns more advanced parameters used in the epidemiological model.
-          This section is divided into three sub-sections detailling the epidemiological characteristics of a specific population ('Epidemiological parameters'),
-          the characteristics of the tests used ('Test-related parameters') and
-          the levels of immunity in the different sub-populations studied (patients and healthcare workers in each department; 'Immunity-related parameters')."
-          ),
-          p("Each section begins by the 'How to use' page that provides tips for users.")
+            "The MWSS-App enables the simulation of nosocomial outbreaks of a pathogen within a hospital. In the model, the hospital is composed of interconnected wards hosting patients and health-care workers. A series of interventions for surveillance and control are implemented to enable the evaluation of their impact on pathogen transmission."),
+         p(
+           "The application can be used under three different modes: simple, advanced or expert. The appearance of the user interface changes depending on the selected mode. The different settings and options available in each mode are detailed in a dedicated tab entitled \"How to use\". You can change the mode on the presentation page of the MWSS-App."),
+         p(
+           "The purpose of the simple mode is to allow the exploration of basic epidemiological scenarios on pre-defined theoretical healthcare structures, with a simplified user interface. Sets of parameter values are pre-entered for a list of viruses and of monitoring and surveillance strategies."),
+         p(
+           "Advanced and expert modes are under development. In the advanced mode, the user will be able to design their own healthcare structure, including a list of wards and interconnections between them through healthcare worker sharing. They will also be able to document/parametrize care organization, and baseline hygiene and epidemic management. In the expert mode, all model parameters will be accessible, including epidemiological characteristics, efficacy of available surveillance tools, and levels of immunity in the studied sub-populations (patients and healthcare workers in each ward). This mode will provide users with access to the full flexibility and adaptability of the model.
+            ")
           )
 }

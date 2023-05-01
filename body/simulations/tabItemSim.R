@@ -13,54 +13,27 @@ tabItemSim <- function() {
               title = "How to use",
               icon = icon("question-circle",
                           verify_fa = FALSE),
-              h3("Simulation panel"),
+              br(),
+              HTML("In this mode, you can explore basic epidemiological scenarios on predefined theoretical healthcare structures. It is not possible to edit the epidemiological parameters associated with studied viruses or the list of available  surveillance and control strategies that can be evaluated."),
+              h3("Initialization/Parameters"),
               HTML(
-                "In this panel, you can select a variant and run various surveillance and control scenarios to assess their impact on the disease spread.
-                <br>
-                In the upper part of this panel, you can use either the scrolling list, to select a SARS-CoV-2 variants,
-                or the buttons 'Browse' and 'Upload' to load a previously saved set of parameters.
-                Parameters loaded using the scrolling list were defined based on the literature (see Reference tab) and
-                parameter estimation statistical approaches.
-                <br>
-                  Be careful, uploading new parameters will erase any modified parameters. Think about regularly saving your inputs using the 'Download' button.
-                <br>
-                  Using the 'Download' button allows saving the set of parameters in RDA file.
-                This file contains a list of parameters and can be opened in the MWSS-App as well as directly using the R software.
-                <br>
-                The epidemiological parameters defined for each variant are displayed in the 'More parameters' panel.
-                They have been defined based on literature review and expert opinion. They should not require modification, but to meet different user needs, the possibility to adjust each parameter has been implemented."
+                "The first step is to select a hospital structure and a pathogen. Users may choose between three possible hospital structures and three possible pathogens. All three simulated hospital structures include 29 wards distributed over five buildings, and connected through healthcare workers to form a ward network, which is displayed as a graph. This network’s level of clustering varies: in the “high clustering” level, healthcare workers mostly work within a given building, while in the “low clustering” level, their assignments are not tied to the location of wards into specific buildings. The three possible pathogens were chosen to simulate three respiratory viruses: SARS-CoV-2, influenza and respiratory syncytial virus (RSV)."
               ),
-              h3("Surveillance and control"),
+              h3("Control and Surveillance"),
               HTML(
-                "At this stage of development, the following measures have been implemented:
-                  <ol>
-                    <li>contact restriction for patients with positive test (ISO compartment at the subpopulation level). You can adjust the average duration of this restriction.</li>
-                    <li>regular screening in patient and/or professionals populations. You can adjust the frequency of test-screening events, as well as the targeted population and subpopulation (immunity-based).</li>
-                    <li>systematic screening of patients at the admission. This measure implies the absence of contact with most of the professionals and all patients before test result. You can adjust the various parameters such as the type of test used, the level of infection control in patient/professional interactions, etc.</li>
-                  </ol>"
-              ),
-              h3("Simulation parameters"),
+                "Different surveillance and control strategies can be selected from a list. Details on how these practices are implemented are provided through the question mark button to the right of the ‘Control and surveillance’ box."),
+              h3("Simulations"),
               HTML(
-                "You can define the duration of the simulation (days) and the number of simulations before running the model.
-                The number of simulations should be defined as a tradeoff between running time and standard deviation of the output.
-                During a run, any click is prevented by the app.
-                Once you clicked the \"Run\" button, be patient, simulations can take time.
-                Do not close the window."
+              "By default, the simulation duration is set to 60 days, but that duration can be modified. Once you click the \"Run\" button, the model will run 50 stochastic simulations. Be patient, it can take time, do not close the window at any time, it would close the session and you would lose your selections and simulations."
               ),
               h3("Simulation output"),
               HTML(
-                "Various output are proposed.
-                You can download a synthetic report and raw data ready to be imported and explore in R.
-                All figures are editable and downloadable either in png of pdf.
-                "
-              ),
-              br(),
-              br(),
-              img(
-                src = 'compartmentalModel.png',
-                title = "Multilevel compartmental model",
-                width = "70%"
-              )
+              "Once simulations are run, results are provided through different outputs: summary statistics, graphs, and a detailed report (pdf format). All figures are downloadable in png format. Be careful and save the results you would like to keep : when a new simulation is run, all outputs and results are overwritten.")
+              # img(
+              #   src = 'compartmentalModel.png',
+              #   title = "Multilevel compartmental model",
+              #   width = "70%"
+              # )
             ),
             tabPanel(
               title = "Simulations",
