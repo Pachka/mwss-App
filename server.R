@@ -32,9 +32,9 @@ server <- function(input, output, session) {
   )
 
   # load test
-  callModule(module = loadTestdt,
-             id = "loadtest",
-             variable = data)
+  clustering <- callModule(module = loadTestdt,
+                           id = "loadtest",
+                           variable = data)
 
   # reset inputs
   callModule(module = resetreactives,
@@ -1408,7 +1408,9 @@ server <- function(input, output, session) {
       LS = LS,
       matContact = matContact,
       IMMstate = IMMstate,
-      EPIstate = EPIstate)
+      EPIstate = EPIstate,
+      clustering = clustering$clustering
+        )
 
     # save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
 
@@ -1439,7 +1441,7 @@ server <- function(input, output, session) {
 
   output$Markdown <- downloadHandler(
     # For PDF output, change this to "report.pdf"
-    filename = "report.pdf",
+    filename = "Report.pdf",
     content = function(file) {
       # Copy the report file to a temporary directory before processing it, in
       # case we don't have write permissions to the current working dir (which
@@ -1453,7 +1455,9 @@ server <- function(input, output, session) {
       # child of the global environment (this isolates the code in the document
       # from the code in this app).
       output <- rmarkdown::render(
-        input = tempReport
+        input = tempReport,
+        # Set up parameters to pass to Rmd document
+        params = runmodel()
       )
       file.copy(output, file)
     })

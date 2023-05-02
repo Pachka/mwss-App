@@ -1,13 +1,30 @@
 ---
 title: "Epidemiological simulation report"
-author: "CB"
+author: "Le CNAM, Institut Pasteur, Inserm, Université Paris-Saclay"
 date: "2/10/2021"
 output: pdf_document
+params:
+  trajmwss: NA,
+  ward_names: NA,
+  pop_size_P: NA,
+  pop_size_H: NA,
+  nVisits: NA,
+  LS: NA,
+  matContact: NA,
+  IMMstate: NA,
+  EPIstate: NA,
+  clustering: NA
 ---
+
 
 ```{r setup, include=FALSE}
 options(tinytex.verbose = TRUE)
 knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r message= FALSE, warning = FALSE}
+library(mwss)
+library(formattable)
 ```
 
 ## Objective
@@ -17,15 +34,41 @@ We use here a network-structured model to simulate disease spreading accross war
 
 ## Methods
 ### Hospital structure and population
-This report presents synthetic results of 50 simulations run for a 29-wards healthcare facility. The wards are connected by the professionals. 
+This report presents synthetic results of 50 simulations run for an ``r params$clustering`` hospital structure including 29 wards distributed over five buildings, and connected through healthcare workers.
 
 <!-- Plots: 1. connectivity plot for the newtork of wards // 2. Population size (patients, HCWs) -->
+```{r message= FALSE, warning = FALSE}
+   if(length(params$ward_names) > 1) {
+      # FIX ME colors only for preprocessed test datasets
+      plot_connectivity(
+        matContact = params$matContact,
+        size = as.numeric(params$pop_size_P) + as.numeric(params$pop_size_H),
+        vertexcexrate = 3,
+        vertexcol = c(rep("red",3),
+                      rep("blue",4),
+                      rep("white",5),
+                      rep("yellow",8),
+                      rep("orange",9)),
+        verbose = FALSE
+      )
+   }
+
+  df <- data.frame(Number_of_patients = params$pop_size_P,
+                 Number_of_healthcare_workers = params$pop_size_H,
+                 Daily_visits = params$nVisits,
+                 Stay_length = params$LS, row.names = params$ward_names)
+  
+  colnames(df) = gsub("_", " ",colnames(df))
+  
+ kable(df)
+                  
+```
 
 ### Epidemiology: pathogen (and immunity level)
 We simulate the diffusion of **pathogen X** in a population with **no/low/high** immunity/ in a population with heterogeneous immunity.
 
 <!-- A couple of key parameters to include: -->
-<!-- 1. Baseline transmissibility (R0) -->
+<!-- 1. Baseline transmissible (R0) -->
 <!-- 2. Severity (probability of developing (severe) symptoms) -->
 <!-- 3. Fraction of HCW and PATIENTS with low/high immunity. -->
 ### Intervention strategies
