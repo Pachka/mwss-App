@@ -12,7 +12,7 @@ tabItemAbout <- function(){
 ## mwss-App: an R-Shiny application to run stochastic simulation of infectious diseases spreading in healthcare systems structured as networked metapopulations
 
 ### Authors
-Hammami Pachka<sup>1,2,3,&#128312;</sup>, Oodally Ajmal<sup>1,2,3,&#128312;</sup>, Reilhac Astrid<sup>4</sup>, Gu&eacute;rineau de Lam&eacute;rie Guillaume<sup>4</sup>,  Widgren Stefan <sup>5</sup>,  Temime Laura<sup>3,6,&#10070;</sup> and  Opatowski Lulla<sup>1,2,&#10070;</sup></font>
+Hammami Pachka<sup>1,2,3,&#128312;</sup>, Oodally Ajmal<sup>1,2,3,&#128312;</sup>, Quentin Leclerc, Mélanie Bonneault, Paul Henriot, Sophie Chervet, Reilhac Astrid<sup>4</sup>, Gu&eacute;rineau de Lam&eacute;rie Guillaume<sup>4</sup>,  Widgren Stefan <sup>5</sup>,  Temime Laura<sup>3,6,&#10070;</sup> and  Opatowski Lulla<sup>1,2,&#10070;</sup></font>
 
 <br>
 <sup>1</sup> Anti-infective evasion and pharmacoepidemiology team, Universit&eacute; Paris-Saclay, UVSQ, Inserm, CESP,  Montigny-Le-Bretonneux, France

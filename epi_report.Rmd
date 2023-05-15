@@ -86,7 +86,7 @@ The severity (probability of developing (severe) symptoms) considered is ``r par
 <!-- 1. confinement/contact restriction to detected patients -->
 
 ```{asis, echo = "ISO"%in% params$scenarios}
-print("The risk of transmission during contacts with patients detected as infected is considered null.")
+The risk of transmission during contacts with patients detected as infected is considered null.
 ```
 <!-- 2. implementation of a screening area at patient admission including contact restriction/clinical examination/test -->
 ```{r eval="SA"%in% params$scenarios}
@@ -129,7 +129,7 @@ print("We compare the results of this intervention scenario with a baseline scen
  # kable(df)
                   
 ```
-## Conclusions:
+## Synthesis (résultats avec intervals):
 …
 
 ## Modelling project:

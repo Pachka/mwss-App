@@ -1419,7 +1419,7 @@ server <- function(input, output, session) {
       scenarios = scenarios
         )
 
-    save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
+    # save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
 
     return(trajmwss_data)}
   })
