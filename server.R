@@ -28,7 +28,8 @@ server <- function(input, output, session) {
     IMMstate = NULL,
     # Epidemiological states // infections
     EPIstate = NULL,
-    gdata = NULL
+    gdata = NULL,
+    disease = NULL
   )
 
   # load test
@@ -1298,6 +1299,7 @@ server <- function(input, output, session) {
               title = "Important message",
               "The number of simulated days must be up to 0."
             )) } else {
+
     ward_names <- data$ward_names
     pop_size_P <- data$pop_size_P
     pop_size_H <- data$pop_size_H
@@ -1399,6 +1401,8 @@ server <- function(input, output, session) {
     # trajmwss <- multisim(mwssmodel, input$n_sim, ward_names)
     trajmwss <- multisim(mwssmodel, 50, ward_names)
 
+    scenarios <- input$CSprotocols
+
     trajmwss_data <- list(
       trajmwss = trajmwss,
       ward_names = ward_names,
@@ -1409,10 +1413,13 @@ server <- function(input, output, session) {
       matContact = matContact,
       IMMstate = IMMstate,
       EPIstate = EPIstate,
-      clustering = clustering$clustering
+      clustering = clustering$clustering,
+      disease = data$disease,
+      gdata = data$gdata,
+      scenarios = scenarios
         )
 
-    # save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
+    save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
 
     return(trajmwss_data)}
   })

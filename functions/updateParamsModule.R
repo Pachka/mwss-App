@@ -20,10 +20,15 @@ updateParams_simp  <- function(input, output, session, variable){
 if(input$disease_id %in% c("Covid", "Influenza")){
                          # structure
                          variable$gdata = build_gdata(input$disease_id)
+                         variable$disease = input$disease_id
                                                       # R0 = 30)
                                                       # rinfLI = 0.99,
                                                       # rinfHI = 0.99)
-      }
+}
+
   })
+
+
+
 
   }

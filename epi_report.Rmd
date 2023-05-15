@@ -13,7 +13,10 @@ params:
   matContact: NA,
   IMMstate: NA,
   EPIstate: NA,
-  clustering: NA
+  clustering: NA,
+  disease: NA,
+  gdata: NA,
+  scenarios: NA
 ---
 
 
@@ -36,7 +39,7 @@ We use here a network-structured model to simulate disease spreading accross war
 ### Hospital structure and population
 This report presents synthetic results of 50 simulations run for an ``r params$clustering`` hospital structure including 29 wards distributed over five buildings, and connected through healthcare workers.
 
-<!-- Plots: 1. connectivity plot for the newtork of wards // 2. Population size (patients, HCWs) -->
+<!-- Plots: 1. connectivity plot for the network of wards // 2. Population size (patients, HCWs) -->
 ```{r message= FALSE, warning = FALSE}
    if(length(params$ward_names) > 1) {
       # FIX ME colors only for preprocessed test datasets
@@ -55,8 +58,9 @@ This report presents synthetic results of 50 simulations run for an ``r params$c
 
   df <- data.frame(Number_of_patients = params$pop_size_P,
                  Number_of_healthcare_workers = params$pop_size_H,
-                 Daily_visits = params$nVisits,
-                 Stay_length = params$LS, row.names = params$ward_names)
+                 # Daily_visits = params$nVisits,
+                 Length_of_stay_in_days = params$LS, 
+                 row.names = params$ward_names)
   
   colnames(df) = gsub("_", " ",colnames(df))
   
@@ -65,26 +69,66 @@ This report presents synthetic results of 50 simulations run for an ``r params$c
 ```
 
 ### Epidemiology: pathogen (and immunity level)
-We simulate the diffusion of **pathogen X** in a population with **no/low/high** immunity/ in a population with heterogeneous immunity.
+We simulate the diffusion of  ``r params$disease`` in a fully susceptible population (no immunity).
+
+<!-- in a population with **no/low/high/heterogeneous** immunity/ -->
 
 <!-- A couple of key parameters to include: -->
 <!-- 1. Baseline transmissible (R0) -->
+The baseline considered R0 was ``r if(params$disease == "Covid"){ 13 }``.
+
 <!-- 2. Severity (probability of developing (severe) symptoms) -->
+The severity (probability of developing (severe) symptoms) considered is ``r params$gdata["psevPNI"]`` for individuals without any immunity (neither vaccinated nor recovered), ``r params$gdata["psevPLI"]`` for individuals with a low immunity level (considering either an old vaccine injection or recovery), and ``r params$gdata["psevPHI"]`` for individuals with a high immunity level (considering either a recent vaccine injection or recovery).
+
 <!-- 3. Fraction of HCW and PATIENTS with low/high immunity. -->
 ### Intervention strategies
 <!-- A quick recap of the interventions assumed.  -->
 <!-- 1. confinement/contact restriction to detected patients -->
+
+```{asis, echo = "ISO"%in% params$scenarios}
+print("The risk of transmission during contacts with patients detected as infected is considered null.")
+```
 <!-- 2. implementation of a screening area at patient admission including contact restriction/clinical examination/test -->
+```{r eval="SA"%in% params$scenarios}
+print("Before admission, new patients undergo a clinical examination, during which they can be tested. Symptomatic patients are always tested, and among asymptomatic or susceptible patients: 75% of patients with no vaccination or infection history, 50% of patients with old vaccination or infection history and 25% of patients with recent vaccination or infection history will undergo a test. The model considers 2 contacts of 10min with the professional in charge of admission and no contact with other patients during the admission process.")
+```
 <!-- 3. screening of patients by implementation of tests on a random subset of patient population at regular intervals -->
+```{asis, echo = "testPat"%in% params$scenarios}
+print("For patients, random testing is implemented every week in 75% of patients with no vaccination or infection history, 50% of patients with old vaccination or infection history and 10% of patients with recent vaccination or infection history.
+
+Note that the model considers that a tested individual will not be tested again before a minimal duration fixed as the duration of the disease (eg 10 days for covid).")
+```
 <!-- 4. screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals -->
-We compare the results of this intervention scenario with a baseline scenario without any interventions.
+```{asis, echo = "testProf"%in% params$scenarios}
+print("For healthcare workers, random testing is implemented every two weeks in 75% of healthcare workers with no vaccination or infection history, 50% of healthcare workers with old vaccination or infection history and 20% of healthcare workers with recent vaccination or infection history.
+
+The model further assumes that a healthcare worker will take sick leave with 100% probability if he develops severe symptoms, 30% probability if he develops mild symptoms but is not tested or tested negative, and 50% probability if he is tested positive.
+
+Note that the model considers that a tested individual will not be tested again before a minimal duration fixed as the duration of the disease (eg 10 days for covid).")
+```
+
+```{asis, echo = is.null(params$scenarios)}
+print("No intervention strategy was implemented. We present here the results of simulations considering a baseline scenario without any interventions.")
+```
+
+```{asis, echo = !is.null(params$scenarios)}
+print("We compare the results of this intervention scenario with a baseline scenario without any interventions.")
+```
+
+
 ## Results
 <!-- All plots from the simple version app. -->
 <!-- ## Limitations -->
 <!-- To discuss. -->
 ## Appendix
 <!-- Full table with parameters. -->
+```{r message= FALSE, warning = FALSE}
 
+  params$gdata
+  
+ # kable(df)
+                  
+```
 ## Conclusions:
 …
 
