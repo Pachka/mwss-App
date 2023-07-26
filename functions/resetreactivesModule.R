@@ -20,7 +20,7 @@ resetreactives <- function(input, output, session, variable) {
       # Immunity
       variable$IMMstate = NULL
       # Epidemiological states // infections
-      variable$EPIstate = NULL
+      # variable$EPIstate = NULL
       variable$gdata = NULL
   })
 }

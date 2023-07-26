@@ -68,6 +68,7 @@ tabItemSim <- function() {
                 width = 6,
                 loadTestdtUI("loadtest"),
                 updateParamsUI_simp("disease"),
+                updateImportationUI_simp("level_importation")
               ),
               box(
                 width = 6,

@@ -27,7 +27,6 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ```{r message= FALSE, warning = FALSE}
 library(mwss)
-library(formattable)
 ```
 
 ## Objective
@@ -59,7 +58,7 @@ This report presents synthetic results of 50 simulations run for an ``r params$c
   df <- data.frame(Number_of_patients = params$pop_size_P,
                  Number_of_healthcare_workers = params$pop_size_H,
                  # Daily_visits = params$nVisits,
-                 Length_of_stay_in_days = params$LS, 
+                 Length_of_stay_in_days = round(params$LS,1), 
                  row.names = params$ward_names)
   
   colnames(df) = gsub("_", " ",colnames(df))
@@ -78,55 +77,331 @@ We simulate the diffusion of  ``r params$disease`` in a fully susceptible popula
 The baseline considered R0 was ``r if(params$disease == "Covid"){ 13 }``.
 
 <!-- 2. Severity (probability of developing (severe) symptoms) -->
-The severity (probability of developing (severe) symptoms) considered is ``r params$gdata["psevPNI"]`` for individuals without any immunity (neither vaccinated nor recovered), ``r params$gdata["psevPLI"]`` for individuals with a low immunity level (considering either an old vaccine injection or recovery), and ``r params$gdata["psevPHI"]`` for individuals with a high immunity level (considering either a recent vaccine injection or recovery).
+The severity (probability of developing severe symptoms) considered is ``r params$gdata["psevPNI"]`` for individuals without any immunity (neither vaccinated nor recovered), ``r params$gdata["psevPLI"]`` for individuals with a low immunity level (considering either an old vaccine injection or recovery), and ``r params$gdata["psevPHI"]`` for individuals with a high immunity level (considering either a recent vaccine injection or recovery).
 
 <!-- 3. Fraction of HCW and PATIENTS with low/high immunity. -->
 ### Intervention strategies
+```{asis, echo = !is.null(params$scenarios)}
+In this simulation, the following intervention strategies were implemented.
+```
+
 <!-- A quick recap of the interventions assumed.  -->
 <!-- 1. confinement/contact restriction to detected patients -->
 
-```{asis, echo = "ISO"%in% params$scenarios}
+```{asis, echo = "ISO" %in% params$scenarios}
+#### confinement/contact restriction to detected patients
 The risk of transmission during contacts with patients detected as infected is considered null.
 ```
 <!-- 2. implementation of a screening area at patient admission including contact restriction/clinical examination/test -->
-```{r eval="SA"%in% params$scenarios}
-print("Before admission, new patients undergo a clinical examination, during which they can be tested. Symptomatic patients are always tested, and among asymptomatic or susceptible patients: 75% of patients with no vaccination or infection history, 50% of patients with old vaccination or infection history and 25% of patients with recent vaccination or infection history will undergo a test. The model considers 2 contacts of 10min with the professional in charge of admission and no contact with other patients during the admission process.")
+```{asis, echo = "SA" %in% params$scenarios}
+
+#### Implementation of a screening area at patient admission including contact restriction, clinical examination and test
+Before admission, new patients undergo a clinical examination, during which they can be tested. Symptomatic patients are always tested, and among asymptomatic or susceptible patients: 75% of patients with no vaccination or infection history, 50% of patients with old vaccination or infection history and 25% of patients with recent vaccination or infection history will undergo a test. The model considers 2 contacts of 10min with the professional in charge of admission and no contact with other patients during the admission process.
 ```
 <!-- 3. screening of patients by implementation of tests on a random subset of patient population at regular intervals -->
-```{asis, echo = "testPat"%in% params$scenarios}
-print("For patients, random testing is implemented every week in 75% of patients with no vaccination or infection history, 50% of patients with old vaccination or infection history and 10% of patients with recent vaccination or infection history.
+```{asis, echo = "testPat" %in% params$scenarios}
+#### Screening of patients by implementation of tests on a random subset of patient population at regular intervals
+For patients, random testing is implemented every week in 75% of patients with no vaccination or infection history, 50% of patients with old vaccination or infection history and 10% of patients with recent vaccination or infection history.
 
-Note that the model considers that a tested individual will not be tested again before a minimal duration fixed as the duration of the disease (eg 10 days for covid).")
+Note that the model considers that a tested individual will not be tested again before a minimal duration fixed as the duration of the disease (eg 10 days for covid).
+
 ```
 <!-- 4. screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals -->
-```{asis, echo = "testProf"%in% params$scenarios}
-print("For healthcare workers, random testing is implemented every two weeks in 75% of healthcare workers with no vaccination or infection history, 50% of healthcare workers with old vaccination or infection history and 20% of healthcare workers with recent vaccination or infection history.
+```{asis, echo = "testProf" %in% params$scenarios}
+#### Screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals
+For healthcare workers, random testing is implemented every two weeks in 75% of healthcare workers with no vaccination or infection history, 50% of healthcare workers with old vaccination or infection history and 20% of healthcare workers with recent vaccination or infection history.
 
 The model further assumes that a healthcare worker will take sick leave with 100% probability if he develops severe symptoms, 30% probability if he develops mild symptoms but is not tested or tested negative, and 50% probability if he is tested positive.
 
-Note that the model considers that a tested individual will not be tested again before a minimal duration fixed as the duration of the disease (eg 10 days for covid).")
+Note that the model considers that a tested individual will not be tested again before a minimal duration fixed as the duration of the disease (eg 10 days for covid).
 ```
 
 ```{asis, echo = is.null(params$scenarios)}
-print("No intervention strategy was implemented. We present here the results of simulations considering a baseline scenario without any interventions.")
-```
-
-```{asis, echo = !is.null(params$scenarios)}
-print("We compare the results of this intervention scenario with a baseline scenario without any interventions.")
+No intervention strategy was implemented. The results presented here consider a baseline scenario without any interventions.
 ```
 
 
 ## Results
+
 <!-- All plots from the simple version app. -->
+
+```{r message= FALSE, warning = FALSE}
+
+n_it <- seq(length(params$trajmwss))
+
+# add iteration
+trajmwss <- lapply(n_it, function(sim) {
+  params$trajmwss[[sim]][, `:=`(iteration = sim)]
+  params$trajmwss[[sim]]
+})
+
+# group into unique data.table
+trajmwss %<>% do.call(rbind, .)
+
+#  cumulative daily incidence per node per iteration
+trajmwss[, `:=`(incP = (sum(incPA, incPM,  incPS)),
+                incH = (sum(incHA, incHM, incHS))),
+         by = c("iteration", "time", "node")]
+
+#  daily incidence per node per iteration
+trajmwss[, `:=`(d_incP = diff(c(0,incP)),
+                d_incH = diff(c(0,incH))),
+         by = c("node", "iteration")]
+
+#### simple_plot_peak
+
+#  remove unused columns
+peak_incidence_values <- trajmwss %>% .[, c("time","node", "iteration", "d_incP", "d_incH"), with=FALSE]
+
+#  renames variables
+setnames(peak_incidence_values, "d_incP", "Patients")
+setnames(peak_incidence_values, "d_incH", "Healthcare workers")
+
+#  remove unused columns
+peak_incidence_values %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+# select maximal incidence in each node for each simulation
+peak_incidence_values[, `:=`(maxInc = max(value)),
+                      by = c("node", "variable", "iteration")]
+
+peak_incidence_values %<>% .[, c("node", "variable", "maxInc"), with=FALSE]
+peak_incidence_values %<>% unique
+
+# calculate mean peak and sd per node over all simulations
+peak_incidence_values[, `:=`(mean = mean(maxInc),
+                             sd = sd(maxInc)),
+                      by = c("node", "variable")]
+
+peak_incidence_values %<>% .[, c("node", "variable","mean","sd"), with=FALSE]
+peak_incidence_values %<>% unique
+
+peak_incidence_plot <- ggplot(peak_incidence_values) +
+  facet_wrap(~variable) +
+  geom_col(aes(node, mean), fill = "grey", position = "dodge") +
+  geom_col(data = peak_incidence_values[order(mean), tail(.SD,5), by = variable],
+           aes(node, mean, fill = variable),
+           position = "dodge") +
+  geom_errorbar(aes(node,
+                    mean,
+                    ymin = ifelse((mean-sd) < 0, 0, (mean-sd)),
+                    ymax = mean+sd,
+                    group = variable),
+                position = "dodge") +
+  labs(x = "Service", y = "Peak daily incidence") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle=45, hjust=1, size = 5)) +
+  guides(fill = "none")
+
+
+### Incidence
+incidence_plot_values <- trajmwss
+incidence_plot_values[, `:=`(casImpP = sum(admE, admEA, admES, admIA, admIM, admIS),
+                             casImpH = infHout)]
+
+incidence_plot_values %<>% .[, c("time","node", "iteration", "casImpP", "casImpH", "infP", "infH"), with=FALSE]
+
+incidence_plot_values[, `:=`(casImpP = c(0,diff(casImpP)),
+                             casImpH = c(0,diff(casImpH)),
+                             infP = c(0,diff(infP)),
+                             infH = c(0,diff(infH))),
+                      by = c("node", "iteration")]
+
+incidence_plot_values[, `:=`(infections = casImpP + casImpH + infP + infH)]
+
+incidence_plot_values %<>% .[, c("time","node", "iteration", "infections"), with=FALSE]
+
+# incidence_plot_values %<>% melt(., id.vars = c("time" , "node" , "iteration"))
+
+incidence_plot_values[, `:=`(infections = sum(infections)),
+                      by = c("time", "iteration")]
+
+incidence_plot_values[, node := NULL]
+
+incidence_plot_values %<>% unique
+
+incidence_plot_values[, `:=`(mean = mean(infections),
+                             sd = sd(infections),
+                             yhat_lower = quantile(infections, 0.025),
+                             yhat_upper = quantile(infections, 0.925)),
+                      by = c("time")]
+
+incidence_plot <- ggplot(incidence_plot_values) +
+  geom_ribbon(aes(x=time, ymin = yhat_lower, ymax = yhat_upper),
+              alpha = 0.3,
+              na.rm = TRUE,
+              fill = "#f68323") +
+  geom_line(data = incidence_plot_values[iteration %in% 1:4],
+            aes(x=time, y=infections, group=factor(iteration),
+                color = factor(iteration)), linewidth = .2) +
+  xlab("Time (day)") +
+  ylab("Average daily number of cases (lines are 4 random simulations)") +
+  theme(panel.background = element_rect(fill = "white", colour = "grey50")) +
+  guides(color="none")
+
+peak_incidence_plot
+
+### Nosocomial hazard
+plot_nosoHazard(
+  trajmwss = params$trajmwss,
+  ward_names = params$ward_names,
+  pop_size_P = params$pop_size_P,
+  LS = params$LS,
+  matContact = params$matContact,
+  layout = "with_fr", 
+  vertexsize = 0.5, 
+  vertexlabelsize = 0.03,
+  edgearrowsize = 0.4,
+  addtitle = TRUE,
+  maxcolors = 5,
+  verbose = FALSE
+)
+
+incidence_plot
+
+plot_testcount(
+        trajmwss = params$trajmwss,
+        scale = 0,
+        pop = NULL,
+        iter = FALSE,
+        ward = FALSE,
+        daysint = 7
+      ) + theme_bw()
+
+                  
+```
+
 <!-- ## Limitations -->
 <!-- To discuss. -->
+
+```{asis, echo = !is.null(params$scenarios)}
+We compare the results of this intervention scenario with a baseline scenario without any interventions.
+```
+
+
+```{r message= FALSE, warning = FALSE}
+if(is.null(params$scenarios)){
+def_params <- c(
+"Number of nosocomial infections among professionals", 
+"Number of imported infections among professionals", 
+"Number of nosocomial infections among patients",
+"Number of imported infections among patients",
+"Number of severe cases among patients",
+"Number of tests of patients",
+"Number of tests of professionals",
+"Maximal number of beds simultaneously under confinement",
+"Maximal number of professionals simultaneously in sick leave")
+
+key_numbers <- keyoutput(params$trajmwss,
+                         scale = 0)
+
+intervals_values <- rbind(
+  key_numbers$infection$H$n_noso %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$infection$H$n_out %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$infection$P$n_noso %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$infection$P$n_intro %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$incidence$incidence[, incPS] %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$test$ntest[, nTestP] %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$test$ntest[, nTestH] %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  ifelse(!is.null(key_numbers$ISO),key_numbers$ISO$maxnISO %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling, NA),
+  key_numbers$SL$maxnSL %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling
+)
+
+colnames(intervals_values)[1] <- "median"
+
+table_params <- cbind(" " = def_params[!is.na(intervals_values[, "median"])], intervals_values[!is.na(intervals_values[, "median"]),]) %>% as.data.frame
+
+kable(table_params)} else {
+  gdata <- params$gdata
+  gdata[['pISO']] = 0
+  gdata[['ptestPWNI']] = 0
+  gdata[['ptestPWLI']] = 0
+  gdata[['ptestPWHI']] = 0
+  gdata[['ptestHNI']] = 0
+  gdata[['ptestHLI']] = 0
+  gdata[['ptestHHI']] = 0
+      
+    mwssmodel <- mwss(
+      params$ward_names,
+      params$pop_size_P,
+      params$pop_size_H,
+      params$nVisits,
+      params$LS,
+      matContact = params$matContact,
+      IMMstate = params$IMMstate,
+      EPIstate = params$EPIstate,
+      gdata = gdata,
+      tSim =  params$trajmwss[[1]][,max(time)],
+      verbose = FALSE
+    )
+
+    trajmwss_baseline <- multisim(mwssmodel, 50, params$ward_names)
+
+
+
+def_params <- c(
+"Number of nosocomial infections among professionals", 
+"Number of imported infections among professionals", 
+"Number of nosocomial infections among patients",
+"Number of imported infections among patients",
+"Number of severe cases among patients",
+"Number of tests of patients",
+"Number of tests of professionals",
+"Maximal number of beds simultaneously under confinement",
+"Maximal number of professionals simultaneously in sick leave")
+
+key_numbers <- keyoutput(params$trajmwss,
+                         scale = 0)
+
+intervals_values <- rbind(
+  key_numbers$infection$H$n_noso %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$infection$H$n_out %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$infection$P$n_noso %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$infection$P$n_intro %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$incidence$incidence[, incPS] %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$test$ntest[, nTestP] %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$test$ntest[, nTestH] %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  ifelse(!is.null(key_numbers$ISO),key_numbers$ISO$maxnISO %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling, NA),
+  key_numbers$SL$maxnSL %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling
+)
+
+key_numbers <- keyoutput(trajmwss_baseline,
+                         scale = 0)
+
+intervals_values_baseline <- rbind(
+  key_numbers$infection$H$n_noso %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$infection$H$n_out %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$infection$P$n_noso %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$infection$P$n_intro %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$incidence$incidence[, incPS] %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$test$ntest[, nTestP] %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  key_numbers$test$ntest[, nTestH] %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling,
+  ifelse(!is.null(key_numbers$ISO),key_numbers$ISO$maxnISO %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling, NA),
+  key_numbers$SL$maxnSL %>% quantile(., prob = c(0.5, 0.025, 0.975)) %>% ceiling
+)
+
+colnames(intervals_values)[1] <- "median"
+colnames(intervals_values_baseline)[1] <- "median"
+colnames(intervals_values_baseline) %<>% paste0(., '_baseline')
+
+table_params <- cbind(" " = def_params[!is.na(intervals_values[, "median"])], intervals_values[!is.na(intervals_values[, "median"]),]) %>% 
+ cbind(., intervals_values_baseline[!is.na(intervals_values[, "median"]),]) %>% as.data.frame
+
+colnames(table_params) %<>% gsub("_", " ", .)
+kable(table_params)
+}
+
+```
+
+
 ## Appendix
+
 <!-- Full table with parameters. -->
 ```{r message= FALSE, warning = FALSE}
 
-  params$gdata
-  
- # kable(df)
+#   c(params$gdata
+#   
+# df = data.frame(Parameters = , 
+#                 values = )
+#  kable(df)
                   
 ```
 ## Synthesis (résultats avec intervals):

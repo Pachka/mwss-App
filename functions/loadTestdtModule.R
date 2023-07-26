@@ -49,9 +49,9 @@ loadTestdt <- function(input, output, session, variable) {
         variable$Hplanning = NULL
         variable$matContact = network_input$matContact
         # Immunity
-        variable$IMMstate = NULL
+        # variable$IMMstate = NULL
         # Epidemiological states // infections
-        variable$EPIstate = NULL
+        # variable$EPIstate = NULL
       }
     }
 

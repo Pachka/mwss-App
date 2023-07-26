@@ -29,7 +29,8 @@ server <- function(input, output, session) {
     # Epidemiological states // infections
     EPIstate = NULL,
     gdata = NULL,
-    disease = NULL
+    disease = NULL,
+    imp_lev = NULL
   )
 
   # load test
@@ -162,7 +163,7 @@ server <- function(input, output, session) {
           # Immunity
           data$IMMstate = network_input$IMMstate
           # Epidemiological states // infections
-          data$EPIstate = network_input$EPIstate
+          # data$EPIstate = network_input$EPIstate
         } #FIX ME: warn me if the object is missing
       }
     },
@@ -456,46 +457,46 @@ server <- function(input, output, session) {
 
   ## Add a ward
   # update reactive values
-  observeEvent(input$addWbutton, {
-    isolate({
-      #####
-      ##### Update structure data
-      #####
-
-      data$ward_names %<>% c(., input$wardname)
-      data$pop_size_P %<>% c(., input$pop_size_P)
-      data$pop_size_H %<>% c(., input$pop_size_H)
-      data$nVisits %<>% c(., input$nVisits)
-      data$LS %<>% c(., input$LS)
-
-      #####
-      ##### Update professionals plannings
-      #####
-      if (is.null(data$Hplanning)) {
-        data$Hplanning <-
-          data.table(professionals = paste0(
-            "HCWS_",
-            seq(input$pop_size_H),
-            paste0("_", input$wardname)
-          ),
-          ward = 100)
-        setnames(data$Hplanning, "ward", input$wardname)
-      } else {
-        newW <-
-          data.table(professionals = paste0(
-            "HCWS_",
-            seq(input$pop_size_H),
-            paste0("_", input$wardname)
-          ),
-          ward = 100)
-        setnames(newW, "ward", input$wardname)
-
-        data$Hplanning %<>% rbind(., newW, fill = TRUE)
-
-        data$Hplanning[is.na(data$Hplanning)] <- 0
-      }
-    })
-  })
+  # observeEvent(input$addWbutton, {
+  #   isolate({
+  #     #####
+  #     ##### Update structure data
+  #     #####
+  #
+  #     data$ward_names %<>% c(., input$wardname)
+  #     data$pop_size_P %<>% c(., input$pop_size_P)
+  #     data$pop_size_H %<>% c(., input$pop_size_H)
+  #     data$nVisits %<>% c(., input$nVisits)
+  #     data$LS %<>% c(., input$LS)
+  #
+  #     #####
+  #     ##### Update professionals plannings
+  #     #####
+  #     if (is.null(data$Hplanning)) {
+  #       data$Hplanning <-
+  #         data.table(professionals = paste0(
+  #           "HCWS_",
+  #           seq(input$pop_size_H),
+  #           paste0("_", input$wardname)
+  #         ),
+  #         ward = 100)
+  #       setnames(data$Hplanning, "ward", input$wardname)
+  #     } else {
+  #       newW <-
+  #         data.table(professionals = paste0(
+  #           "HCWS_",
+  #           seq(input$pop_size_H),
+  #           paste0("_", input$wardname)
+  #         ),
+  #         ward = 100)
+  #       setnames(newW, "ward", input$wardname)
+  #
+  #       data$Hplanning %<>% rbind(., newW, fill = TRUE)
+  #
+  #       data$Hplanning[is.na(data$Hplanning)] <- 0
+  #     }
+  #   })
+  # })
 
   ###############################
   ####    Edit wards         ####
@@ -670,6 +671,14 @@ server <- function(input, output, session) {
   callModule(module = updateParams_simp,
              id = "disease",
              variable = data)
+
+
+  ## Choose level of importation, update parameters baseline values
+  callModule(module = updateImportation_simp,
+             id = "level_importation",
+             variable = data)
+
+
 
   ###
   ### Download set of parameters
@@ -1289,10 +1298,10 @@ server <- function(input, output, session) {
 
   runmodel <- eventReactive(input$runmodelVsimp, {
 
-    if(is.null(data$gdata)){
+    if(is.null(data$gdata)|is.null(data$disease)){
         showModal(modalDialog(
           title = "Important message",
-          "Select a pathogen!"
+          "Select a pathogen and a scenario of importation!"
         )) } else
           if(input$n_days == 0){
             showModal(modalDialog(
@@ -1381,7 +1390,6 @@ server <- function(input, output, session) {
     # save(gdata,  file = "tmpdata/gdata.Rda")
     # save(n_days,  file = "tmpdata/n_days.Rda")
 
-
     mwssmodel <- mwss(
       ward_names,
       pop_size_P,
@@ -1419,7 +1427,7 @@ server <- function(input, output, session) {
       scenarios = scenarios
         )
 
-    # save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
+    save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
 
     return(trajmwss_data)}
   })
