@@ -60,30 +60,34 @@ server <- function(input, output, session) {
     }
   })
 
+  output$CSprotocolsUI <- renderUI({
+  checkboxGroupInput(
+    "CSprotocols",
+    "Control and surveillance:",
+    c(
+      "Impose isolation/contact restrictions to detected patients?" = "ISO",
+      "Implement random tests at regular intervals for patients?" = "testPat",
+      "Implement random tests at regular intervals for professionals?" = "testProf",
+      "Implement a test at patient admission?" = "SA"
+    )
+  )
+    })
+
   #####################################
   #######    Structure panel     ######
   #####################################
 
-  ###
-  ### Sidebar
-  ###
 
   observeEvent(input$versionSimple, {
 
+    updateTabsetPanel(session,
+                      "sidebarMenu",
+                      selected = "simulation_sidetab")
 
-    output$menu <- renderUI({
-        ################
-        ### VERISONS ###
-        ################
+    updateTabsetPanel(session,
+                      "tabsSIMULATIONS",
+                      selected = "Simple mode")
 
-        menuItem("Version simple", icon = icon("play",
-                                               verify_fa = FALSE),
-                 tabName = "Vsimp")
-
-        })
-
-    updateTabsetPanel(session, "sidebarMenu",
-                      selected = "Vsimp")
   })
 
 
@@ -91,29 +95,21 @@ server <- function(input, output, session) {
     shinyalert(title = paste("Advanced mode is under development."),
                type = "info",
                size = "l")
+
+    updateTabsetPanel(session,
+                      "sidebarMenu",
+                      selected = "simulation_sidetab")
+
+    updateTabsetPanel(session,
+                      "tabsSIMULATIONS",
+                      selected = "Advanced mode")
+
   })
 
   observeEvent(input$versionExp, {
       shinyalert(title = paste("Expert mode is under development."),
                  type = "info",
                  size = "l")
-    # output$menu <- renderUI({
-    #     ################
-    #     ### VERISONS ###
-    #     ################
-    #
-    #     menuItem("Version expert", icon = icon("play",
-    #                                            verify_fa = FALSE), startExpanded = TRUE,
-    #              tabName = "Vexp",
-    #              menuSubItem("Initialization", icon = icon("gears", verify_fa = FALSE), tabName = "INI"),
-    #              menuSubItem('Simulations', tabName = 'SIMexp'),
-    #              menuSubItem("More parameters", icon = icon("fas fa-sliders-h", verify_fa = FALSE), tabName = "PARAMS"))
-    #
-    #   })
-    #
-    #
-    # updateTabsetPanel(session, "sidebarMenu",
-    #                   selected = "Vexp")
   })
 
 

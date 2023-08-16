@@ -8,15 +8,21 @@ sidebar <- dashboardSidebar(
   sidebarMenu(
     id = "sidebarMenu",
 
-    menuItem("Presentation", icon = icon("book",
-                                         verify_fa = FALSE), tabName = "PRS"),
+    menuItem("Presentation",
+             icon = icon("book", verify_fa = FALSE),
+             tabName = "PRS"),
 
 
     ################
-    ### VERISONS ###
+    ### VERSIONS ###
     ################
 
-    uiOutput("menu"),
+    ###
+    ### Sidebar
+    ###
+    menuItem("Simulations", icon = icon("play",
+                                                verify_fa = FALSE),
+                     tabName = "simulation_sidetab"),
 
     #############
     #############

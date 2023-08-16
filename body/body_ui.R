@@ -66,7 +66,7 @@ body <- dashboardBody(
   tabItems(
     tabItemPresentation(),
     tabItemInitialization(),
-    tabItemSim(),
+    tabItemSimple(),
     tabItemParams(),
     tabItemAbout()
   )

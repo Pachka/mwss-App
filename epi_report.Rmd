@@ -535,15 +535,18 @@ def_param <-
 
 table_of_params <- data.frame(def_param = def_param[names(params$gdata)],
                               values = sapply(params$gdata, function(x){
-    if(nchar(x) > 4) 
-    format(x, digits = 2, scientific = TRUE) else
-    format(x, digits = 1, scientific = FALSE)}))
+                                if(nchar(x) > 4) 
+                                  format(x, digits = 2, scientific = TRUE) else
+                                    format(x, digits = 1, scientific = FALSE)}))
 
 row.names(table_of_params) <- NULL
 
 colnames(table_of_params) = c('Parameters definition', 'values')
 library(flextable)
-table_of_params %>% regulartable() %>% autofit()
+
+# table_of_params %>% regulartable %>% dim_pretty() %>% .$widths
+table_of_params %>% regulartable(. , cwidth = c(5, 1)) 
+
                   
 ```
 ## Modelling project:
