@@ -27,28 +27,20 @@ updateImportationUI_simp <- function(id, variable) {
 updateImportation_simp  <- function(input, output, session, variable){
   ns <- session$ns
 
-  observeEvent(input$importation_lev, {
+  observeEvent(list(input$importation_lev, input$index_c), {
     if(!is.na(as.numeric(input$importation_lev))){
       # structure
-      variable$gdata = build_gdata(disease = variable$disease,
-                                   I = as.numeric(input$importation_lev))
       variable$imp_lev <- as.numeric(input$importation_lev)
 
+      if(input$importation_lev == "0" & !is.null(input$index_c))
+        variable$EPIstate <- data.frame(
+          ward = input$index_c,
+          pop = c("P"),
+          imm = c("NI"),
+          epi = c("E"),
+          n = c(1)
+        )
     }
-  })
-
-  observeEvent(input$index_c, {
-
-    if(input$importation_lev == "0" & !is.null(input$index_c))
-      variable$EPIstate <- data.frame(
-        ward = input$index_c,
-        pop = c("P"),
-        imm = c("NI"),
-        epi = c("E"),
-        n = c(1)
-      )
-    print(variable$EPIstate)
-
   })
 
 

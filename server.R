@@ -28,7 +28,7 @@ server <- function(input, output, session) {
     IMMstate = NULL,
     # Epidemiological states // infections
     EPIstate = NULL,
-    gdata = NULL,
+    # gdata = NULL,
     disease = NULL,
     imp_lev = NULL
   )
@@ -1298,7 +1298,7 @@ server <- function(input, output, session) {
 
   runmodel <- eventReactive(input$runmodelVsimp, {
 
-    if(is.null(data$gdata)|is.null(data$disease)){
+    if(is.null(data$imp_lev)|is.null(data$disease)){
         showModal(modalDialog(
           title = "Important message",
           "Select a pathogen and a scenario of importation!"
@@ -1323,7 +1323,10 @@ server <- function(input, output, session) {
     IMMstate = data$IMMstate
     EPIstate = data$EPIstate
 
-    gdata = data$gdata
+    print(EPIstate)
+
+    gdata = build_gdata(disease = data$disease,
+                        I = data$imp_lev)
 
     # Isolation
     if ('ISO' %in% input$CSprotocols) {
@@ -1423,11 +1426,11 @@ server <- function(input, output, session) {
       EPIstate = EPIstate,
       clustering = clustering$clustering,
       disease = data$disease,
-      gdata = data$gdata,
+      gdata = gdata,
       scenarios = scenarios
         )
 
-    save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
+    # save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
 
     return(trajmwss_data)}
   })
