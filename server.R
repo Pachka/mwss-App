@@ -1270,6 +1270,8 @@ server <- function(input, output, session) {
   #   data$gdata <- gdata
   # })
 
+
+
   output$runbutton <- renderUI({
       conditionalPanel(
         "output.atleastoneward == true" ,
@@ -1323,7 +1325,7 @@ server <- function(input, output, session) {
     IMMstate = data$IMMstate
     EPIstate = data$EPIstate
 
-    print(EPIstate)
+    # print(EPIstate)
 
     gdata = build_gdata(disease = data$disease,
                         I = data$imp_lev)

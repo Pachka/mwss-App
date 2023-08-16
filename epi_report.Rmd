@@ -80,12 +80,15 @@ The baseline considered R0 was ``r if(params$disease == "Covid"){ 13 }``.
 The severity (probability of developing severe symptoms) considered is ``r params$gdata["psevPNI"]`` for individuals without any immunity (neither vaccinated nor recovered), ``r params$gdata["psevPLI"]`` for individuals with a low immunity level (considering either an old vaccine injection or recovery), and ``r params$gdata["psevPHI"]`` for individuals with a high immunity level (considering either a recent vaccine injection or recovery).
 
 <!-- 3. Fraction of HCW and PATIENTS with low/high immunity. -->
+
+
+
+<!-- A quick recap of the interventions assumed.  -->
 ### Intervention strategies
 ```{asis, echo = !is.null(params$scenarios)}
 In this simulation, the following intervention strategies were implemented.
 ```
 
-<!-- A quick recap of the interventions assumed.  -->
 <!-- 1. confinement/contact restriction to detected patients -->
 
 ```{asis, echo = "ISO" %in% params$scenarios}
@@ -120,6 +123,22 @@ Note that the model considers that a tested individual will not be tested again 
 No intervention strategy was implemented. The results presented here consider a baseline scenario without any interventions.
 ```
 
+
+<!-- A quick recap of the importation level assumed.  -->
+### Level of importation
+
+
+```{r results='asis', echo=FALSE}
+if (params$gdata[['hinc']] == 0) {cat(paste0('In this simulation, no regular importation was implemented, incidence was set at 0. The simulations only considered an index case in ward ', params$EPIstate$ward, '.')     
+)}
+
+
+if (params$gdata[['hinc']] == 50/100000) {cat('In this simulation, the initial population is considered as fully susceptible. A low level of importation was considered with the incidence set at 50 cases per 100,000 persons in the incoming population.'  
+)}
+
+if (params$gdata[['hinc']] == 185/100000) {cat('In this simulation, the initial population is considered as fully susceptible. A high level of importation was considered with the incidence set at 185 cases per 100,000 persons in the incoming population.'  
+)}
+```
 
 ## Results
 
@@ -269,13 +288,7 @@ plot_testcount(
                   
 ```
 
-<!-- ## Limitations -->
-<!-- To discuss. -->
-
-```{asis, echo = !is.null(params$scenarios)}
-We compare the results of this intervention scenario with a baseline scenario without any interventions.
-```
-
+## Synthetic results
 
 ```{r message= FALSE, warning = FALSE}
 if(is.null(params$scenarios)){
@@ -392,21 +405,147 @@ kable(table_params)
 ```
 
 
+<!-- ## Limitations -->
+<!-- To discuss. -->
+
+```{asis, echo = !is.null(params$scenarios)}
+We compare the results of this intervention scenario with a baseline scenario without any interventions.
+```
+
 ## Appendix
 
 <!-- Full table with parameters. -->
 ```{r message= FALSE, warning = FALSE}
 
 #   c(params$gdata
-#   
-# df = data.frame(Parameters = , 
-#                 values = )
-#  kable(df)
+def_param <-
+  c(
+    n_ctcH_PSA = "the daily number of contacts with professionals per patient in the screening area",
+    t_ctcH_PSA = "the average duration of contact between professional and patient per day in the screening area (in days, ex: if 15 min, t_ctcH_PSA = 15/60/24)",
+    n_ctcP_PSA = "the daily number of contacts with other patients per patient in the screening area",
+    t_ctcP_PSA = "the average duration of contact between patients per day in the screening area (in days)",
+    n_ctcH_PW = "the number of contact between professional and patient per day in the ward",
+    t_ctcH_PW = "the average duration of contact between patients per day in the ward (in days)",
+    n_ctcP_PW = "the number of contacts with other patients per patient per day, in the ward",
+    t_ctcP_PW = "the average duration of contact between patients per day in the ward (in days)",
+    n_ctcH_H = "the number of contacts with professionals per professional per day",
+    t_ctcH_H = "the average duration of contact between professionals in the ward (in days)",
+    t_ctcV_PW = "the average duration of contact between patients per day in the ward (in days)",
+    I = "the daily incidence",
+    d = "the average disease duration (in days)",
+    R0 = "the basic reproduction number",
+    tw = "the average number of working hours per week (in hours)",
+    tSA = "the average duration (in days) before full admission (in screening area for clinical exam, administrative procedure, etc)",
+    tIC = "the average duration (in days) of stay in intensive care",
+    tSL = "the average duration (in days) of sick leave",
+    tESL = "the average duration (in days) of extended sick leave",
+    tE = "the average duration (in days) of epidemiological state E (exposed - non contagious)",
+    tEA = "the average duration (in days) of epidemiological state EA (exposed - contagious pre-asymptomatic)",
+    tES = "the average duration (in days) of epidemiological state ES (exposed - contagious pre-symptomatic)",
+    tIA = "the average duration (in days) of epidemiological state IA (infectious asymptomatic)",
+    tIM = "the average duration (in days) of epidemiological state IM (infectious with mild symptoms)",
+    tIS = "the average duration (in days) of epidemiological state IS (infectious with severe symptoms)",
+    tLI = "the average duration (in days) of low immunity persistence before return to non immune status",
+    tHI = "the average duration (in days) of high immunity persistence before return to low immune status",
+    epsPPSA = "the average infection-reducing ratio for patient infection during patient-to-patient contacts in the screening area (0 = no protection, 1 = complete protection/no infection possible)",
+    epsHPSA = "the average infection-reducing ratio for patient infection during professional-to-patient contacts in the screening area (0 = no protection, 1 = complete protection/no infection possible)",
+    epsHPW = "the average infection-reducing ratio for patient infection during professional-to-patient contacts in the ward (0 = no protection, 1 = complete protection/no infection possible)",
+    epsPPW = "the average infection-reducing ratio for patient infection during patient-to-patient contacts in the ward (0 = no protection, 1 = complete protection/no infection possible)",
+    epsVPW = "the average infection-reducing ratio for patient infection during visitor-to-patient contacts (0 = no protection, 1 = complete protection/no infection possible)",
+    epsPHSA = "the average infection-reducing ratio for professional infection during patient-to-professional contacts in the screening area (0 = no protection, 1 = complete protection/no infection possible)",
+    epsPHW = "the average infection-reducing ratio for professional infection during patient-to-professional contacts in the ward (0 = no protection, 1 = complete protection/no infection possible)",
+    epsHHW = "the average infection-reducing ratio for professional infection during professional-to-professional contacts (0 = no protection, 1 = complete protection/no infection possible)",
+    ttestSA = "the average duration (in days) of test in the screening area (from decision to test to action - such as transfer -after obtaining the test result)",
+    ttestPW = "the average duration (in days) of test in the ward for patient screening (from decision to test to action - such as transfer -after obtaining the test result)",
+    ttestHW = "the average duration (in days) of test for professional screening (from decision to test to action - such as sick leave -after obtaining the test result)",
+    ttestsymp = "the average duration (in days) of test for symptomatic individuals (from decision to test to action - such as sick leave or transfer -after obtaining the test result)",
+    tbtwtestP = "the average duration (in days) between two patient screening testing-events in the ward",
+    tbtwtestH = "the average duration (in days) between two professional screening testing-events in the ward",
+    tbeftestPsymp = "the average duration (in days) of symptomatic patients detection (before test)",
+    tbeftestHsymp = "the average duration (in days) of symptomatic professional detection (before test)",
+    psympNI = "the conditional probability to be symptomatic when non immune",
+    psympLI = "the conditional probability to be symptomatic despite a low immunity",
+    psympHI = "the conditional probability to be symptomatic despite a high immunity",
+    psevNI = "the conditional probability to develop severe symptoms when symptomatic and non immune",
+    psevLI = "the conditional probability to develop severe symptoms when symptomatic and despite a low immunity",
+    psevHI = "the conditional probability to develop severe symptoms when symptomatic and despite a high immunity",
+    pISO = "level of contact restrictions (confinement/quarantine/isolation) in case of positive test",
+    pSL = "the probability for professional with mild symptoms of taking sick leave",
+    pESL = "the probability for professional with severe symptomsof taking extended sick leave",
+    pSLT = "the additional probability for professionals of taking sick leave after positive test",
+    pIC = "the probability for patient with severe symptoms to be transfer in intensive care",
+    pdieIC = "the probability to die in intensive care",
+    pLI = "the probability to have low immunity at the admission (proportion of individuals with low immunity in the community)",
+    pHI = "the probability to have high immunity at the admission (proportion of individuals with high immunity in the community)",
+    hNI2LI = "the daily probability to gain low immunity when non immune",
+    hLI2HI = "the daily probability to gain high immunity when having low immunity",
+    rinfLI = "the average infection-reducing ratio for individuals with low immunity compared to non immune (can be interpreted as low immunity efficiency)",
+    rinfHI = "the average infection-reducing ratio for individuals with high immunity compared to non immune (can be interpreted as high immunity efficiency)",
+    rsymp = "the average ratio increasing or reducing the probability to develop symptoms for patients compared to general population (professionals)",
+    rsev = "the average ratio increasing or reducing the probability to develop severe symptoms for symptomatic patients compared to general population (professionals)",
+    rEA = "the ratio of excretion for individuals in epidemiological stage EA (exposed - contagious pre-asymptomatic)",
+    rES = "the ratio of excretion for individuals in epidemiological stage ES (exposed - contagious pre-symptomatic)",
+    rIA = "the ratio of excretion for individuals in epidemiological stage IA (infectious asymptomatic)",
+    rIM = "the ratio of excretion for individuals in epidemiological stage IM (infectious with mild symptoms)",
+    rIS = "the ratio of excretion for individuals in epidemiological stage IS (infectious with severe symptoms)",
+    ptestPSAsymp = "the probability to test symptomatic patients in the screening area",
+    ptestPSANI = "the probability to test non immune patients in the screening area",
+    ptestPSALI = "the probability to test patients with low immunity in the screening area",
+    ptestPSAHI = "the probability to test patients with high immunity in the screening area",
+    ptestPWsymp = "the probability to test symptomatic patients in the ward (Diagnostic testing)",
+    ptestPWNI = "the proportion of non immune patients tested during screening testing in the ward",
+    ptestPWLI = "the proportion of patients with low immunity tested during screening testing in the ward",
+    ptestPWHI = "the proportion of patients with high immunity tested during screening testing in the ward",
+    ptestHsymp = "the probability to test symptomatic professionals (Diagnostic testing)",
+    ptestHNI = "the proportion of non immune professionals tested during screening testing",
+    ptestHLI = "the proportion of professionals with low immunity tested during screening testing",
+    ptestHHI = "the proportion of professionals with high immunity tested during screening testing",
+    senSA = "the sensibility of tests use within the screening area",
+    speSA = "the specificity of tests use within the screening area",
+    senW = "the sensibility of tests use for patient screening in the ward",
+    speW = "the specificity of tests use for patient screening in the ward",
+    senH = "the sensibility of tests use for professional screening",
+    speH = "the specificity of tests use for professional screening",
+    sensymp = "the sensibility of tests use for symptomatic individuals",
+    spesymp = "the specificity of tests use for symptomatic individuals",
+    td = "the average disease duration (in days)",
+    ctcHPSA = "the average duration of contact with patients per healthcare worker per day in the screening area (in days)",
+    ctcPPSA = "the average duration of contact with other patients per patient per day in the screening area (in days)",
+    ctcHPW = "the average duration of contact with patients per healthcare worker per day in the ward (in days)",
+    ctcPPW = "the average duration of contact with other patients per patient per day in the ward (in days)",
+    ctcHH = "the average duration of contact with other healthcare workers per heathcare worker per day (in days)",
+    ctcV = "the average duration of contact with visitors per patient per day in the ward (in days)",
+    hinc = "the daily incidence in the community",
+    prev = "the prevalence (probability to be infected at the admission)",
+    pconta = "the probability of transmission per minute spent in contact",
+    ptow = "the proportion of time outside of work per healthcare worker (in days)",
+    psympPNI = "the conditional probability to be symptomatic when non immune for patients",
+    psevPNI = "the conditional probability to develop severe symptoms when symptomatic and non immune for patients",
+    psympPLI = "the conditional probability to be symptomatic despite a low immunity for patients",
+    psevPLI = "the conditional probability to develop severe symptoms when symptomatic and despite a low immunity for patients",
+    psympPHI = "the conditional probability to be symptomatic despite a high immunity for patients",
+    psevPHI = "the conditional probability to develop severe symptoms when symptomatic and despite a high immunity for patients",
+    rtE = 'the time ratio of the epidemiological state E over the whole infectious period (probability to be exposed/incubating non infectious at the admission when non susceptible)',
+    rtEA = 'the time ratio of the epidemiological state EA over the whole infectious period (probability to be exposed/incubating infectious before asymptomatic form at the admission when non susceptible)',
+    rtES = 'the time ratio of the epidemiological state ES over the whole infectious period (probability to be exposed/incubating infectious before symptomatic form at the admission when non susceptible)',
+    rtIA = 'the time ratio of the epidemiological state IA over the whole infectious period (probability to be infectious with asymptomatic form at the admission when non susceptible)',
+    rtIM = 'the time ratio of the epidemiological state IM over the whole infectious period (probability to be infectious with mild symptoms at the admission when non susceptible)',
+    rtIS = 'the time ratio of the epidemiological state IS over the whole infectious period (probability to be infectious with severe symptoms at the admission when non susceptible)')
+
+
+table_of_params <- data.frame(def_param = def_param[names(params$gdata)],
+                              values = sapply(params$gdata, function(x){
+    if(nchar(x) > 4) 
+    format(x, digits = 2, scientific = TRUE) else
+    format(x, digits = 1, scientific = FALSE)}))
+
+row.names(table_of_params) <- NULL
+
+colnames(table_of_params) = c('Parameters definition', 'values')
+library(flextable)
+table_of_params %>% regulartable() %>% autofit()
                   
 ```
-## Synthesis (résultats avec intervals):
-…
-
 ## Modelling project:
 Supported by the Département d’information médicale of the Centre hospitalier Guillaume Régnier (Rennes, France), a simulation modelling project was undertaken during 2020 pandemic to evaluate the effect of infection control protocols on SARS-CoV-2 spread in french long-term care facilities. The modelling was carried out by the french Pasteur Institute, the french Conservatoire national des arts et métiers and the french University of Versailles Saint-Quentin-en-Yvelines, in collaboration with the Department of Disease Control and Epidemiology of the National Veterinary Institute of Sweden. Epidemiological simulation are performed using R-based packages: mwss and SimInf.
 
