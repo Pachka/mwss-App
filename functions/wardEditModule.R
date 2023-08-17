@@ -2,7 +2,7 @@ wardEditUI <- function(id, titletext) {
   ns <- NS(id)
 
   conditionalPanel(
-    "output.atleastoneward == true",
+    "output.atleastoneward_advanced == true",
   actionButton(
     ns("editbut"),
     titletext,

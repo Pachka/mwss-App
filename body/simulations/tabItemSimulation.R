@@ -29,40 +29,11 @@ tabItemSimple <- function() {
               h3("Simulation output"),
               HTML(
               "Once simulations are run, results are provided through different outputs: summary statistics, graphs, and a detailed report (pdf format). All figures are downloadable in png format. Be careful and save the results you would like to keep : when a new simulation is run, all outputs and results are overwritten.")
-              # img(
-              #   src = 'compartmentalModel.png',
-              #   title = "Multilevel compartmental model",
-              #   width = "70%"
-              # )
             ),
             tabPanel(
               "Simple mode",
               icon = icon("sliders-h",
                           verify_fa = FALSE),
-              # div(
-              #   style = "display: inline-block;vertical-align:top;",
-              #   fileInput(
-              #     "loadparams",
-              #     "Upload a pre-recorded set of parameters",
-              #     buttonLabel = "Browse RDA file",
-              #     accept = c("rda", ".Rda")
-              #   )
-              # ),
-              # div(
-              #   style = "display: inline-block;vertical-align:top;",
-              #   conditionalPanel(
-              #     "output.paramsUploaded == true",
-              #     actionButton(
-              #       inputId = "applyParamsLoad",
-              #       label = "Upload",
-              #       icon = icon("upload",
-              #                   verify_fa = FALSE),
-              #       style = "color: #fff; background-color: red; border-color: #fff; padding: 5px 5px 5px 5px; margin: 10px 5px 5px 5px; "
-              #     )
-              #   )
-              # ),
-              # div(style = "display: inline-block;vertical-align:top;",
-              #     downloadParamsUI("dwloadParams")),
               hr(),
               box(
                 width = 6,
@@ -125,64 +96,40 @@ tabItemSimple <- function() {
               "Advanced mode",
               icon = icon("sliders-h",
                           verify_fa = FALSE),
-              hr()#,
-            #   box(
-            #     width = 6,
-            #     # loadTestdtUI("loadtest"),
-            #
-            #     # FIX ME
-            #     ## SET wards
-            #
-            #     updateParamsUI_simp("disease"),
-            #     updateImportationUI_simp("level_importation")
-            #   ),
-            #   box(
-            #     width = 6,
-            #     plotOutput("network_plot")
-            #   ),
-            #   hr(),
-            #   fluidRow(
-            #     box(
-            #       width = 12,
-            #       helper(
-            #         shiny_tag = uiOutput("CSprotocolsUI"),
-            #         icon = "question-circle",
-            #         colour = "orange",
-            #         type = "markdown",
-            #         title = "",
-            #         content = "HelpBoxSC",
-            #         size = "m",
-            #         buttonLabel = "Okay",
-            #         easyClose = TRUE,
-            #         fade = FALSE
-            #       )
-            #     ),
-            #     box(
-            #       title = "Simulations parameters",
-            #       solidHeader = T,
-            #       width = 12,
-            #       status = "primary",
-            #       numericInput(
-            #         'n_days',
-            #         'Number of simulated days',
-            #         value = 60,
-            #         min = 1,
-            #         step = 1
-            #       ),
-            #       uiOutput("runbutton"),
-            #       # display load spinner when shiny is busy
-            #       conditionalPanel(
-            #         condition = "$(\'html\').hasClass(\'shiny-busy\')",
-            #         tags$div("Simulation in progress. This may take a while...",
-            #                  id = "loadmessage")
-            #       )
-            #     )
-            #   ),
-            #   conditionalPanel(
-            #     "output.simoutput == true",
-            #     valueboxoutputUI("simulation"),
-            #     plotsoutputUI("simulationPlots")
-            #   )
+              hr(),
+              fluidRow(
+                box(
+                  title = "General settings",
+                  solidHeader = T,
+                  conditionalPanel(
+                    "output.atleastoneward_advanced == true",
+                    div(DTOutput("structure_hospital"), style = "font-size: 70%;")
+                  )
+                  ,
+                  h5("Add, edit or delete a ward/building"),
+                  div(style = "display: inline-block;vertical-align:top;",
+                      actionButton("addW_button", "",
+                                   tags$i(
+                                     class = "fa fa-plus",
+                                     style = "color: rgb(0,166,90)"
+                                   )
+                      ),
+                  conditionalPanel(
+                    "output.atleastoneward_advanced == true",
+                      actionButton("editW_button", "",
+                                   tags$i(
+                                     class = "fa fa-edit",
+                                     style = "color: rgb(0,166,90)"
+                                   )
+                      ),
+                      actionButton("deleteW_button", '',
+                                   tags$i(
+                                     class = "fa fa-minus",
+                                     style = "color: rgb(255,0,0)"
+                                   )
+                      )))
+                )
+              )
             )
           )
           )

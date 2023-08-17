@@ -21,7 +21,6 @@ loadTestdt <- function(input, output, session, variable) {
 
   toreturn <- reactiveValues()
 
-
   observeEvent(input$structure, {
     if(input$structure %in% c("1", "2", "3")){
 

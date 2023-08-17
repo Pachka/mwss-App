@@ -49,8 +49,8 @@ source('functions/timeinputinday.R', local = TRUE)
 # App Structure function
 
 source('body/presentation.R', local = TRUE)
-source('body/initialization/tabItemInitialization.R', local = TRUE)
-source('body/parameters/tabItemParams.R', local = TRUE)
+# source('body/initialization/tabItemInitialization.R', local = TRUE)
+# source('body/parameters/tabItemParams.R', local = TRUE)
 source('body/simulations/tabItemSimulation.R', local = TRUE)
 # source('body/simulations/tabItemAdvMode.R', local = TRUE)
 source('body/about.R', local = TRUE)

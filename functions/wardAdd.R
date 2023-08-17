@@ -1,4 +1,18 @@
+addbuttonUI <- function(id, titletext){
+  ns <- NS(id)
+  actionButton(ns("addbut"), titletext,
+               tags$i(
+                 class = "fa fa-plus",
+                 style = "color: rgb(0,166,90)"
+               )
+  )
+}
+
+
 wardAddPanel <- function(input, output, session) {
+
+  ns <- session$ns
+
   observeEvent(input$addbut, {
     showModal(
       modalDialog(
