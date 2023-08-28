@@ -72,10 +72,16 @@ server <- function(input, output, session) {
 
   })
 
-  observeEvent(input$versionAdv, {
+  observeEvent(input$tabsSIMULATIONS, {
+    if(input$tabsSIMULATIONS == "Advanced mode")
     shinyalert(title = paste("Advanced mode is under development."),
                type = "info",
                size = "l")
+
+  })
+
+
+  observeEvent(input$versionAdv, {
 
     updateTabsetPanel(session,
                       "sidebarMenu",
@@ -109,7 +115,7 @@ server <- function(input, output, session) {
 
       matContact <- lapply(data$ward_names, function(W) {
         W <- contacts$professionals %>% endsWith(., paste0("_", W)) %>% contacts[., ]
-        W %<>% .[, mget(c(names(.)[names(.) != "professionals"]))] %>% colSums
+        W %<>% .[, data$ward_names] %>% colSums
         W %<>% divide_by(sum(.)) %>% multiply_by((100))
         W
       }) %>% do.call(rbind, .)
@@ -133,10 +139,22 @@ server <- function(input, output, session) {
     )
   })
 
+  # display control and surveillance options
+  output$CSprotocolsUI_adv <- renderUI({
+    checkboxGroupInput(
+      "CSprotocols_adv",
+      "Control and surveillance:",
+      c(
+        "Impose isolation/contact restrictions to detected patients?" = "ISO",
+        "Implement random tests at regular intervals for patients?" = "testPat",
+        "Implement random tests at regular intervals for professionals?" = "testProf",
+        "Implement a test at patient admission?" = "SA"
+      )
+    )
+  })
   ###
   # Display network -- FIX ME turn into module to be used with data and data_avdanced
   ###
-
   output$network_plot <- renderPlot({
     num_nodes <- data$ward_names %>% length
 
@@ -250,8 +268,11 @@ server <- function(input, output, session) {
   output$contacts <- DT::renderDT({
     if (!is.null(data_advanced$Hplanning)) {
       TS <- data_advanced$Hplanning
+      TS %>% setDT
       wardN <- data_advanced$ward_names
-      TS$total <- TS[, mget(wardN)] %>% rowSums
+      TS$total <- TS[, ..wardN] %>% rowSums
+
+      setcolorder(TS, c("professionals", wardN, "total"))
 
       datatable(TS,
                 rownames = FALSE) %>% formatStyle('total',
@@ -363,6 +384,7 @@ server <- function(input, output, session) {
           ),
           ward = 100)
         setnames(data_advanced$Hplanning, "ward", input$wardname)
+
       } else {
         newW <-
           data.table(professionals = paste0(
@@ -473,7 +495,8 @@ server <- function(input, output, session) {
       ##### Update professionals planning
       #####
 
-      if (matContneedsUpdate) {
+      if (matContneedsUpdatematContneedsUpdate) {
+
         data_advanced$Hplanning <-
           data_advanced$Hplanning[!endsWith(data_advanced$Hplanning$professionals,
                                    paste0("_", input$wardtoEdit)), ]
@@ -490,6 +513,7 @@ server <- function(input, output, session) {
         data_advanced$Hplanning %<>% rbind(., newW, fill = TRUE)
 
         data_advanced$Hplanning[is.na(data_advanced$Hplanning)] <- 0
+
       }
 
     })
@@ -548,9 +572,11 @@ server <- function(input, output, session) {
                                  paste0("_", input$wardtoremove)), ]
 
       data_advanced$Hplanning[, c(input$wardtoremove) := NULL]
+
     })
 
   })
+
 
 
   ####################################################
@@ -560,10 +586,11 @@ server <- function(input, output, session) {
   ## Open remote window: when editward is activated (see body_ui)
   callModule(module = contactEdit,
              id = "editplanning",
-             variable = data)
+             variable = data_advanced)
 
   # update HCWS list based on the selected ward
   observeEvent(input$wardcontactedit, {
+
     if (input$wardcontactedit != "") {
       selectedW <- which(data_advanced$ward_names == input$wardcontactedit)
 
@@ -576,6 +603,7 @@ server <- function(input, output, session) {
     }
 
   })
+
 
   output$contactEditTab <- DT::renderDT({
     DT::datatable(
@@ -603,9 +631,27 @@ server <- function(input, output, session) {
   observeEvent(input$planningEdit, {
     data_advanced$Hplanning[which(data_advanced$Hplanning$professionals == input$HCWScontactedit),
                    c(input$selectedW)] <- input$ptimeinWard
-
   })
 
+
+  # update contact matrix
+
+  observe({
+    if (!is.null(data_advanced$Hplanning)){
+      contacts <- data_advanced$Hplanning
+
+      matContact <- lapply(data_advanced$ward_names, function(W) {
+        W <- contacts$professionals %>% endsWith(., paste0("_", W)) %>% contacts[., ]
+        W %<>% as.data.frame %>% .[, data_advanced$ward_names] %>% colSums
+        W %<>% divide_by(sum(.)) %>% multiply_by((100))
+        W
+      }) %>% do.call(rbind, .)
+
+
+      rownames(matContact) <- colnames(matContact)
+      data_advanced$matContact <- matContact
+    }
+  })
 
   #####################################
   #######    Parameters panel    ######
@@ -616,12 +662,18 @@ server <- function(input, output, session) {
              id = "disease",
              variable = data)
 
+  callModule(module = updateParams_simp,
+             id = "disease_adv",
+             variable = data_advanced)
 
   ## Choose level of importation, update parameters baseline values
   callModule(module = updateImportation_simp,
              id = "level_importation",
              variable = data)
 
+  callModule(module = updateImportation_simp,
+             id = "level_importation_adv",
+             variable = data_advanced)
 
 
   ###
@@ -954,6 +1006,8 @@ server <- function(input, output, session) {
 
   ########### RUN MODEL ###########
 
+  ###### SIMPLE
+
   ## condition of display of run button
 
   output$atleastoneward <- reactive({
@@ -1151,6 +1205,16 @@ server <- function(input, output, session) {
              id = "export_traj",
              model = runmodel)
 
+  callModule(module = plot_network_serv,
+             id = "network_plot_advanced",
+             variable = data_advanced,
+             buildings = FALSE)
+
+  callModule(module = plot_network_serv,
+             id = "network_plot_simple",
+             variable = data,
+             buildings = TRUE)
+
   output$Markdown <- downloadHandler(
     # For PDF output, change this to "report.pdf"
     filename = "Report.pdf",
@@ -1174,4 +1238,204 @@ server <- function(input, output, session) {
       file.copy(output, file)
     })
 
+
+####### advanced
+
+output$runbutton_adv <- renderUI({
+  conditionalPanel(
+    "output.atleastoneward_advanced == true",
+    conditionalPanel(
+      condition = "$(\'html\').hasClass(\'shiny-busy\')",
+      tags$div(class = "prevent_click")
+    ),
+    actionButton(
+      "runmodelVadv",
+      "Run",
+      icon = icon("play",
+                  verify_fa = FALSE),
+      style = "color: #fff; background-color: #063567; border-color: #2e6da4"
+    ),
+    div(
+      style = "display: inline-block;vertical-align:top;",
+      conditionalPanel(
+        "output.simadv_output == true",
+        downloadButton("Markdown_adv", "Generate report")
+      )
+    )
+  )
+})
+
+runmodel_adv <- eventReactive(input$runmodelVadv, {
+
+  if(is.null(data_advanced$imp_lev)|is.null(data_advanced$disease)){
+    showModal(modalDialog(
+      title = "Important message",
+      "Select a pathogen and a scenario of importation!"
+    )) } else
+      if(input$n_days_adv == 0){
+        showModal(modalDialog(
+          title = "Important message",
+          "The number of simulated days must be up to 0."
+        )) } else {
+
+          ward_names <- data_advanced$ward_names
+          pop_size_P <- data_advanced$pop_size_P
+          pop_size_H <- data_advanced$pop_size_H
+          nVisits <- data_advanced$nVisits
+          LS <- data_advanced$LS
+          LS[LS == 0] <- 1
+
+          matContact <- data_advanced$matContact
+
+          n_days <- input$n_days_adv %>% seq
+
+          IMMstate = data_advanced$IMMstate
+          EPIstate = data_advanced$EPIstate
+
+          # print(EPIstate)
+
+          gdata = build_gdata(disease = data_advanced$disease,
+                              I = data_advanced$imp_lev)
+
+          # Isolation
+          if ('ISO' %in% input$CSprotocolsUI_adv) {
+            gdata[['pISO']] = 1
+          } else
+            gdata[['pISO']] = 0
+
+          # Testing for patients
+          if ('testPat' %in% input$CSprotocolsUI_adv) {
+            gdata[['tbtwtestP']] = 7
+            gdata[['ptestPWNI']] = 0.75
+            gdata[['ptestPWLI']] = 0.5
+            gdata[['ptestPWHI']] = 0.1
+          } else {
+            gdata[['ptestPWNI']] = 0
+            gdata[['ptestPWLI']] = 0
+            gdata[['ptestPWHI']] = 0
+          }
+          # Testing for professionals
+          if ('testProf' %in% input$CSprotocolsUI_adv) {
+            gdata[['tbtwtestH']] = 14
+            gdata[['ptestHNI']] = 0.75
+            gdata[['ptestHLI']] = 0.5
+            gdata[['ptestHHI']] = 0.2
+            gdata[['pSLT']] = 0.2
+          } else{
+            gdata[['ptestHNI']] = 0
+            gdata[['ptestHLI']] = 0
+            gdata[['ptestHHI']] = 0
+          }
+          # Screening area
+          if ('SA' %in% input$CSprotocolsUI_adv) {
+            SA = TRUE
+            # nH_SA = input$nH_SA
+            nH_SA = 1
+            gdata[['tSA']] = 2/24
+            gdata[['ptestPSAsymp']] = 1
+            gdata[['ptestPSANI']] = 0.75
+            gdata[['ptestPSALI']] = 0.5
+            gdata[['ptestPSAHI']] = 0.25
+            gdata[['ttestSA']] = 2/24
+            gdata[['n_ctcH_PSA']] = 2
+            gdata[['t_ctcH_PSA']] = (10/60)/24
+            gdata[['epsHPSA']] = 0.5
+            gdata[['epsPHSA']] = 0.5
+            gdata[['n_ctcP_PSA']] = 0
+            gdata[['t_ctcP_PSA']] = (5/60)/24
+            gdata[['epsPPSA']] = 0.5
+          } else{
+            SA = FALSE
+            nH_SA = NULL
+          }
+
+          mwssmodel <- mwss(
+            ward_names,
+            pop_size_P,
+            pop_size_H,
+            nVisits,
+            LS,
+            matContact = matContact,
+            IMMstate = IMMstate,
+            EPIstate = EPIstate,
+            SA = SA,
+            nH_SA = nH_SA,
+            gdata = gdata,
+            tSim =  n_days,
+            verbose = FALSE
+          )
+
+          # trajmwss <- multisim(mwssmodel, input$n_sim, ward_names)
+          trajmwss <- multisim(mwssmodel, 50, ward_names)
+
+          scenarios <- input$CSprotocols
+
+          trajmwss_data <- list(
+            trajmwss = trajmwss,
+            ward_names = ward_names,
+            pop_size_P = pop_size_P,
+            pop_size_H = pop_size_H,
+            nVisits = nVisits,
+            LS = LS,
+            matContact = matContact,
+            IMMstate = IMMstate,
+            EPIstate = EPIstate,
+            clustering = NULL,
+            disease = data_advanced$disease,
+            gdata = gdata,
+            scenarios = scenarios
+          )
+
+          # save(trajmwss_data,  file = "tmpdata/trajmwss_data.Rda")
+
+          return(trajmwss_data)}
+})
+
+
+
+output$simadv_output <- reactive({
+  return("mwss" %in% class(runmodel_adv()[["trajmwss"]]))
+})
+
+outputOptions(output,
+              'simadv_output',
+              suspendWhenHidden = FALSE)
+
+
+callModule(module = valueboxoutput,
+           id = "simulation_adv",
+           model = runmodel_adv)
+
+callModule(module = plotsoutput,
+           id = "simulationPlots_adv",
+           model = runmodel_adv,
+           ndays = reactive(input$n_days_adv))
+###
+
+source("functions/advanced_updownload.R", local = TRUE)
+source("functions/advanced_updownload_HCWS_time.R", local = TRUE)
+
+
+output$Markdown_adv <- downloadHandler(
+  # For PDF output, change this to "report.pdf"
+  filename = "Report.pdf",
+  content = function(file) {
+    # Copy the report file to a temporary directory before processing it, in
+    # case we don't have write permissions to the current working dir (which
+    # can happen when deployed).
+
+
+    tempReport <- file.path(tempdir(), "epi_report.Rmd")
+    file.copy("epi_report.Rmd", tempReport, overwrite = TRUE)
+
+    # Knit the document, passing in the `params` list, and eval it in a
+    # child of the global environment (this isolates the code in the document
+    # from the code in this app).
+    output <- rmarkdown::render(
+      input = tempReport,
+      # Set up parameters to pass to Rmd document
+      params = runmodel_adv()
+    )
+    file.copy(output, file)
+  })
 } # end server function

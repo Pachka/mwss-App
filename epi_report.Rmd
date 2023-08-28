@@ -36,12 +36,19 @@ We use here a network-structured model to simulate disease spreading accross war
 
 ## Methods
 ### Hospital structure and population
-This report presents synthetic results of 50 simulations run for an ``r params$clustering`` hospital structure including 29 wards distributed over five buildings, and connected through healthcare workers.
+```{asis, echo = !is.null(params$clustering)}
+This report presents synthetic results of 50 simulations run for an ``r params$clustering`` hospital structure including ``r length(params$ward_names)`` wards distributed over five buildings, and connected through healthcare workers.
+```
+
+```{asis, echo = is.null(params$clustering)}
+This report presents synthetic results of 50 simulations run for an hospital structure including ``r length(params$ward_names)`` wards connected through healthcare workers.
+```
 
 <!-- Plots: 1. connectivity plot for the network of wards // 2. Population size (patients, HCWs) -->
 ```{r message= FALSE, warning = FALSE}
    if(length(params$ward_names) > 1) {
       # FIX ME colors only for preprocessed test datasets
+     if(identical(params$ward_names, build_network()$ward_names))
       plot_connectivity(
         matContact = params$matContact,
         size = as.numeric(params$pop_size_P) + as.numeric(params$pop_size_H),
@@ -52,7 +59,13 @@ This report presents synthetic results of 50 simulations run for an ``r params$c
                       rep("yellow",8),
                       rep("orange",9)),
         verbose = FALSE
-      )
+      ) else
+      plot_connectivity(
+        matContact = params$matContact,
+        size = as.numeric(params$pop_size_P) + as.numeric(params$pop_size_H),
+        vertexcexrate = 3,
+        verbose = FALSE
+      ) 
    }
 
   df <- data.frame(Number_of_patients = params$pop_size_P,

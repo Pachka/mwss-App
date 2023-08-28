@@ -1,4 +1,4 @@
-updateImportationUI_simp <- function(id, variable) {
+updateImportationUI_simp <- function(id) {
   ns <- NS(id)
 
   tagList(
@@ -19,7 +19,9 @@ updateImportationUI_simp <- function(id, variable) {
                    ns = ns,
                    selectInput(ns("index_c"),
                                "Index case in ward:",
-                               build_network()$ward_names))
+                               choices = NULL
+                               # build_network()$ward_names
+                               ))
   )
 
 }
@@ -31,6 +33,12 @@ updateImportation_simp  <- function(input, output, session, variable){
     if(!is.na(as.numeric(input$importation_lev))){
       # structure
       variable$imp_lev <- as.numeric(input$importation_lev)
+
+      if(input$importation_lev == "0"){
+        updateSelectInput(inputId = "index_c",
+                          choices = variable$ward_names,
+                          selected = NULL)
+        }
 
       if(input$importation_lev == "0" & !is.null(input$index_c))
         variable$EPIstate <- data.frame(

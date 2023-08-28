@@ -44,6 +44,9 @@ source('functions/resetreactivesModule.R', local = TRUE)
 source('functions/exporttrajModule.R', local = TRUE)
 source('functions/loadTestdtModule.R', local = TRUE)
 source('functions/timeinputinday.R', local = TRUE)
+source('functions/plot_networkModule.R', local = TRUE)
+# source('functions/update_matContact_adv.R', local = TRUE)
+
 
 
 # App Structure function
@@ -52,6 +55,9 @@ source('body/presentation.R', local = TRUE)
 # source('body/initialization/tabItemInitialization.R', local = TRUE)
 # source('body/parameters/tabItemParams.R', local = TRUE)
 source('body/simulations/tabItemSimulation.R', local = TRUE)
+source('body/simulations/simpleMode.R', local = TRUE)
+source('body/simulations/advancedMode.R', local = TRUE)
+
 # source('body/simulations/tabItemAdvMode.R', local = TRUE)
 source('body/about.R', local = TRUE)
 

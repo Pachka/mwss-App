@@ -24,113 +24,14 @@ tabItemSimple <- function() {
                 "Different surveillance and control strategies can be selected from a list. Details on how these practices are implemented are provided through the question mark button to the right of the ‘Control and surveillance’ box."),
               h3("Simulations"),
               HTML(
-              "By default, the simulation duration is set to 60 days, but that duration can be modified. Once you click the \"Run\" button, the model will run 50 stochastic simulations. Be patient, it can take time, do not close the window at any time, it would close the session and you would lose your selections and simulations."
+                "By default, the simulation duration is set to 60 days, but that duration can be modified. Once you click the \"Run\" button, the model will run 50 stochastic simulations. Be patient, it can take time, do not close the window at any time, it would close the session and you would lose your selections and simulations."
               ),
               h3("Simulation output"),
               HTML(
-              "Once simulations are run, results are provided through different outputs: summary statistics, graphs, and a detailed report (pdf format). All figures are downloadable in png format. Be careful and save the results you would like to keep : when a new simulation is run, all outputs and results are overwritten.")
+                "Once simulations are run, results are provided through different outputs: summary statistics, graphs, and a detailed report (pdf format). All figures are downloadable in png format. Be careful and save the results you would like to keep : when a new simulation is run, all outputs and results are overwritten.")
             ),
-            tabPanel(
-              "Simple mode",
-              icon = icon("sliders-h",
-                          verify_fa = FALSE),
-              hr(),
-              box(
-                width = 6,
-                loadTestdtUI("loadtest"),
-                updateParamsUI_simp("disease"),
-                updateImportationUI_simp("level_importation")
-              ),
-              box(
-                width = 6,
-                # title = "Clustering",
-                # solidHeader = T,
-                plotOutput("network_plot")
-              ),
-              hr(),
-              fluidRow(
-                box(
-                  width = 12,
-
-                  helper(
-                    shiny_tag = uiOutput("CSprotocolsUI"),
-                    icon = "question-circle",
-                    colour = "orange",
-                    type = "markdown",
-                    title = "",
-                    content = "HelpBoxSC",
-                    size = "m",
-                    buttonLabel = "Okay",
-                    easyClose = TRUE,
-                    fade = FALSE
-                  )
-                ),
-                box(
-                  title = "Simulations parameters",
-                  solidHeader = T,
-                  width = 12,
-                  status = "primary",
-                  numericInput(
-                    'n_days',
-                    'Number of simulated days',
-                    value = 60,
-                    min = 1,
-                    step = 1
-                  ),
-                  uiOutput("runbutton"),
-                  # display load spinner when shiny is busy
-                  conditionalPanel(
-                    condition = "$(\'html\').hasClass(\'shiny-busy\')",
-                    tags$div("Simulation in progress. This may take a while...",
-                             id = "loadmessage")
-                  )
-                )
-              ),
-              conditionalPanel(
-                "output.simoutput == true",
-                valueboxoutputUI("simulation"),
-                plotsoutputUI("simulationPlots")
-              )
-            ),
-            tabPanel(
-              "Advanced mode",
-              icon = icon("sliders-h",
-                          verify_fa = FALSE),
-              hr(),
-              fluidRow(
-                box(
-                  title = "General settings",
-                  solidHeader = T,
-                  conditionalPanel(
-                    "output.atleastoneward_advanced == true",
-                    div(DTOutput("structure_hospital"), style = "font-size: 70%;")
-                  )
-                  ,
-                  h5("Add, edit or delete a ward/building"),
-                  div(style = "display: inline-block;vertical-align:top;",
-                      actionButton("addW_button", "",
-                                   tags$i(
-                                     class = "fa fa-plus",
-                                     style = "color: rgb(0,166,90)"
-                                   )
-                      ),
-                  conditionalPanel(
-                    "output.atleastoneward_advanced == true",
-                      actionButton("editW_button", "",
-                                   tags$i(
-                                     class = "fa fa-edit",
-                                     style = "color: rgb(0,166,90)"
-                                   )
-                      ),
-                      actionButton("deleteW_button", '',
-                                   tags$i(
-                                     class = "fa fa-minus",
-                                     style = "color: rgb(255,0,0)"
-                                   )
-                      )))
-                )
-              )
-            )
+            simpleMode,
+            advancedMode
           )
-          )
+  )
 }
