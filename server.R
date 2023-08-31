@@ -110,7 +110,7 @@ server <- function(input, output, session) {
 
   # update contact matrix
   observe({
-    if (!is.null(data$Hplanning)){
+    if (!is.null(data$Hplanning) & length(data_advanced$ward_names) > 1){
       contacts <- data$Hplanning
 
       matContact <- lapply(data$ward_names, function(W) {
@@ -637,7 +637,7 @@ server <- function(input, output, session) {
   # update contact matrix
 
   observe({
-    if (!is.null(data_advanced$Hplanning)){
+    if (!is.null(data_advanced$Hplanning) & length(data_advanced$ward_names) > 1 ){
       contacts <- data_advanced$Hplanning
 
       matContact <- lapply(data_advanced$ward_names, function(W) {
