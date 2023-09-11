@@ -17,11 +17,7 @@ updateImportationUI_simp <- function(id) {
   ),
   conditionalPanel(condition = "input.importation_lev == '0'",
                    ns = ns,
-                   selectInput(ns("index_c"),
-                               "Index case in ward:",
-                               choices = NULL
-                               # build_network()$ward_names
-                               ))
+                   uiOutput(ns("select_index_c")))
   )
 
 }
@@ -29,16 +25,16 @@ updateImportationUI_simp <- function(id) {
 updateImportation_simp  <- function(input, output, session, variable){
   ns <- session$ns
 
+  output$select_index_c <- renderUI({
+    selectInput(ns("index_c"),
+                "Index case in ward:",
+                choices = variable$ward_names
+    )
+  })
+
   observeEvent(list(input$importation_lev, input$index_c), {
-    if(!is.na(as.numeric(input$importation_lev))){
       # structure
       variable$imp_lev <- as.numeric(input$importation_lev)
-
-      if(input$importation_lev == "0"){
-        updateSelectInput(inputId = "index_c",
-                          choices = variable$ward_names,
-                          selected = NULL)
-        }
 
       if(input$importation_lev == "0" & !is.null(input$index_c))
         variable$EPIstate <- data.frame(
@@ -47,8 +43,7 @@ updateImportation_simp  <- function(input, output, session, variable){
           imm = c("NI"),
           epi = c("E"),
           n = c(1)
-        )
-    }
+        ) else variable$EPIstate <- NULL
   })
 
 

@@ -90,7 +90,7 @@ We simulate the diffusion of  ``r params$disease`` in a fully susceptible popula
 
 <!-- A couple of key parameters to include: -->
 <!-- 1. Baseline transmissible (R0) -->
-The baseline considered R0 was ``r if(params$disease == "Covid"){ 13 }``.
+The baseline considered R0 was ``r if(params$disease == "Covid") 13 else if(params$disease == "Influenza") 1.3   # params$gdata["pconta"]*(8 * (30 / 60 / 24) * params$gdata["prev"]/params$gdata["hinc"])``.
 
 <!-- 2. Severity (probability of developing (severe) symptoms) -->
 The severity (probability of developing severe symptoms) considered is ``r params$gdata["psevPNI"]`` for individuals without any immunity (neither vaccinated nor recovered), ``r params$gdata["psevPLI"]`` for individuals with a low immunity level (considering either an old vaccine injection or recovery), and ``r params$gdata["psevPHI"]`` for individuals with a high immunity level (considering either a recent vaccine injection or recovery).
@@ -119,6 +119,7 @@ Before admission, new patients undergo a clinical examination, during which they
 ```
 <!-- 3. screening of patients by implementation of tests on a random subset of patient population at regular intervals -->
 ```{asis, echo = "testPat" %in% params$scenarios}
+
 #### Screening of patients by implementation of tests on a random subset of patient population at regular intervals
 For patients, random testing is implemented every week in 75% of patients with no vaccination or infection history, 50% of patients with old vaccination or infection history and 10% of patients with recent vaccination or infection history.
 

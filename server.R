@@ -1223,7 +1223,6 @@ server <- function(input, output, session) {
       # case we don't have write permissions to the current working dir (which
       # can happen when deployed).
 
-
       tempReport <- file.path(tempdir(), "epi_report.Rmd")
       file.copy("epi_report.Rmd", tempReport, overwrite = TRUE)
 
