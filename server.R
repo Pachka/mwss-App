@@ -152,6 +152,7 @@ server <- function(input, output, session) {
       )
     )
   })
+
   ###
   # Display network -- FIX ME turn into module to be used with data and data_avdanced
   ###
@@ -197,7 +198,6 @@ server <- function(input, output, session) {
     }
 
     if(num_nodes > 1) {
-      # FIX ME colors only for preprocessed test datasets
       plot_connectivity(
         matContact = data$matContact,
         size = as.numeric(data$pop_size_P) + as.numeric(data$pop_size_H),

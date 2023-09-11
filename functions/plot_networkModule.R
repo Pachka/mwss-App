@@ -12,10 +12,9 @@ plot_network_serv <- function(input, output, session, variable, buildings) {
 
   output$network_plot <- renderPlot({
 
-    if(variable$ward_names %>% length > 0){
+    if((variable$ward_names %>% length) > 0){
     num_nodes <- variable$ward_names %>% length
 
-  if(variable$ward_names %>% length == nrow(variable$matContact)){
     if(num_nodes == 1) {
       my_sociomatrix <- matrix(rep(0, num_nodes * num_nodes),
                                # edge values
@@ -74,7 +73,6 @@ plot_network_serv <- function(input, output, session, variable, buildings) {
           vertexcexrate = 3,
           verbose = FALSE
         )
-    }
     }
     }
 

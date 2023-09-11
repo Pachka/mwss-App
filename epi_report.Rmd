@@ -36,12 +36,15 @@ We use here a network-structured model to simulate disease spreading accross war
 
 ## Methods
 ### Hospital structure and population
-```{asis, echo = !is.null(params$clustering)}
-This report presents synthetic results of 50 simulations run for an ``r params$clustering`` hospital structure including ``r length(params$ward_names)`` wards distributed over five buildings, and connected through healthcare workers.
-```
 
-```{asis, echo = is.null(params$clustering)}
-This report presents synthetic results of 50 simulations run for an hospital structure including ``r length(params$ward_names)`` wards connected through healthcare workers.
+```{r, results='asis'}
+if(!is.null(params$clustering))
+cat('
+This report presents synthetic results of', length(params$trajmwss), 'simulations run for an',  params$clustering, 'hospital structure including', length(params$ward_names), 'wards distributed over five buildings, and connected through healthcare workers.')
+
+if(is.null(params$clustering))
+cat('
+This report presents synthetic results of', length(params$trajmwss), 'simulations run for an hospital structure including', length(params$ward_names), 'wards distributed over five buildings, and connected through healthcare workers.')
 ```
 
 <!-- Plots: 1. connectivity plot for the network of wards // 2. Population size (patients, HCWs) -->
@@ -105,7 +108,7 @@ In this simulation, the following intervention strategies were implemented.
 <!-- 1. confinement/contact restriction to detected patients -->
 
 ```{asis, echo = "ISO" %in% params$scenarios}
-#### confinement/contact restriction to detected patients
+#### Confinement/contact restriction to detected patients
 The risk of transmission during contacts with patients detected as infected is considered null.
 ```
 <!-- 2. implementation of a screening area at patient admission including contact restriction/clinical examination/test -->
@@ -124,6 +127,7 @@ Note that the model considers that a tested individual will not be tested again 
 ```
 <!-- 4. screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals -->
 ```{asis, echo = "testProf" %in% params$scenarios}
+
 #### Screening of healthcare workers by implementation of tests on a random subset of healthcare worker population at regular intervals
 For healthcare workers, random testing is implemented every two weeks in 75% of healthcare workers with no vaccination or infection history, 50% of healthcare workers with old vaccination or infection history and 20% of healthcare workers with recent vaccination or infection history.
 

@@ -58,10 +58,10 @@ body <- dashboardBody(
   )),
 
 
-  setSliderColor(
-    c("#FF3300", "#CC0000", "#FF3300 ", "#CC0000", "#CC0000", "black"),
-    c(1:6)
-  ),
+  # setSliderColor(
+  #   c("#FF3300", "#CC0000", "#FF3300 ", "#CC0000", "#CC0000", "black"),
+  #   c(1:6)
+  # ),
   useShinyjs(),
   tabItems(
     tabItemPresentation(),

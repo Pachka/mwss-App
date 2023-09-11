@@ -73,7 +73,7 @@ valueboxoutput <- function(input, output, session, model) {
     )
   })
 
-  # number of test FIX ME split patient / HCWS
+  # number of test
   output$ntestP <- renderValueBox({
     valueBox(
       ifelse(
