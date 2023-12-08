@@ -30,9 +30,9 @@ library(mwss)
 ```
 
 ## Objective
-Dynamic epidemiological modeling is a powerful tool to analyse risk of pathogen persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and health care workers in health care settings, heterogeneity and stochasticity play fundamental roles due to risk of super-spreading events or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately.
+Dynamic epidemiological modeling is a powerful tool to analyze the risk of pathogen persistence and spread, following an introduction in a population, as well as predicting the impact of surveillance and control strategies. In small populations such as patients and healthcare workers in healthcare settings, heterogeneity and stochasticity play fundamental roles due to the risk of super-spreading events or epidemic extinction. Epidemic models of hospital-acquired infections generally consider a unique homogeneous population and do not account for the organizational or multi-ward structure, hindering the capacity of models to capture nosocomial spread processes accurately. 
 
-We use here a network-structured model to simulate disease spreading accross wards inside a healthcare facility and test the efficacy of intervention strategies on disease control.
+We use here a network-structured model to simulate disease spreading across wards inside a healthcare facility and test the efficacy of intervention strategies on disease control. 
 
 ## Methods
 ### Hospital structure and population
@@ -40,11 +40,11 @@ We use here a network-structured model to simulate disease spreading accross war
 ```{r, results='asis'}
 if(!is.null(params$clustering))
 cat('
-This report presents synthetic results of', length(params$trajmwss), 'simulations run for an',  params$clustering, 'hospital structure including', length(params$ward_names), 'wards distributed over five buildings, and connected through healthcare workers.')
+This report presents synthetic results of', length(params$trajmwss), 'simulations run for an',  params$clustering, 'hospital structure including', length(params$ward_names), 'wards distributed over five buildings, and connected through healthcare workers (the structure is detailed in the following figure and table).')
 
 if(is.null(params$clustering))
 cat('
-This report presents synthetic results of', length(params$trajmwss), 'simulations run for an hospital structure including', length(params$ward_names), 'wards distributed over five buildings, and connected through healthcare workers.')
+This report presents synthetic results of', length(params$trajmwss), 'simulations run for an hospital structure including', length(params$ward_names), 'wards distributed over five buildings, and connected through healthcare workers (the structure is detailed in the following figure and table).')
 ```
 
 <!-- Plots: 1. connectivity plot for the network of wards // 2. Population size (patients, HCWs) -->
@@ -83,14 +83,14 @@ This report presents synthetic results of', length(params$trajmwss), 'simulation
                   
 ```
 
-### Epidemiology: pathogen (and immunity level)
+### Epidemiology: pathogen and immunity level
 We simulate the diffusion of  ``r params$disease`` in a fully susceptible population (no immunity).
 
 <!-- in a population with **no/low/high/heterogeneous** immunity/ -->
 
 <!-- A couple of key parameters to include: -->
 <!-- 1. Baseline transmissible (R0) -->
-The baseline considered R0 was ``r if(params$disease == "Covid") 13 else if(params$disease == "Influenza") 1.3   # params$gdata["pconta"]*(8 * (30 / 60 / 24) * params$gdata["prev"]/params$gdata["hinc"])``.
+The baseline basic reproduction number (R0) considered was ``r if(params$disease == "Covid") 13 else if(params$disease == "Influenza") 1.3   # params$gdata["pconta"]*(8 * (30 / 60 / 24) * params$gdata["prev"]/params$gdata["hinc"])``.
 
 <!-- 2. Severity (probability of developing (severe) symptoms) -->
 The severity (probability of developing severe symptoms) considered is ``r params$gdata["psevPNI"]`` for individuals without any immunity (neither vaccinated nor recovered), ``r params$gdata["psevPLI"]`` for individuals with a low immunity level (considering either an old vaccine injection or recovery), and ``r params$gdata["psevPHI"]`` for individuals with a high immunity level (considering either a recent vaccine injection or recovery).
@@ -306,7 +306,7 @@ plot_testcount(
                   
 ```
 
-## Synthetic results
+## Synthetic results (with 95% prediction interval)
 
 ```{r message= FALSE, warning = FALSE}
 if(is.null(params$scenarios)){
@@ -568,9 +568,8 @@ table_of_params %>% regulartable(. , cwidth = c(5, 1))
                   
 ```
 ## Modelling project:
-Supported by the Département d’information médicale of the Centre hospitalier Guillaume Régnier (Rennes, France), a simulation modelling project was undertaken during 2020 pandemic to evaluate the effect of infection control protocols on SARS-CoV-2 spread in french long-term care facilities. The modelling was carried out by the french Pasteur Institute, the french Conservatoire national des arts et métiers and the french University of Versailles Saint-Quentin-en-Yvelines, in collaboration with the Department of Disease Control and Epidemiology of the National Veterinary Institute of Sweden. Epidemiological simulation are performed using R-based packages: mwss and SimInf.
+Supported by the Département d’information médicale of the Centre hospitalier Guillaume Régnier (Rennes, France), a simulation modeling project was undertaken during the 2020 pandemic to evaluate the effect of infection control protocols on SARS-CoV-2 spread in french long-term care facilities. The modeling was carried out by the French Pasteur Institute, the French Conservatoire national des Arts et métiers, and the French University of Versailles Saint-Quentin-en-Yvelines, in collaboration with the Department of Disease Control and Epidemiology of the National Veterinary Institute of Sweden. Epidemiological simulations are performed using R-based packages: mwss and SimInf. 
 
-
-Results presented in this report were generated using the open source R package ‘MWSS’ which uses the Gillespie algorithm, implemented with mwss R-package.
+Results presented in this report were generated using the open source R package ‘MWSS’ which uses the Gillespie algorithm, implemented with mwss R-package. 
 
 Note that simulations were run locally and, to deal with data confidentiality challenges, the parameters and simulations were not saved on our servers.
